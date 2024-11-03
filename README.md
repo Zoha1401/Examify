@@ -5,16 +5,17 @@
 
 Follow these steps:
 
-Clone repo
+1) Clone repo
 
-Go to the frontend directory
+2) Go to the frontend directory
 
-Run **npm install** to install all the dependencies
+3) Run **npm install** to install all the dependencies
 
-Run **npm start** to start the application
+4) Run **npm start** to start the application
 
 
 **Backend setup**
 
-Requirements: JDK 17, Maven, SQL server.
-Dependencies: Lombok, Spring Security
+1) Requirements: JDK 17, Maven, SQL server.
+
+2) Dependencies: Lombok, Spring Security
