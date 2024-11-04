@@ -4,13 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
+// import org.springframework.security.core.userdetails.UserDetails;
+// import org.springframework.security.core.userdetails.UserDetailsService;
+// import org.springframework.security.core.userdetails.UsernameNotFoundException;
+// import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.onlineexammodule.backend.model.Examiner;
-import com.onlineexammodule.backend.model.ExaminerPrincipal;
+// import com.onlineexammodule.backend.model.ExaminerPrincipal;
 import com.onlineexammodule.backend.repo.ExaminerRepo;
 
 @Service
@@ -25,8 +25,8 @@ public class ExaminerService {
     @Autowired
     private AuthenticationManager authManager;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    // @Autowired
+    // private PasswordEncoder passwordEncoder;
 
     @Autowired
     private JWTService jwtService;
@@ -34,7 +34,7 @@ public class ExaminerService {
    
 
     public Examiner signInExaminer(Examiner examiner) {
-        examiner.setPassword(passwordEncoder.encode(examiner.getPassword()));
+        System.out.println(examiner);
         return repo.save(examiner);
     }
 
@@ -45,6 +45,7 @@ public class ExaminerService {
                 String token=jwtService.generateToken(examiner.getEmail());
             return token;
         } catch (AuthenticationException ex) {
+            System.out.println(ex.getLocalizedMessage());
             return "Fail";
         }
     }

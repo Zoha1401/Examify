@@ -17,13 +17,19 @@ public class ExaminerDetailService implements UserDetailsService{
         this.repo = repo;
      
     }
+
+   
+
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        System.out.println("Attempting to load user: " + email);
         Examiner examiner = repo.findByEmail(email);
         if (examiner == null) {
             System.out.println("Examiner not found");
             throw new UsernameNotFoundException("Examiner not found");
         }
+
+        System.out.println("Loaded user: " + examiner.getEmail());
         return new ExaminerPrincipal(examiner);
     }
 }

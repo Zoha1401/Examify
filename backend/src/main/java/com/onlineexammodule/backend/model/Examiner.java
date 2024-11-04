@@ -19,5 +19,9 @@ public class Examiner {
    private Long examinerId;
    private String email;
    private String password;
+   
+   public Examiner(String email) {
+      this.email = email;
+   }
 
 }
