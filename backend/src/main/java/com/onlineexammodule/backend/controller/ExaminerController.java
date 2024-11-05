@@ -5,8 +5,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.onlineexammodule.backend.model.Examinee;
 import com.onlineexammodule.backend.model.Examiner;
 import com.onlineexammodule.backend.service.ExaminerService;
+import com.onlineexammodule.backend.service.JWTService;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 //import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -22,7 +26,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/examiner")
 @CrossOrigin
 public class ExaminerController {
 
@@ -30,6 +34,9 @@ public class ExaminerController {
     private ExaminerService service;
     private BCryptPasswordEncoder encoder=new BCryptPasswordEncoder(12);  //Can specify strength
     
+    @Autowired
+    private JWTService jwtService;
+
     @PostMapping("/signin")
     public ResponseEntity<?> signInExaminer(@RequestBody Examiner examiner) {
 
@@ -42,7 +49,7 @@ public class ExaminerController {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
-     @PostMapping("/examinerlogin")
+     @PostMapping("/login")
      public String login(@RequestBody Examiner examiner) {
         return service.verify(examiner);
      }
@@ -52,6 +59,17 @@ public class ExaminerController {
      public String greet() {
          return "JWT token validation done";
      }
+
+
+     @PostMapping("/addExaminee")
+     public ResponseEntity<Examinee> addExaminee(@RequestBody Examinee examinee, HttpServletRequest request) {
+         String token=request.getHeader("Authorization").substring(7);
+
+         String email=jwtService.extractEmail(token);
+         Examinee savedExaminee= service.addExaminee(examinee, email);
+         return new ResponseEntity<>(savedExaminee, HttpStatus.CREATED);
+     }
+     
      
      
     
