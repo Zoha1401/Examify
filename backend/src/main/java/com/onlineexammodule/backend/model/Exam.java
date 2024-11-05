@@ -32,10 +32,10 @@ public class Exam {
     @JoinColumn(name = "examiner_id", nullable = false)
     private Examiner examiner;
 
-    @OneToMany(mappedBy = "exam")
+    @ManyToMany(mappedBy = "exam")
     private List<Programming> programmingQuestions;
 
-    @OneToMany(mappedBy = "exam")
+    @ManyToMany(mappedBy = "exam")
     private List<Mcq> mcqQuestions;
 
     @ManyToMany(mappedBy = "exams")

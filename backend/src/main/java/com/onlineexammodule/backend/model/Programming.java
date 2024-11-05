@@ -5,7 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.ManyToMany;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,8 +21,10 @@ public class Programming {
     private Long questionId;
     private String questionText;
     private String testCases;
+    private String difficulty_level;
+    private String reference_answer;
 
-    @ManyToOne
+    @ManyToMany
     @JoinColumn(name = "exam_id")
     private Exam exam;
 
