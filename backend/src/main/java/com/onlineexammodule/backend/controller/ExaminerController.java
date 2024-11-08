@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class ExaminerController {
 
     @Autowired
-    private ExaminerService service;
+    private ExaminerService examinerService;
     private BCryptPasswordEncoder encoder=new BCryptPasswordEncoder(12);  //Can specify strength
     
     @Autowired
@@ -43,7 +43,7 @@ public class ExaminerController {
 
         try {
         examiner.setPassword(encoder.encode(examiner.getPassword()));
-        Examiner newExaminer = service.signInExaminer(examiner);
+        Examiner newExaminer = examinerService.signInExaminer(examiner);
         return new ResponseEntity<>(newExaminer, HttpStatus.CREATED);
        
     } catch (Exception e) {
@@ -55,7 +55,7 @@ public class ExaminerController {
      @PostMapping("/login")
      public String login(@RequestBody Examiner examiner) {
         System.out.println(examiner.getExaminees().size());
-        return service.verify(examiner);
+        return examinerService.verify(examiner);
      }
 
     
@@ -73,24 +73,26 @@ public class ExaminerController {
          String email=jwtService.extractEmail(token);
          System.out.println("Examiner Email "+email);
          System.out.println("Inisde Controller "+ examinee);
-         Examinee savedExaminee= service.addExaminee(examinee, email);
+         Examinee savedExaminee= examinerService.addExaminee(examinee, email);
          return new ResponseEntity<>(savedExaminee, HttpStatus.CREATED);
      }
 
      
      //API endpoint to delete the Examinee
-    //  @DeleteMapping("/deleteExaminee")
-    //  public ResponseEntity<String> deleteExaminee(String email) {
-    //     examineeService.deleteExaminee(email);
-    //     return ResponseEntity.ok("Examinee deleted successfully.");
-    //  }
+     @DeleteMapping("/deleteExaminee")
+     public ResponseEntity<String> deleteExaminee(String email,  HttpServletRequest request) {
+        String token=request.getHeader("Authorization").substring(7);
+        String examiner_email=jwtService.extractEmail(token);
+        examinerService.deleteExaminee(email, examiner_email);
+        return ResponseEntity.ok("Examinee deleted successfully.");
+     }
      
      
-    //  @PostMapping("/updateExaminee")
-    //  public ResponseEntity<Examinee> updateExaminee(@RequestBody Examinee examinee) {
-    //    Examinee updatedExaminee=service.updateExaminee(examinee);
-    //    return new ResponseEntity<>(updatedExaminee);
-    //  }
+     @PostMapping("/updateExaminee")
+     public ResponseEntity<Examinee> updateExaminee(@RequestBody Examinee examinee) {
+       Examinee updatedExaminee=examinerService.updateExaminee(examinee);
+       return new ResponseEntity<>(updatedExaminee, HttpStatus.CREATED);
+     }
      
      
      

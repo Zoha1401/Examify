@@ -50,4 +50,8 @@ public class Examiner {
       this.email = email;
    }
 
+   public void removeExaminee(Examinee examinee) {
+      examinees.remove(examinee);
+   }
+
 }

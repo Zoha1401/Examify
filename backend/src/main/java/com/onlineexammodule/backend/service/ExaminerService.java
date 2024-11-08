@@ -1,6 +1,5 @@
 package com.onlineexammodule.backend.service;
 
-import java.util.ArrayList;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -111,5 +110,41 @@ public class ExaminerService {
         System.out.println("Inside Service size of examinee's examiners " + savedExaminee.getExaminers().size());
         return savedExaminee;
         
+    }
+
+
+    public void deleteExaminee(String email, String examiner_email) {
+        Examinee examinee = examineeRepository.findByEmail(email);
+
+        Examiner examiner=examinerRepository.findByEmail(examiner_email);
+
+       
+
+        if(examiner!=null)
+        {
+            examiner.removeExaminee(examinee);
+            examinerRepository.save(examiner);
+        }
+        
+        if(examinee!=null)
+        {
+            examineeRepository.delete(examinee);
+        }
+
+        
+    }
+
+
+    public Examinee updateExaminee(Examinee updatedExaminee) {
+        Examinee existingExaminee = examineeRepository.findByEmail(updatedExaminee.getEmail());
+
+    // Update fields
+    existingExaminee.setCollege(updatedExaminee.getCollege());
+    existingExaminee.setEmail(updatedExaminee.getEmail());
+    existingExaminee.setDegree(updatedExaminee.getDegree());
+    // Add other fields to update as needed
+
+    // Save the updated entity
+    return examineeRepository.save(existingExaminee);
     }
 }
