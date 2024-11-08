@@ -1,10 +1,15 @@
 package com.onlineexammodule.backend.model;
 
+// import java.util.HashSet;
+import java.util.List;
+// import java.util.Set;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
+// import jakarta.persistence.JoinColumn;
+// import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,8 +29,7 @@ public class Programming {
     private String difficulty_level;
     private String reference_answer;
 
-    @ManyToMany
-    @JoinColumn(name = "exam_id")
-    private Exam exam;
+    @ManyToMany(mappedBy = "programmingQuestions")
+    private List<Exam> exams; // Should be a collection
 
 }

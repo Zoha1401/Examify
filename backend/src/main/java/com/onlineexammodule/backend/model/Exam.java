@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
@@ -32,10 +33,15 @@ public class Exam {
     @JoinColumn(name = "examiner_id", nullable = false)
     private Examiner examiner;
 
-    @ManyToMany(mappedBy = "exam")
+    @ManyToMany
+    @JoinTable(
+        name = "programming_exam", // The join table
+        joinColumns = @JoinColumn(name = "exam_id"), // Foreign key for Exam
+        inverseJoinColumns = @JoinColumn(name = "programming_id") // Foreign key for Programming
+    )
     private List<Programming> programmingQuestions;
 
-    @ManyToMany(mappedBy = "exam")
+    @OneToMany(mappedBy = "exam")
     private List<Mcq> mcqQuestions;
 
     @ManyToMany(mappedBy = "exams")

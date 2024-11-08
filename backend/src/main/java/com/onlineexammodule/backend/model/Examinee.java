@@ -1,9 +1,11 @@
 package com.onlineexammodule.backend.model;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -12,7 +14,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
+// import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,6 +24,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@JsonIgnoreProperties({"examiners"})
 public class Examinee {
      
     @Id
@@ -32,10 +35,10 @@ public class Examinee {
     private String college;
     private String degree;
 
-    @ManyToOne
-    @JoinColumn(name="examiner_id")
-    @JsonBackReference //Breaks circular reference
-    private Examiner examiner;
+    @ManyToMany(mappedBy = "examinees")
+    @JsonBackReference
+    private List<Examiner> examiners = new ArrayList<>();
+
 
     @ManyToMany
     @JoinTable(
@@ -43,9 +46,15 @@ public class Examinee {
         joinColumns = @JoinColumn(name = "examinee_id"),
         inverseJoinColumns = @JoinColumn(name = "exam_id")
     )
-    private List<Exam> exams;
+    private List<Exam> exams= new ArrayList<>();;
 
     @OneToMany(mappedBy = "examinee")
-    private List<Result> testResults;
+    private List<Result> testResults= new ArrayList<>();;
+
+    public Examinee(String email, Examiner examiner) {
+        this.email = email;
+        
+     }
+
 
 }

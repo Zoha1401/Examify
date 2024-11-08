@@ -31,6 +31,6 @@ public class Mcq {
     @JoinColumn(name = "exam_id")
     private Exam exam;
 
-    @OneToMany(mappedBy = "question")
+    @OneToMany(mappedBy = "mcqQuestion")
     private List<Option> options;  // List of options for MCQs
 }

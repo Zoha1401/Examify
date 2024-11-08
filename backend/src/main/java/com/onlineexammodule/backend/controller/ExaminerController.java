@@ -14,6 +14,7 @@ import jakarta.servlet.http.HttpServletRequest;
 
 //import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 // import org.springframework.web.bind.annotation.RequestBody;
 //import org.springframework.web.bind.annotation.GetMapping;
@@ -49,25 +50,46 @@ public class ExaminerController {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
+
+    //API endpoint for examiner login
      @PostMapping("/login")
      public String login(@RequestBody Examiner examiner) {
+        System.out.println(examiner.getExaminees().size());
         return service.verify(examiner);
      }
 
-
+    
+     //API endpoint for testing authentication
      @GetMapping("/getSomething")
      public String greet() {
          return "JWT token validation done";
      }
 
-
+     //API endpoint to add the Examinee
      @PostMapping("/addExaminee")
      public ResponseEntity<Examinee> addExaminee(@RequestBody Examinee examinee, HttpServletRequest request) {
          String token=request.getHeader("Authorization").substring(7);
 
          String email=jwtService.extractEmail(token);
+         System.out.println("Examiner Email "+email);
+         System.out.println("Inisde Controller "+ examinee);
          Examinee savedExaminee= service.addExaminee(examinee, email);
          return new ResponseEntity<>(savedExaminee, HttpStatus.CREATED);
+     }
+
+     
+     //API endpoint to delete the Examinee
+     @DeleteMapping("/deleteExaminee")
+     public ResponseEntity<String> deleteExaminee(String email) {
+        examineeService.deleteExaminee(email);
+        return ResponseEntity.ok("Examinee deleted successfully.");
+     }
+     
+     
+     @PostMapping("/updateExaminee")
+     public ResponseEntity<Examinee> updateExaminee(@RequestBody Examinee examinee) {
+       Examinee updatedExaminee=service.updateExaminee(examinee);
+       return new ResponseEntity<>(updatedExaminee)
      }
      
      

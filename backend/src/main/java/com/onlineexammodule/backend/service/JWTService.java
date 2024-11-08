@@ -52,6 +52,23 @@ public class JWTService {
 
     }
 
+
+    public String generateExamineeToken(String email){
+        
+        Map<String, Object> claims=new HashMap<>();
+        return Jwts.builder()
+               .claims()
+               .add(claims)
+               .subject(email)
+               .issuedAt(new Date(System.currentTimeMillis()))
+               .expiration(new Date(System.currentTimeMillis()+60*60*30*1000L))
+               .and()
+               .signWith(getKey())
+               .compact();
+
+    }
+
+
     private SecretKey getKey() {
         byte [] keyBytes=Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);

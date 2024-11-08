@@ -1,6 +1,10 @@
 package com.onlineexammodule.backend.model;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 // import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -8,6 +12,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,6 +24,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@JsonIgnoreProperties({"examinees"}) 
 public class Examiner {
      
    @Id
@@ -26,12 +34,17 @@ public class Examiner {
    private String password;
 
    @OneToMany(mappedBy = "examiner")
-   private List<Exam> exams;
+   private List<Exam> exams= new ArrayList<>();;
 
 
-   @OneToMany(mappedBy = "examiner")
-   // @JsonManagedReference // Indicates the parent side of the relationship
-   private List<Examinee> examinees;
+  @ManyToMany
+  @JoinTable(
+    name = "examiner_examinee",  // Link table name
+    joinColumns = @JoinColumn(name = "examiner_id"),
+    inverseJoinColumns = @JoinColumn(name = "examinee_id")
+  )
+  @JsonManagedReference
+  private List<Examinee> examinees = new ArrayList<>();
    
    public Examiner(String email) {
       this.email = email;

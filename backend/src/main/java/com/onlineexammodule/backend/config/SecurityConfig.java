@@ -32,15 +32,19 @@ public class SecurityConfig {
     @Autowired
     private JwtFilter jwtFilter;
 
+    @Autowired
+    private ExamineeJwtFilter examineeJwtFilter;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/examiner/signin", "/api/examiner/login").permitAll()
+                .requestMatchers("/api/examiner/signin", "/api/examiner/login", "/api/examinee/login").permitAll()
                 .anyRequest().authenticated())
             .httpBasic(Customizer.withDefaults())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+            .addFilterBefore(examineeJwtFilter, UsernamePasswordAuthenticationFilter.class)
             .build();
     }
 
