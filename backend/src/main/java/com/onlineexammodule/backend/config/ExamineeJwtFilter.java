@@ -42,6 +42,7 @@ public class ExamineeJwtFilter extends OncePerRequestFilter {
 
         if(email!=null && SecurityContextHolder.getContext().getAuthentication()==null)
         {
+            System.out.println("Examinee Jwt filter invoked");
             UserDetails userDetails=context.getBean(ExamineeDetailService.class).loadUserByUsername(email);
             System.out.println(jwtService.validateToken(token, userDetails));
             if(jwtService.validateToken(token, userDetails)){

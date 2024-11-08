@@ -79,18 +79,18 @@ public class ExaminerController {
 
      
      //API endpoint to delete the Examinee
-     @DeleteMapping("/deleteExaminee")
-     public ResponseEntity<String> deleteExaminee(String email) {
-        examineeService.deleteExaminee(email);
-        return ResponseEntity.ok("Examinee deleted successfully.");
-     }
+    //  @DeleteMapping("/deleteExaminee")
+    //  public ResponseEntity<String> deleteExaminee(String email) {
+    //     examineeService.deleteExaminee(email);
+    //     return ResponseEntity.ok("Examinee deleted successfully.");
+    //  }
      
      
-     @PostMapping("/updateExaminee")
-     public ResponseEntity<Examinee> updateExaminee(@RequestBody Examinee examinee) {
-       Examinee updatedExaminee=service.updateExaminee(examinee);
-       return new ResponseEntity<>(updatedExaminee)
-     }
+    //  @PostMapping("/updateExaminee")
+    //  public ResponseEntity<Examinee> updateExaminee(@RequestBody Examinee examinee) {
+    //    Examinee updatedExaminee=service.updateExaminee(examinee);
+    //    return new ResponseEntity<>(updatedExaminee);
+    //  }
      
      
      

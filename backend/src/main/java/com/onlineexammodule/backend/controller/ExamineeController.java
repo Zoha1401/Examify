@@ -27,6 +27,7 @@ public class ExamineeController {
     @PostMapping("/login")
     public String LoginExaminee(@RequestBody ExamineeLoginRequest loginRequest) {
         
+        System.out.println(loginRequest.getEmail());
         return examineeService.verify(loginRequest.getEmail(), loginRequest.getExaminerId());
        
     }

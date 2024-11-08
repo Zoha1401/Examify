@@ -38,7 +38,7 @@ public class Answer {
 
     @ManyToOne
     @JoinColumn(name = "selected_option_id", nullable = true)
-    private Option selectedOption;  
+    private QuestionOption selectedOption;  
 
     private String codeSubmission;  
 }
