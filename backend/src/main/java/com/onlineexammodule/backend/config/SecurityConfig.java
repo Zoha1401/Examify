@@ -3,6 +3,7 @@ package com.onlineexammodule.backend.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -36,17 +37,34 @@ public class SecurityConfig {
     private ExamineeJwtFilter examineeJwtFilter;
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http.csrf(csrf -> csrf.disable())
+    @Order(1)
+    public SecurityFilterChain examinerSecurityFilterChain(HttpSecurity http) throws Exception {
+        return http
+            .securityMatcher("/api/examiner/**")  // Apply only to examiner paths
+            .csrf(csrf -> csrf.disable())
+            .securityMatcher("/api/examiner/**")  // Apply only to examiner paths
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/examiner/signin", "/api/examiner/login", "/api/examinee/login").permitAll()
+                .requestMatchers("/api/examiner/signin", "/api/examiner/login").permitAll()
                 .anyRequest().authenticated())
             .httpBasic(Customizer.withDefaults())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-            .addFilterBefore(examineeJwtFilter, UsernamePasswordAuthenticationFilter.class)
             .build();
     }
+
+    @Bean
+    @Order(2)
+     public SecurityFilterChain examineeSecurityFilterChain(HttpSecurity http) throws Exception {
+    return http
+        .securityMatcher("/api/examinee/**")  // Apply only to examinee paths
+        .csrf(csrf -> csrf.disable())
+        .authorizeHttpRequests(auth -> auth
+            .requestMatchers("/api/examinee/login").permitAll()
+            .anyRequest().authenticated())
+        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .addFilterBefore(examineeJwtFilter, UsernamePasswordAuthenticationFilter.class)  // Examinee filter
+        .build();
+}
 
     @Bean
     public AuthenticationProvider authenticationProvider() {

@@ -1,5 +1,7 @@
 package com.onlineexammodule.backend.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +25,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
 // import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 
@@ -32,7 +36,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class ExaminerController {
 
     @Autowired
-    private ExaminerService service;
+    private ExaminerService examinerService;
     private BCryptPasswordEncoder encoder=new BCryptPasswordEncoder(12);  //Can specify strength
     
     @Autowired
@@ -43,7 +47,7 @@ public class ExaminerController {
 
         try {
         examiner.setPassword(encoder.encode(examiner.getPassword()));
-        Examiner newExaminer = service.signInExaminer(examiner);
+        Examiner newExaminer = examinerService.signInExaminer(examiner);
         return new ResponseEntity<>(newExaminer, HttpStatus.CREATED);
        
     } catch (Exception e) {
@@ -55,7 +59,7 @@ public class ExaminerController {
      @PostMapping("/login")
      public String login(@RequestBody Examiner examiner) {
         System.out.println(examiner.getExaminees().size());
-        return service.verify(examiner);
+        return examinerService.verify(examiner);
      }
 
     
@@ -73,24 +77,54 @@ public class ExaminerController {
          String email=jwtService.extractEmail(token);
          System.out.println("Examiner Email "+email);
          System.out.println("Inisde Controller "+ examinee);
-         Examinee savedExaminee= service.addExaminee(examinee, email);
+         Examinee savedExaminee= examinerService.addExaminee(examinee, email);
          return new ResponseEntity<>(savedExaminee, HttpStatus.CREATED);
      }
 
      
      //API endpoint to delete the Examinee
      @DeleteMapping("/deleteExaminee")
-     public ResponseEntity<String> deleteExaminee(String email) {
-        examineeService.deleteExaminee(email);
-        return ResponseEntity.ok("Examinee deleted successfully.");
+     public ResponseEntity<Examinee> deleteExaminee(@RequestParam Long examineeId,  HttpServletRequest request) {
+        String token=request.getHeader("Authorization").substring(7);
+        String examiner_email=jwtService.extractEmail(token);
+        Examinee deletedExaminee=examinerService.deleteExaminee(examineeId, examiner_email);
+        if (deletedExaminee != null) {
+            return ResponseEntity.ok(deletedExaminee);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
      }
      
      
+     //API endpoint to update the examinee
      @PostMapping("/updateExaminee")
      public ResponseEntity<Examinee> updateExaminee(@RequestBody Examinee examinee) {
-       Examinee updatedExaminee=service.updateExaminee(examinee);
-       return new ResponseEntity<>(updatedExaminee)
+       Examinee updatedExaminee=examinerService.updateExaminee(examinee);
+       return new ResponseEntity<>(updatedExaminee, HttpStatus.OK);
      }
+
+     // Fetch examinee by Email
+     @GetMapping("/getExamineeByEmail")
+     public Examinee getExaminee(@RequestBody String examinee_email, HttpServletRequest request) {
+         String token=request.getHeader("Authorization").substring(7);
+         String examiner_email=jwtService.extractEmail(token);
+         System.out.println("Examinee email "+examinee_email);
+         System.out.println("Examiner Email "+examiner_email);
+         Examinee examinee=examinerService.getExaminee(examinee_email, examiner_email);
+         return examinee;
+     }
+
+
+     @GetMapping("/getAllExaminee")
+     public List getAllExaminee(HttpServletRequest request) {
+         String token=request.getHeader("Authorization").substring(7);
+         String examiner_email=jwtService.extractEmail(token);
+         List<Examinee> examinees=examinerService.getAllExaminee(examiner_email);
+
+         return examinees;
+     }
+     
+     
      
      
      

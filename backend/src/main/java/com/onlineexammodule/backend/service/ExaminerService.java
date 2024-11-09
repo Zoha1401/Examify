@@ -1,6 +1,8 @@
 package com.onlineexammodule.backend.service;
 
-import java.util.ArrayList;
+
+import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -112,4 +114,87 @@ public class ExaminerService {
         return savedExaminee;
         
     }
+
+
+    public Examinee deleteExaminee(Long examineeId, String examiner_email) {
+
+        Examiner examiner=examinerRepository.findByEmail(examiner_email);
+
+        if (examiner == null) {
+            throw new IllegalArgumentException("Examiner not found with email: " + examiner_email);
+        }
+        
+        Examinee examinee = examineeRepository.findById(examineeId)
+        .orElseThrow(() -> new IllegalArgumentException("Examinee not found with ID: " + examineeId));
+
+        examiner.removeExaminee(examinee);
+        examinerRepository.save(examiner); 
+        
+        if (examinee.getExaminers().isEmpty()) {
+            examineeRepository.delete(examinee);
+            System.out.println("Deleted examinee from database as it has no other associated examiners.");
+        } else {
+            System.out.println("Examinee removed from examiner but not deleted as it is associated with other examiners.");
+        }
+    
+        return examinee;
+
+
+
+
+        
+    }
+
+
+    public Examinee updateExaminee(Examinee updatedExaminee) {
+        if (updatedExaminee.getExamineeId() == null) {
+            throw new IllegalArgumentException("Examinee ID is required for update.");
+        }
+
+        Examinee existingExaminee = examineeRepository.findById(updatedExaminee.getExamineeId())
+            .orElseThrow(() -> new IllegalArgumentException("Examinee not found with ID: " + updatedExaminee.getExamineeId()));
+
+
+        if(updatedExaminee.getCollege()!=null)
+        existingExaminee.setCollege(updatedExaminee.getCollege());
+
+        if(updatedExaminee.getEmail()!=null)
+        existingExaminee.setEmail(updatedExaminee.getEmail());
+
+        if(updatedExaminee.getDegree()!=null)
+        existingExaminee.setDegree(updatedExaminee.getDegree());
+    
+        return examineeRepository.save(existingExaminee);
+    }
+
+
+    public Examinee getExaminee(String examinee_email, String examiner_email) {
+        
+        Examiner examiner=examinerRepository.findByEmail(examiner_email);
+
+        if(examiner==null)
+        {
+            throw new IllegalArgumentException("Examiner not found with email "+ examiner_email);
+        }
+
+        return examiner.getExaminees().stream()
+               .filter(examinee->examinee.getEmail().equals(examinee_email))
+               .findFirst()
+               .orElseThrow(()-> new IllegalArgumentException("Examinee not found with email "+ examinee_email + " under examiner "+ examiner_email));
+
+
+    }
+
+
+    public List<Examinee> getAllExaminee(String examiner_email) {
+        Examiner examiner=examinerRepository.findByEmail(examiner_email);
+
+        if (examiner == null) {
+            throw new IllegalArgumentException("Examiner not found with email: " + examiner_email);
+        }
+
+        return examiner.getExaminees();
+    }
+
+
 }

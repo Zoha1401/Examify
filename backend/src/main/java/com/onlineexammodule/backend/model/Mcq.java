@@ -32,5 +32,5 @@ public class Mcq {
     private Exam exam;
 
     @OneToMany(mappedBy = "mcqQuestion")
-    private List<Option> options;  // List of options for MCQs
+    private List<QuestionOption> options;  // List of options for MCQs
 }

@@ -26,6 +26,7 @@ public class ExamineeService {
     public String verify(String email, Long examinerId)
     {
         Examinee examinee=examineeRepository.findByEmail(email);
+        System.out.println("Finding examinee by email"+email);
         if (examinee == null) {
             System.out.println("Examinee not found for the provided email and examiner ID.");
             throw new RuntimeException("Invalid credentials");
