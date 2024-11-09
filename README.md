@@ -1,5 +1,6 @@
 # Examify
 
+Technologies: React, Java Springboot
 
 **For frontend setup:**
 
@@ -18,4 +19,4 @@ Follow these steps:
 
 1) Requirements: JDK 17, Maven, SQL server.
 
-2) Dependencies: Lombok, Spring Security
+2) Dependencies: Lombok, Spring Security, JWT
