@@ -1,5 +1,7 @@
 package com.onlineexammodule.backend.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +25,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
 // import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 
@@ -80,19 +84,47 @@ public class ExaminerController {
      
      //API endpoint to delete the Examinee
      @DeleteMapping("/deleteExaminee")
-     public ResponseEntity<String> deleteExaminee(String email,  HttpServletRequest request) {
+     public ResponseEntity<Examinee> deleteExaminee(@RequestParam Long examineeId,  HttpServletRequest request) {
         String token=request.getHeader("Authorization").substring(7);
         String examiner_email=jwtService.extractEmail(token);
-        examinerService.deleteExaminee(email, examiner_email);
-        return ResponseEntity.ok("Examinee deleted successfully.");
+        Examinee deletedExaminee=examinerService.deleteExaminee(examineeId, examiner_email);
+        if (deletedExaminee != null) {
+            return ResponseEntity.ok(deletedExaminee);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
      }
      
      
+     //API endpoint to update the examinee
      @PostMapping("/updateExaminee")
      public ResponseEntity<Examinee> updateExaminee(@RequestBody Examinee examinee) {
        Examinee updatedExaminee=examinerService.updateExaminee(examinee);
-       return new ResponseEntity<>(updatedExaminee, HttpStatus.CREATED);
+       return new ResponseEntity<>(updatedExaminee, HttpStatus.OK);
      }
+
+     // Fetch examinee by Email
+     @GetMapping("/getExamineeByEmail")
+     public Examinee getExaminee(@RequestBody String examinee_email, HttpServletRequest request) {
+         String token=request.getHeader("Authorization").substring(7);
+         String examiner_email=jwtService.extractEmail(token);
+         System.out.println("Examinee email "+examinee_email);
+         System.out.println("Examiner Email "+examiner_email);
+         Examinee examinee=examinerService.getExaminee(examinee_email, examiner_email);
+         return examinee;
+     }
+
+
+     @GetMapping("/getAllExaminee")
+     public List getAllExaminee(HttpServletRequest request) {
+         String token=request.getHeader("Authorization").substring(7);
+         String examiner_email=jwtService.extractEmail(token);
+         List<Examinee> examinees=examinerService.getAllExaminee(examiner_email);
+
+         return examinees;
+     }
+     
+     
      
      
      
