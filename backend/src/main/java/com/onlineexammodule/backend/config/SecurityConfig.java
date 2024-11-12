@@ -40,9 +40,8 @@ public class SecurityConfig {
     @Order(1)
     public SecurityFilterChain examinerSecurityFilterChain(HttpSecurity http) throws Exception {
         return http
-            .securityMatcher("/api/examiner/**")  // Apply only to examiner paths
+            .securityMatcher("/api/examiner/**", "/api/exam/**", "/api/mcqQuestion/**", "/api/programmingQuestion/**")  // Apply only to examiner paths
             .csrf(csrf -> csrf.disable())
-            .securityMatcher("/api/examiner/**")  // Apply only to examiner paths
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/examiner/signin", "/api/examiner/login").permitAll()
                 .anyRequest().authenticated())

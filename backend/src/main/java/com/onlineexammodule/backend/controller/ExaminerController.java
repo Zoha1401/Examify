@@ -7,10 +7,15 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+
+
 import com.onlineexammodule.backend.model.Examinee;
 import com.onlineexammodule.backend.model.Examiner;
+
+
 import com.onlineexammodule.backend.service.ExaminerService;
 import com.onlineexammodule.backend.service.JWTService;
+
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -42,6 +47,7 @@ public class ExaminerController {
     @Autowired
     private JWTService jwtService;
 
+  
     @PostMapping("/signin")
     public ResponseEntity<?> signInExaminer(@RequestBody Examiner examiner) {
 
@@ -114,7 +120,7 @@ public class ExaminerController {
          return examinee;
      }
 
-
+     // Fetch all examinees
      @GetMapping("/getAllExaminee")
      public List getAllExaminee(HttpServletRequest request) {
          String token=request.getHeader("Authorization").substring(7);
@@ -123,6 +129,21 @@ public class ExaminerController {
 
          return examinees;
      }
+     
+     
+
+     //Update exam
+
+     //Update Mcq
+
+     //Update programming
+
+     //Delete exam
+
+     //Delete Mcq
+
+     //Delete programming
+     
      
      
      

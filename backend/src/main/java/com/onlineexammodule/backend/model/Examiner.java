@@ -32,7 +32,8 @@ public class Examiner {
    private Long examinerId;
    private String email;
    private String password;
-
+   
+   @JsonManagedReference
    @OneToMany(mappedBy = "examiner")
    private List<Exam> exams= new ArrayList<>();;
 

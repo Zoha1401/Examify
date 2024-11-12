@@ -36,6 +36,12 @@ public class ExamineeController {
     public String greet() {
         return "Examinee token validated hurrah";
     }
+
+    //submitExam
+
+    //AnswerMCQ
+
+    //AnswerProgramming
     
     
 }

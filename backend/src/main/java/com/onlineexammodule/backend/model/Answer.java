@@ -30,11 +30,11 @@ public class Answer {
 
     @ManyToOne
     @JoinColumn(name = "mcq_question_id", nullable = true)
-    private Mcq mcqQuestion;  
+    private McqQuestion mcqQuestion;  
 
     @ManyToOne
     @JoinColumn(name = "programming_question_id", nullable = true)
-    private Programming programmingQuestion;  
+    private ProgrammingQuestion programmingQuestion;  
 
     @ManyToOne
     @JoinColumn(name = "selected_option_id", nullable = true)

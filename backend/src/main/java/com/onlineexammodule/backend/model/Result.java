@@ -26,6 +26,7 @@ public class Result {
     private LocalDateTime submitDateTime;
     private boolean passed;
     private boolean submitted;
+    private int mcqScore;
 
     @ManyToOne
     @JoinColumn(name = "examinee_id")

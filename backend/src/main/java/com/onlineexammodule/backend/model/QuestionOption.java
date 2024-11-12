@@ -21,7 +21,7 @@ public class QuestionOption {
     private Long optionId;  
     @ManyToOne
     @JoinColumn(name = "question_id")
-    private Mcq mcqQuestion; 
+    private McqQuestion mcqQuestion; 
 
     private String text;  
     private boolean isCorrect;  

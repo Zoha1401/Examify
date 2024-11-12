@@ -2,11 +2,15 @@ package com.onlineexammodule.backend.model;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
@@ -17,7 +21,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Mcq {
+public class McqQuestion {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,12 +29,18 @@ public class Mcq {
     private String questionText;
     private String correct_answer;
     private String category;
-
-
-    @ManyToOne
-    @JoinColumn(name = "exam_id")
-    private Exam exam;
+    
+    @JsonIgnore
+    @ManyToMany(mappedBy = "mcqQuestions")
+    private List<Exam> exams;
 
     @OneToMany(mappedBy = "mcqQuestion")
     private List<QuestionOption> options;  // List of options for MCQs
+
+    public void removeExam(Exam exam){
+        if(this.getExams().contains(exam))
+        {
+            this.getExams().remove(exam);
+        }
+     }
 }

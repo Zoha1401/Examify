@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Entity;
@@ -39,8 +40,8 @@ public class Examinee {
     @JsonBackReference
     private List<Examiner> examiners = new ArrayList<>();
 
-
     @ManyToMany
+    @JsonIgnore
     @JoinTable(
         name = "examinee_exam",
         joinColumns = @JoinColumn(name = "examinee_id"),
@@ -55,6 +56,12 @@ public class Examinee {
         this.email = email;
         
      }
-
+    
+     public void removeExam(Exam exam){
+        if(this.getExams().contains(exam))
+        {
+            this.getExams().remove(exam);
+        }
+     }
 
 }

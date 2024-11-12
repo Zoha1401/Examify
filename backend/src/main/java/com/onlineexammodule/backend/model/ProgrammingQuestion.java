@@ -4,6 +4,9 @@ package com.onlineexammodule.backend.model;
 import java.util.List;
 // import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -19,7 +22,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Programming {
+public class ProgrammingQuestion {
      
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,8 +31,16 @@ public class Programming {
     private String testCases;
     private String difficulty_level;
     private String reference_answer;
-
+    
+    @JsonIgnore
     @ManyToMany(mappedBy = "programmingQuestions")
     private List<Exam> exams; // Should be a collection
+
+    public void removeExam(Exam exam){
+        if(this.getExams().contains(exam))
+        {
+            this.getExams().remove(exam);
+        }
+     }
 
 }
