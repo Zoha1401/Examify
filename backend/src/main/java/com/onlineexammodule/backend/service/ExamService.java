@@ -1,7 +1,6 @@
 package com.onlineexammodule.backend.service;
 
 import java.util.List;
-import java.util.Optional;
 
 
 import org.springframework.stereotype.Service;
@@ -18,7 +17,6 @@ import com.onlineexammodule.backend.repo.ExaminerRepo;
 import com.onlineexammodule.backend.repo.McqRepository;
 import com.onlineexammodule.backend.repo.ProgrammingRepository;
 
-import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class ExamService {

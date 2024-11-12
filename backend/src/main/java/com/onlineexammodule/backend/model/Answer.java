@@ -22,11 +22,7 @@ public class Answer {
 
     @ManyToOne
     @JoinColumn(name = "exam_result_id")
-    private Result examResult;  
-
-    @ManyToOne
-    @JoinColumn(name = "examinee_id")
-    private Examinee examinee;  
+    private Result examResult;   
 
     @ManyToOne
     @JoinColumn(name = "mcq_question_id", nullable = true)

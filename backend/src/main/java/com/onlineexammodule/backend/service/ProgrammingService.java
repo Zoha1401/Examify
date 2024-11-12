@@ -31,5 +31,30 @@ public class ProgrammingService {
 
         return new_mcqQuestion;
     }
+
+ // Update pro
+
+ //Delete Pro
+
+
+
+
+ //Exam Management
+ //Create*, update, Delete*
+
+ //Question Management
+ //Add, Update Delete MCQ, 
+ //Add Update Delete Programming
+
+ //MCQ management
+ //Update, Add, delete Options
+
+
+ //----> Next week ----> Submit Exam -> Examinee submit answers
+//              ----> Show Exam Result.
+
+//Integration with frontend
+
+
     
 }
