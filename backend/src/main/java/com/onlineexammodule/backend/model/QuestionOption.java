@@ -3,12 +3,18 @@ package com.onlineexammodule.backend.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.JoinColumn;
+
+import jakarta.persistence.ManyToOne;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,16 +29,13 @@ public class QuestionOption {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long optionId;  
 
-    
-    @ManyToMany(mappedBy = "options")
-    private List<McqQuestion> mcqQuestions=new ArrayList<>(); 
+    @ManyToOne
+    @JsonBackReference
+    @JoinColumn(name = "mcq_id")
+    private McqQuestion mcqQuestion;
+
 
     private String optionText;  
     private boolean isCorrect;
-    public void addMcqQuestion(McqQuestion mcqQuestion) {
-        if(!this.getMcqQuestions().contains(mcqQuestion))
-        {
-            this.getMcqQuestions().add(mcqQuestion);
-        }
-    }  
+   
 }

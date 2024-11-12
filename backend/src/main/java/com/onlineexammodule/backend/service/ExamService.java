@@ -74,6 +74,7 @@ public class ExamService {
             List <McqQuestion> mcqQuestions=mcqRepository.findAllById(exam.getMcqQuestionIds());
             for (McqQuestion question : mcqQuestions) {
                 new_exam.addMcqQuestion(question); // Method in Exam
+                question.getExams().add(new_exam);
             }
        }
 
@@ -82,6 +83,7 @@ public class ExamService {
            List<ProgrammingQuestion> programmingQuestions=programmingRepository.findAllById(exam.getProgrammingQuestionIds());
            for (ProgrammingQuestion question : programmingQuestions) {
             new_exam.addProgrammingQuestion(question); // Method in Exam
+            question.getExams().add(new_exam);
         }
        }
 

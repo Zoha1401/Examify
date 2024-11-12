@@ -3,16 +3,20 @@ package com.onlineexammodule.backend.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
-
+import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -31,17 +35,13 @@ public class McqQuestion {
     private String category;
     
     @JsonIgnore
-    @ManyToMany(mappedBy = "mcqQuestions")
+    @ManyToMany(mappedBy = "mcqQuestions", fetch = FetchType.LAZY)
     private List<Exam> exams=new ArrayList<>();
     
-    
-    @ManyToMany
-    @JoinTable(
-        name = "mcq_question_option",
-        joinColumns = @JoinColumn(name = "mcq_id"),
-        inverseJoinColumns = @JoinColumn(name = "option_id")
-    )
-    private List<QuestionOption> options=new ArrayList<>();  // List of options for MCQs
+ 
+    @OneToMany(mappedBy = "mcqQuestion")
+    @JsonManagedReference
+    private List<QuestionOption> options = new ArrayList<>() ;// List of options for MCQs
 
     public void removeExam(Exam exam){
         if(this.getExams().contains(exam))
