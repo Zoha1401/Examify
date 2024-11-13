@@ -73,10 +73,20 @@ public class ProgrammingService {
        
        
     }
+     // Update pro
+    public ProgrammingQuestion updateProgrammingQuestion(ProgrammingQuestion programmingQuestion, Long examId) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'updateProgrammingQuestion'");
+    }
+     //Delete Pro
+    public ProgrammingQuestion deleteProgrammingQuestion(ProgrammingQuestion programmingQuestion, Long examId) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'deleteProgrammingQuestion'");
+    }
 
- // Update pro
 
- //Delete Pro
+
+
 
 
 

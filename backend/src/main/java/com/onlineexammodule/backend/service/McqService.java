@@ -3,6 +3,7 @@ package com.onlineexammodule.backend.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -160,6 +161,21 @@ public class McqService {
         // Return success message
         return "Deleted";
 
+    }
+
+    public ResponseEntity<QuestionOption> addOption(Long mcqId, Long optionId, QuestionOption questionOption) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'addOption'");
+    }
+
+    public ResponseEntity<QuestionOption> updateOption(Long mcqId, Long optionId, QuestionOption questionOption) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'updateOption'");
+    }
+
+    public ResponseEntity<QuestionOption> deleteOption(Long mcqId, Long optionId, QuestionOption questionOption) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'deleteOption'");
     }
 
 }

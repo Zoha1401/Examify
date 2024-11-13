@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.onlineexammodule.backend.DTO.MCQ;
 import com.onlineexammodule.backend.model.McqQuestion;
+import com.onlineexammodule.backend.model.QuestionOption;
 import com.onlineexammodule.backend.service.McqService;
 
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,6 +44,25 @@ public class McqQuestionController {
          String string=mcqService.deleteMcqQuestion(mcqId, examId);
          return string;
      }
+
+     @PostMapping("/addOption")
+     public ResponseEntity<QuestionOption> addOption(@RequestBody QuestionOption questionOption, @RequestParam Long mcqId, @RequestParam Long optionId) {
+         return mcqService.addOption(mcqId, optionId, questionOption);
+     }
+
+     
+     @PostMapping("/updateOption")
+     public ResponseEntity<QuestionOption> updateOption(@RequestBody QuestionOption questionOption, @RequestParam Long mcqId, @RequestParam Long optionId) {
+         return mcqService.updateOption(mcqId, optionId, questionOption);
+     }
+
+     @DeleteMapping("/deleteOption")
+     public ResponseEntity<QuestionOption> deleteOption(@RequestBody QuestionOption questionOption, @RequestParam Long mcqId, @RequestParam Long optionId) {
+        return mcqService.deleteOption(mcqId, optionId, questionOption);
+    }
+
+
+     
      
 
     

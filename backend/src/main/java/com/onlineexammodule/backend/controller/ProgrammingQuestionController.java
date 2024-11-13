@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,5 +36,19 @@ public class ProgrammingQuestionController {
      public List<TestCase> fetchTestCase(@RequestParam Long pro_id) {
          return programmingService.fetchTestCases(pro_id);
      }
+
+     @PostMapping("/updateProgrammingQuestion")
+     public ProgrammingQuestion updateProgrammingQuestion(@RequestBody ProgrammingQuestion ProgrammingQuestion, @RequestParam Long examId) {
+        ProgrammingQuestion up_prog_ques=programmingService.updateProgrammingQuestion(ProgrammingQuestion, examId);
+        return up_prog_ques;
+     }
+
+     @DeleteMapping("/deleteProgrammingQuestion")
+     public ProgrammingQuestion deleteProgrammingQuestion(@RequestBody ProgrammingQuestion ProgrammingQuestion, @RequestParam Long examId) {
+        ProgrammingQuestion up_prog_ques=programmingService.deleteProgrammingQuestion(ProgrammingQuestion, examId);
+        return up_prog_ques;
+     }
+     
+
      
 }

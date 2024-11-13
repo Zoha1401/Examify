@@ -67,7 +67,7 @@ public class ExamService {
             }
         }
         
-       }
+    }
       
        if(exam.getMcqQuestionIds()!=null)
        {
@@ -125,11 +125,51 @@ public class ExamService {
 
     }
 
-    public Exam updateExam(ExamRequest exam, Long examId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'updateExam'");
+    public Exam updateExam(ExamRequest examRequest, Long examId) {
+        // Check if the Exam exists
+        Exam existingExam = examRepository.findById(examId)
+                .orElseThrow(() -> new IllegalArgumentException("Exam not found or exam ID incorrect"));
+    
+        // Update duration if provided
+        if (examRequest.getDuration() != 0) {
+            existingExam.setDuration(examRequest.getDuration());
+        }
+    
+        // Update MCQ passing score if provided
+        if (examRequest.getMcqPassingScore() != 0) {
+            existingExam.setMcqpassingScore(examRequest.getMcqPassingScore());
+        }
+    
+        // Update start and end times if provided
+        if (examRequest.getStartTime() != null) {
+            existingExam.setStartTime(examRequest.getStartTime());
+        }
+        if (examRequest.getEndTime() != null) {
+            existingExam.setEndTime(examRequest.getEndTime());
+        }
+    
+        // Update assigned examinees if the list is not empty
+        if (examRequest.getAssignedExamineeIds() != null && !examRequest.getAssignedExamineeIds().isEmpty()) {
+            List<Examinee> examinees = examineeRepository.findAllById(examRequest.getAssignedExamineeIds());
+            existingExam.setExaminees(examinees);
+        }
+    
+        // Update MCQ questions if the list is not empty
+        if (examRequest.getMcqQuestionIds() != null && !examRequest.getMcqQuestionIds().isEmpty()) {
+            List<McqQuestion> mcqQuestions = mcqRepository.findAllById(examRequest.getMcqQuestionIds());
+            existingExam.setMcqQuestions(mcqQuestions);
+        }
+    
+        // Update programming questions if the list is not empty
+        if (examRequest.getProgrammingQuestionIds() != null && !examRequest.getProgrammingQuestionIds().isEmpty()) {
+            List<ProgrammingQuestion> programmingQuestions = programmingRepository.findAllById(examRequest.getProgrammingQuestionIds());
+            existingExam.setProgrammingQuestions(programmingQuestions);
+        }
+    
+        // Save and return updated Exam
+        return examRepository.save(existingExam);
     }
-
+    
 // public Exam createExamWithQuestions(Exam exam, List<Long> mcqQuestionIds, List<Long> programmingQuestionIds) {
 //     // Retrieve MCQs and programming questions based on IDs
 //     List<McqQuestion> mcqs = mcqRepository.findAllById(mcqQuestionIds);
