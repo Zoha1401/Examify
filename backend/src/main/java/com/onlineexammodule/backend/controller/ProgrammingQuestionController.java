@@ -3,6 +3,8 @@ package com.onlineexammodule.backend.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,17 +40,34 @@ public class ProgrammingQuestionController {
      }
 
      @PostMapping("/updateProgrammingQuestion")
-     public ProgrammingQuestion updateProgrammingQuestion(@RequestBody ProgrammingQuestion ProgrammingQuestion, @RequestParam Long examId) {
-        ProgrammingQuestion up_prog_ques=programmingService.updateProgrammingQuestion(ProgrammingQuestion, examId);
+     public ProgrammingQuestion updateProgrammingQuestion(@RequestBody ProgrammingQuestion ProgrammingQuestion, @RequestParam Long examId, @RequestParam Long proId) {
+        ProgrammingQuestion up_prog_ques=programmingService.updateProgrammingQuestion(ProgrammingQuestion, examId, proId);
         return up_prog_ques;
      }
 
      @DeleteMapping("/deleteProgrammingQuestion")
-     public ProgrammingQuestion deleteProgrammingQuestion(@RequestBody ProgrammingQuestion ProgrammingQuestion, @RequestParam Long examId) {
-        ProgrammingQuestion up_prog_ques=programmingService.deleteProgrammingQuestion(ProgrammingQuestion, examId);
+     public ProgrammingQuestion deleteProgrammingQuestion(@RequestParam Long examId, @RequestParam Long proId) {
+        ProgrammingQuestion up_prog_ques=programmingService.deleteProgrammingQuestion(examId, proId);
         return up_prog_ques;
      }
-     
 
+     @PostMapping("/addTestCase")
+     public ResponseEntity<TestCase> addTestCase(@RequestBody TestCase testcase, Long examId, Long proId) {
+        TestCase new_TestCase=programmingService.addTestCase(testcase, examId, proId);
+         
+         return new ResponseEntity<>(new_TestCase, HttpStatus.CREATED);
+     }
+     
+     @PostMapping("/updateTestCase")
+     public ResponseEntity<TestCase> updateTestCase(@RequestBody TestCase testcase, Long examId, Long proId, Long testcaseId ) {
+        TestCase upTestCase=programmingService.updateTestCase(testcase, examId, proId, testcaseId);
+        return new ResponseEntity<>(upTestCase, HttpStatus.OK);
+     }
+     
+     @DeleteMapping("/deleteTestCase")
+     public ResponseEntity<String> deleteTestCase(Long examId, Long proId, Long testcaseId){
+       return programmingService.deleteTestCase(examId, proId, testcaseId);
+
+     }
      
 }

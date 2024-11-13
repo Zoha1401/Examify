@@ -2,9 +2,8 @@ package com.onlineexammodule.backend.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-import org.aspectj.weaver.ast.Test;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.onlineexammodule.backend.model.Exam;
@@ -30,7 +29,6 @@ public class ProgrammingService {
       public ProgrammingQuestion addProgrammingQuestion(ProgrammingQuestion programmingQuestion, Long examId) {
         Exam exam = examRepository.findById(examId).orElseThrow(() -> new IllegalArgumentException("Exam not found"));
 
-        // Step 2: Save the ProgrammingQuestion and its test cases
         
         System.out.println("Test case details before saving:");
          for (TestCase testCase : programmingQuestion.getTestCases()) {
@@ -46,7 +44,6 @@ public class ProgrammingService {
         }
         programmingQuestion.setTestCases(savedTestCases);
     
-        // Save ProgrammingQuestion independently to ensure it has a generated ID
         programmingQuestion = programmingRepository.save(programmingQuestion);
     
         // Step 3: Now link the ProgrammingQuestion to the Exam
@@ -74,15 +71,125 @@ public class ProgrammingService {
        
     }
      // Update pro
-    public ProgrammingQuestion updateProgrammingQuestion(ProgrammingQuestion programmingQuestion, Long examId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'updateProgrammingQuestion'");
+    public ProgrammingQuestion updateProgrammingQuestion(ProgrammingQuestion programmingQuestion, Long examId, Long proId) {
+
+        Exam exam = examRepository.findById(examId).orElseThrow(() -> new IllegalArgumentException("Exam not found"));
+
+        List<ProgrammingQuestion> pro_Questions=exam.getProgrammingQuestions();
+        ProgrammingQuestion toBeUpdated=new ProgrammingQuestion();
+
+        for(ProgrammingQuestion programmingQuestion2: pro_Questions)
+        {
+            if(programmingQuestion2.getQuestionId()==proId)
+            {
+                toBeUpdated=programmingQuestion2;
+            }
+        }
+
+        if(toBeUpdated.getQuestionId()==null)
+        throw new IllegalArgumentException("Programming question not found");
+
+        if(programmingQuestion.getDifficulty_level()!=null)
+        toBeUpdated.setDifficulty_level(programmingQuestion.getDifficulty_level());
+
+        if(programmingQuestion.getQuestionText()!=null)
+        toBeUpdated.setQuestionText(programmingQuestion.getQuestionText());
+
+        return programmingRepository.save(toBeUpdated);
+
+
+
     }
      //Delete Pro
-    public ProgrammingQuestion deleteProgrammingQuestion(ProgrammingQuestion programmingQuestion, Long examId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'deleteProgrammingQuestion'");
+    public ProgrammingQuestion deleteProgrammingQuestion(Long examId, Long proId) {
+        Exam exam = examRepository.findById(examId).orElseThrow(() -> new IllegalArgumentException("Exam not found"));
+
+        ProgrammingQuestion toBeDeleted = exam.getProgrammingQuestions().stream()
+            .filter(progQuestion -> progQuestion.getQuestionId().equals(proId))
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException("Programming Question not found in this Exam"));
+
+        
+        exam.deleteProgrammingQuestion(toBeDeleted);
+        examRepository.save(exam);
+        
+        toBeDeleted.getExams().remove(exam);
+
+        if(toBeDeleted.getExams().isEmpty())
+        programmingRepository.delete(toBeDeleted);
+
+        return toBeDeleted;
     }
+
+    //Update TestCase
+
+    public TestCase updateTestCase(TestCase testcase, Long examId, Long proId, Long testcaseId)
+    {
+        Exam exam = examRepository.findById(examId).orElseThrow(() -> new IllegalArgumentException("Exam not found"));
+
+        ProgrammingQuestion programmingQuestion = exam.getProgrammingQuestions().stream()
+            .filter(progQuestion -> progQuestion.getQuestionId().equals(proId))
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException("Programming Question not found in this Exam"));
+
+        TestCase toBeUpdatedTestCase = programmingQuestion.getTestCases().stream()
+            .filter(tc -> tc.getTestcaseId().equals(testcaseId))
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException("Test Case not found in this Programming Question"));
+
+            toBeUpdatedTestCase.setInput(testcase.getInput());
+            toBeUpdatedTestCase.setExpectedOutput(testcase.getExpectedOutput());
+
+        programmingRepository.save(programmingQuestion);
+        return toBeUpdatedTestCase;
+
+    }
+
+    public TestCase addTestCase(TestCase newTestCase, Long examId, Long proId) {
+      
+        Exam exam = examRepository.findById(examId)
+                .orElseThrow(() -> new IllegalArgumentException("Exam not found"));
+    
+       
+        ProgrammingQuestion programmingQuestion = exam.getProgrammingQuestions().stream()
+                .filter(progQuestion -> progQuestion.getQuestionId().equals(proId))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Programming Question not found in this Exam"));
+    
+        programmingQuestion.getTestCases().add(newTestCase);
+        programmingRepository.save(programmingQuestion);
+        testCaseRepository.save(newTestCase);
+        return newTestCase;
+    }
+
+
+    public ResponseEntity<String> deleteTestCase(Long examId, Long proId, Long testcaseId) {
+     
+        Exam exam = examRepository.findById(examId)
+                .orElseThrow(() -> new IllegalArgumentException("Exam not found"));
+    
+        ProgrammingQuestion programmingQuestion = exam.getProgrammingQuestions().stream()
+                .filter(progQuestion -> progQuestion.getQuestionId().equals(proId))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Programming Question not found in this Exam"));
+    
+
+        TestCase testCaseToDelete = programmingQuestion.getTestCases().stream()
+                .filter(tc -> tc.getTestcaseId().equals(testcaseId))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Test Case not found in this Programming Question"));
+    
+       
+        programmingQuestion.getTestCases().remove(testCaseToDelete);
+    
+        programmingRepository.save(programmingQuestion);
+    
+       
+        testCaseRepository.deleteById(testcaseId);
+        return ResponseEntity.ok("Test Case deleted successfully");
+    }
+    
+    
 
 
 
@@ -92,11 +199,12 @@ public class ProgrammingService {
 
 
  //Exam Management
- //Create*, update, Delete*
+ //Create*, update*, Delete*
 
  //Question Management
- //Add*, Update* Delete MCQ*, 
- //Add*, Update Delete Programming
+ //Add*, Update* Delete* MCQ*, 
+ //Add*, Update* Delete* Programming*
+ //Add* Update* Delete* TestCase
 
  //MCQ management
  //Update, Add, delete Options

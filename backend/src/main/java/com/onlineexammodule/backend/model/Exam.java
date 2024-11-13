@@ -6,7 +6,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+// import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -91,6 +91,13 @@ public void addProgrammingQuestion(ProgrammingQuestion question) {
     }
 }
 
+public void deleteProgrammingQuestion(ProgrammingQuestion question){
+
+    if(this.programmingQuestions.contains(question))
+    {
+        this.programmingQuestions.remove(question);
+    }
+}
 
 
 }

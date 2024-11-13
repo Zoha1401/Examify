@@ -3,8 +3,6 @@ package com.onlineexammodule.backend.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hibernate.annotations.CascadeType;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

@@ -1,13 +1,11 @@
 package com.onlineexammodule.backend.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
+
 import org.springframework.stereotype.Service;
 
-import com.onlineexammodule.backend.DTO.ExamineeLoginRequest;
 import com.onlineexammodule.backend.model.Examinee;
-import com.onlineexammodule.backend.model.Examiner;
+
 // import com.onlineexammodule.backend.model.Examiner;
 import com.onlineexammodule.backend.repo.ExamineeRepository;
 // import org.springframework.security.core.AuthenticationException;

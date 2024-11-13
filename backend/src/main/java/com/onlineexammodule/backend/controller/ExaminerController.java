@@ -122,7 +122,7 @@ public class ExaminerController {
 
      // Fetch all examinees
      @GetMapping("/getAllExaminee")
-     public List getAllExaminee(HttpServletRequest request) {
+     public List<Examinee> getAllExaminee(HttpServletRequest request) {
          String token=request.getHeader("Authorization").substring(7);
          String examiner_email=jwtService.extractEmail(token);
          List<Examinee> examinees=examinerService.getAllExaminee(examiner_email);
