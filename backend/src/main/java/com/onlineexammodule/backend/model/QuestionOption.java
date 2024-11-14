@@ -2,7 +2,7 @@ package com.onlineexammodule.backend.model;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.Entity;
 
@@ -33,7 +33,9 @@ public class QuestionOption {
     private McqQuestion mcqQuestion;
 
 
-    private String optionText;  
+    private String optionText;
+    
+    @JsonProperty("isCorrect")
     private boolean isCorrect;
    
 }

@@ -1,5 +1,7 @@
 package com.onlineexammodule.backend.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -11,10 +13,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.onlineexammodule.backend.DTO.ExamRequest;
 import com.onlineexammodule.backend.model.Exam;
+import com.onlineexammodule.backend.model.McqQuestion;
 import com.onlineexammodule.backend.service.ExamService;
 import com.onlineexammodule.backend.service.JWTService;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.web.bind.annotation.GetMapping;
+
 
 @RestController
 @RequestMapping("/api/exam")
@@ -45,5 +50,19 @@ public class ExamController {
      public String deleteExam(@RequestParam Long examId) {
          return examService.deleteExam(examId);
      }
+
+     //Get all MCQ questions.
+     @GetMapping("/getAllMcqQuestions")
+     public List<McqQuestion> getAllMcqQuestions(@RequestParam Long examId) {
+         return examService.getAllMcqQuestions(examId);
+     }
+     
+
+     //Get all programming question.
+     @GetMapping("/getAllProgrammingQuestions")
+     public String getAllProgrammingQuestions(@RequestParam String param) {
+         return new String();
+     }
+     
      
 }

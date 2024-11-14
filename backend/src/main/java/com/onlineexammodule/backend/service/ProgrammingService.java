@@ -188,6 +188,10 @@ public class ProgrammingService {
         testCaseRepository.deleteById(testcaseId);
         return ResponseEntity.ok("Test Case deleted successfully");
     }
+    public ProgrammingQuestion getProgrammingQuestionById(Long proId) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getProgrammingQuestionById'");
+    }
     
     
 

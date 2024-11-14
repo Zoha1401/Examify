@@ -16,6 +16,8 @@ import com.onlineexammodule.backend.service.McqService;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.GetMapping;
+
 
 
 @RestController
@@ -46,8 +48,8 @@ public class McqQuestionController {
      }
 
      @PostMapping("/addOption")
-     public ResponseEntity<QuestionOption> addOption(@RequestBody QuestionOption questionOption, @RequestParam Long mcqId, @RequestParam Long optionId) {
-         return mcqService.addOption(mcqId, optionId, questionOption);
+     public ResponseEntity<QuestionOption> addOption(@RequestBody QuestionOption questionOption, @RequestParam Long mcqId) {
+         return mcqService.addOption(mcqId, questionOption);
      }
 
      
@@ -57,11 +59,17 @@ public class McqQuestionController {
      }
 
      @DeleteMapping("/deleteOption")
-     public ResponseEntity<QuestionOption> deleteOption(@RequestBody QuestionOption questionOption, @RequestParam Long mcqId, @RequestParam Long optionId) {
-        return mcqService.deleteOption(mcqId, optionId, questionOption);
+     public ResponseEntity<QuestionOption> deleteOption(@RequestParam Long mcqId, @RequestParam Long optionId) {
+        return mcqService.deleteOption(mcqId, optionId);
     }
 
-
+    
+    //Get Mcq by ID
+    @GetMapping("/getMcqById")
+    public McqQuestion getMcqById(@RequestParam Long mcqId) {
+        return mcqService.getMcqById(mcqId);
+    }
+    
      
      
 

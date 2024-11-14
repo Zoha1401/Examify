@@ -70,4 +70,10 @@ public class ProgrammingQuestionController {
 
      }
      
+     //Get prog question By Id
+     @GetMapping("/getProgrammingQuestionById")
+     public ProgrammingQuestion getProgrammingQuestionById(@RequestParam Long proId) {
+         return programmingService.getProgrammingQuestionById(proId);
+     }
+     
 }

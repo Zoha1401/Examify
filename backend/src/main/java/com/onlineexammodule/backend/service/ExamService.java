@@ -168,6 +168,12 @@ public class ExamService {
         
         return examRepository.save(existingExam);
     }
+
+
+    public List<McqQuestion> getAllMcqQuestions(Long examId) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getAllMcqQuestions'");
+    }
     
 // public Exam createExamWithQuestions(Exam exam, List<Long> mcqQuestionIds, List<Long> programmingQuestionIds) {
 //     // Retrieve MCQs and programming questions based on IDs
