@@ -109,7 +109,7 @@ public class McqService {
     }
 
     // Delete MCQ
-
+    @Transactional
     private MCQ convertToDto(McqQuestion mcqQuestion) {
         MCQ mcqDto = new MCQ();
         mcqDto.setMcqId(mcqQuestion.getMcqId());
