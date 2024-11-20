@@ -23,14 +23,15 @@ public class ProgrammingQuestion {
      
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long questionId;
-    private String questionText;
+    private Long programmingQuestionId;
+    private String programmingQuestionText;
 
     @OneToMany(cascade = jakarta.persistence.CascadeType.ALL)
     @JoinColumn(name = "programming_question_id")
     private List<TestCase> testCases = new ArrayList<>();
     
     private String difficulty_level;
+    private String reference_answer;
 
     @JsonIgnore
     @ManyToMany(mappedBy = "programmingQuestions")
@@ -40,9 +41,8 @@ public class ProgrammingQuestion {
         this.exams.remove(exam);
     }
 
-    public ProgrammingQuestion(String questionText, List<TestCase> testCases, String difficulty_level) {
-        this.questionText = questionText;
-        this.testCases = testCases;
+    public ProgrammingQuestion(String programmingQuestionText, List<TestCase> testCases, String difficulty_level) {
+        this.programmingQuestionText = programmingQuestionText;
         this.difficulty_level = difficulty_level;
     }
 }

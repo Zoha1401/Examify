@@ -35,7 +35,8 @@ public class SecurityConfig {
 
     @Autowired
     private ExamineeJwtFilter examineeJwtFilter;
-
+    
+    //Different filter chains for examiner and examinee authentication
     @Bean
     @Order(1)
     public SecurityFilterChain examinerSecurityFilterChain(HttpSecurity http) throws Exception {

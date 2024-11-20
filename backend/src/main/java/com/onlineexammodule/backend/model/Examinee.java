@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -47,10 +48,13 @@ public class Examinee {
         joinColumns = @JoinColumn(name = "examinee_id"),
         inverseJoinColumns = @JoinColumn(name = "exam_id")
     )
-    private List<Exam> exams= new ArrayList<>();;
+    private List<Exam> exams= new ArrayList<>();
+
+    @OneToMany(mappedBy = "examinee", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Answer> answers = new ArrayList<>();
 
     @OneToMany(mappedBy = "examinee")
-    private List<Result> testResults= new ArrayList<>();;
+    private List<Result> testResults= new ArrayList<>();
 
     public Examinee(String email, Examiner examiner) {
         this.email = email;

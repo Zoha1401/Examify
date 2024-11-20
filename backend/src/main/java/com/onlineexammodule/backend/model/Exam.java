@@ -27,7 +27,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 public class Exam {
-       
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long examId;
@@ -35,69 +35,64 @@ public class Exam {
     private LocalDateTime endTime;
     private int duration;
     private int McqpassingScore;
-    
+
     @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "examiner_id", nullable = false)
     private Examiner examiner;
-    
-   
+
     @ManyToMany
     @JsonIgnore
-    @JoinTable(
-        name = "programming_exam", // The join table
-        joinColumns = @JoinColumn(name = "exam_id"), // Foreign key for Exam
-        inverseJoinColumns = @JoinColumn(name = "programming_id") // Foreign key for Programming
+    @JoinTable(name = "programming_exam", // The join table
+            joinColumns = @JoinColumn(name = "exam_id"), // Foreign key for Exam
+            inverseJoinColumns = @JoinColumn(name = "programming_id") // Foreign key for Programming
     )
-    private List<ProgrammingQuestion> programmingQuestions=new ArrayList<>();
-    
-   
+    private List<ProgrammingQuestion> programmingQuestions = new ArrayList<>();
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JsonIgnore
-    @JoinTable(
-    name = "exam_mcq",  // Join table
-    joinColumns = @JoinColumn(name = "exam_id"),  // Foreign key for Exam
-    inverseJoinColumns = @JoinColumn(name = "mcq_id")  // Foreign key for McqQuestion
-)
-private List<McqQuestion> mcqQuestions=new ArrayList<>();
-   
+    @JoinTable(name = "exam_mcq", // Join table
+            joinColumns = @JoinColumn(name = "exam_id"), // Foreign key for Exam
+            inverseJoinColumns = @JoinColumn(name = "mcq_id") // Foreign key for McqQuestion
+    )
+    private List<McqQuestion> mcqQuestions = new ArrayList<>();
 
     @ManyToMany(mappedBy = "exams")
     @JsonIgnore
-    private List<Examinee> examinees=new ArrayList<>();
+    private List<Examinee> examinees = new ArrayList<>();
 
     @OneToMany(mappedBy = "exam")
-    private List<Result> testResults=new ArrayList<>();
+    private List<Result> testResults = new ArrayList<>();
 
- 
-  public void addExaminee(Examinee examinee){
-    if(!this.examinees.contains(examinee)){
-        this.examinees.add(examinee);
-        examinee.getExams().add(this);
+    @OneToMany(mappedBy = "exam")
+    private List<Answer> answers=new ArrayList<>();
+
+    public void addExaminee(Examinee examinee) {
+        if (!this.examinees.contains(examinee)) {
+            this.examinees.add(examinee);
+            examinee.getExams().add(this);
+        }
     }
-  }
 
-  public void addMcqQuestion(McqQuestion question) {
-    if (!this.mcqQuestions.contains(question)) {
-        this.mcqQuestions.add(question);
-        question.getExams().add(this); // If it's a many-to-one relationship
+    public void addMcqQuestion(McqQuestion question) {
+        if (!this.mcqQuestions.contains(question)) {
+            this.mcqQuestions.add(question);
+            question.getExams().add(this); // If it's a many-to-one relationship
+        }
     }
-}
 
-public void addProgrammingQuestion(ProgrammingQuestion question) {
-    if (!this.programmingQuestions.contains(question)) {
-        this.programmingQuestions.add(question);
-        question.getExams().add(this); // If it's a many-to-one relationship
+    public void addProgrammingQuestion(ProgrammingQuestion question) {
+        if (!this.programmingQuestions.contains(question)) {
+            this.programmingQuestions.add(question);
+            question.getExams().add(this); // If it's a many-to-one relationship
+        }
     }
-}
 
-public void deleteProgrammingQuestion(ProgrammingQuestion question){
+    public void deleteProgrammingQuestion(ProgrammingQuestion question) {
 
-    if(this.programmingQuestions.contains(question))
-    {
-        this.programmingQuestions.remove(question);
+        if (this.programmingQuestions.contains(question)) {
+            this.programmingQuestions.remove(question);
+        }
     }
-}
-
 
 }

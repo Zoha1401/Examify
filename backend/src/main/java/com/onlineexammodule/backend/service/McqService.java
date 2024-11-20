@@ -32,16 +32,18 @@ public class McqService {
 
     @Transactional
     public MCQ addMcqQuestion(McqQuestion mcqQuestion, Long examId) {
-
+        //Check if exam exists
         if (!examRepository.existsById(examId)) {
             throw new IllegalArgumentException("Exam not found");
         }
-
+        
+        //GET exam if exists
         Exam exam = examRepository.getReferenceById(examId);
 
         List<QuestionOption> getQuestionOptions = mcqQuestion.getOptions();
         System.out.println("Number of options: " + (getQuestionOptions != null ? getQuestionOptions.size() : 0));
-
+        
+        //Get options and save them based on correct and incorrect
         if (getQuestionOptions != null && !getQuestionOptions.isEmpty()) {
             List<QuestionOption> updatedOptions = new ArrayList<>();
 
@@ -70,21 +72,21 @@ public class McqService {
     @Transactional
     public MCQ updateMcqQuestion(Long mcqId, McqQuestion updatedMcqQuestion, Long examId) {
 
-        
+         //Check if exam exists
         if (!examRepository.existsById(examId)) {
             throw new IllegalArgumentException("Exam not found");
         }
 
-      
+        //Fetch existing mcq
         McqQuestion existingMcqQuestion = mcqRepository.findById(mcqId)
                 .orElseThrow(() -> new IllegalArgumentException("MCQ not found"));
 
-      
+        //Set values
         existingMcqQuestion.setQuestionText(updatedMcqQuestion.getQuestionText());
         existingMcqQuestion.setCategory(updatedMcqQuestion.getCategory());
         existingMcqQuestion.setCorrectAnswer(updatedMcqQuestion.getCorrectAnswer());
 
-        
+        //Set options
         List<QuestionOption> updatedOptions = new ArrayList<>();
         for (QuestionOption option : updatedMcqQuestion.getOptions()) {
             if (option.getOptionId() != null) {
@@ -108,7 +110,7 @@ public class McqService {
 
     }
 
-    // Delete MCQ
+    
     @Transactional
     private MCQ convertToDto(McqQuestion mcqQuestion) {
         MCQ mcqDto = new MCQ();
@@ -118,7 +120,8 @@ public class McqService {
         mcqDto.setQuestionText(mcqQuestion.getQuestionText());
         return mcqDto;
     }
-
+    
+    // Delete MCQ
     @Transactional
     public String deleteMcqQuestion(Long mcqId, Long examId) {
         Exam exam = examRepository.findById(examId)
@@ -163,9 +166,12 @@ public class McqService {
     }
 
     public ResponseEntity<QuestionOption> updateOption(Long mcqId, Long optionId, QuestionOption questionOption) {
+
+         // Find the MCQ to be updated
         McqQuestion mcqQuestion = mcqRepository.findById(mcqId)
                 .orElseThrow(() -> new IllegalArgumentException("Mcq question not found"));
 
+        //Find option to be updated
         QuestionOption toBeUpdatedOption = mcqQuestion.getOptions().stream()
                 .filter(option -> option.getOptionId().equals(optionId))
                 .findFirst()
@@ -182,9 +188,13 @@ public class McqService {
     }
 
     public ResponseEntity<QuestionOption> deleteOption(Long mcqId, Long optionId) {
+
+        //Find mcq
         McqQuestion mcqQuestion = mcqRepository.findById(mcqId)
                 .orElseThrow(() -> new IllegalArgumentException("Mcq question not found"));
 
+
+        //Find option
         QuestionOption toBeDeletedOption = mcqQuestion.getOptions().stream()
                 .filter(option -> option.getOptionId().equals(optionId))
                 .findFirst()

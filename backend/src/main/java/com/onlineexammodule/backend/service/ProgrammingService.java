@@ -80,20 +80,20 @@ public class ProgrammingService {
 
         for(ProgrammingQuestion programmingQuestion2: pro_Questions)
         {
-            if(programmingQuestion2.getQuestionId()==proId)
+            if(programmingQuestion2.getProgrammingQuestionId()==proId)
             {
                 toBeUpdated=programmingQuestion2;
             }
         }
 
-        if(toBeUpdated.getQuestionId()==null)
+        if(toBeUpdated.getProgrammingQuestionId()==null)
         throw new IllegalArgumentException("Programming question not found");
 
         if(programmingQuestion.getDifficulty_level()!=null)
         toBeUpdated.setDifficulty_level(programmingQuestion.getDifficulty_level());
 
-        if(programmingQuestion.getQuestionText()!=null)
-        toBeUpdated.setQuestionText(programmingQuestion.getQuestionText());
+        if(programmingQuestion.getProgrammingQuestionText()!=null)
+        toBeUpdated.setProgrammingQuestionText(programmingQuestion.getProgrammingQuestionText());
 
         return programmingRepository.save(toBeUpdated);
 
@@ -105,7 +105,7 @@ public class ProgrammingService {
         Exam exam = examRepository.findById(examId).orElseThrow(() -> new IllegalArgumentException("Exam not found"));
 
         ProgrammingQuestion toBeDeleted = exam.getProgrammingQuestions().stream()
-            .filter(progQuestion -> progQuestion.getQuestionId().equals(proId))
+            .filter(progQuestion -> progQuestion.getProgrammingQuestionId().equals(proId))
             .findFirst()
             .orElseThrow(() -> new IllegalArgumentException("Programming Question not found in this Exam"));
 
@@ -128,7 +128,7 @@ public class ProgrammingService {
         Exam exam = examRepository.findById(examId).orElseThrow(() -> new IllegalArgumentException("Exam not found"));
 
         ProgrammingQuestion programmingQuestion = exam.getProgrammingQuestions().stream()
-            .filter(progQuestion -> progQuestion.getQuestionId().equals(proId))
+            .filter(progQuestion -> progQuestion.getProgrammingQuestionId().equals(proId))
             .findFirst()
             .orElseThrow(() -> new IllegalArgumentException("Programming Question not found in this Exam"));
 
@@ -152,7 +152,7 @@ public class ProgrammingService {
     
        
         ProgrammingQuestion programmingQuestion = exam.getProgrammingQuestions().stream()
-                .filter(progQuestion -> progQuestion.getQuestionId().equals(proId))
+                .filter(progQuestion -> progQuestion.getProgrammingQuestionId().equals(proId))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Programming Question not found in this Exam"));
     
@@ -169,7 +169,7 @@ public class ProgrammingService {
                 .orElseThrow(() -> new IllegalArgumentException("Exam not found"));
     
         ProgrammingQuestion programmingQuestion = exam.getProgrammingQuestions().stream()
-                .filter(progQuestion -> progQuestion.getQuestionId().equals(proId))
+                .filter(progQuestion -> progQuestion.getProgrammingQuestionId().equals(proId))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Programming Question not found in this Exam"));
     

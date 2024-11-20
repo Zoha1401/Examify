@@ -33,6 +33,8 @@ public class McqQuestion {
     private String correctAnswer;
     private String category;
     
+
+    //Many to Many relationship between mcq and exam, because of option to create exam with already existing mcq. Thus, reducing redundancy.
     @JsonIgnore
     @ManyToMany(mappedBy = "mcqQuestions", fetch = FetchType.LAZY)
     private List<Exam> exams=new ArrayList<>();

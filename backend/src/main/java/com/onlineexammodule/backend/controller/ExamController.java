@@ -12,8 +12,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.onlineexammodule.backend.DTO.ExamRequest;
+import com.onlineexammodule.backend.model.Answer;
 import com.onlineexammodule.backend.model.Exam;
 import com.onlineexammodule.backend.model.McqQuestion;
+import com.onlineexammodule.backend.model.ProgrammingQuestion;
 import com.onlineexammodule.backend.service.ExamService;
 import com.onlineexammodule.backend.service.JWTService;
 
@@ -60,8 +62,14 @@ public class ExamController {
 
      //Get all programming question.
      @GetMapping("/getAllProgrammingQuestions")
-     public String getAllProgrammingQuestions(@RequestParam String param) {
-         return new String();
+     public List<ProgrammingQuestion> getAllProgrammingQuestions(@RequestParam Long examId) {
+         return examService.getAllProgrammingQuestions(examId);
+     }
+     
+
+     @PostMapping("/submitExam")
+     public Answer submitAnswer(@RequestBody Answer answer, @RequestParam Long examineeId, @RequestParam Long examId) {
+        return examService.submitAnswer(answer, examineeId, examId);
      }
      
      
