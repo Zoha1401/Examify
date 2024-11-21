@@ -1,17 +1,21 @@
 package com.onlineexammodule.backend.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.onlineexammodule.backend.DTO.ExamineeLoginRequest;
-
+import com.onlineexammodule.backend.model.Exam;
 import com.onlineexammodule.backend.service.ExamineeService;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 
@@ -37,7 +41,11 @@ public class ExamineeController {
         return "Examinee token validated hurrah";
     }
 
-    //submitExam
+    @GetMapping("/getAllExams")
+    public List<Exam> getAllExams(@RequestParam Long examineeId) {
+        return examineeService.getAllexams(examineeId);
+    }
+    
 
     //AnswerMCQ
 

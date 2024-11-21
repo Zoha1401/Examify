@@ -1,9 +1,12 @@
 package com.onlineexammodule.backend.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
 
+import com.onlineexammodule.backend.model.Exam;
 import com.onlineexammodule.backend.model.Examinee;
 
 // import com.onlineexammodule.backend.model.Examiner;
@@ -33,6 +36,13 @@ public class ExamineeService {
         return jwtService.generateToken(email);
         
        
+    }
+
+    public List<Exam> getAllexams(Long examineeId) {
+        Examinee examinee=examineeRepository.findById(examineeId)
+                          .orElseThrow(()-> new IllegalArgumentException("Examinee not found"));
+        
+        return examinee.getExams();
     }
 
 }
