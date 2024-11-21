@@ -129,10 +129,12 @@ public class McqService {
 
         McqQuestion mcqQuestion = mcqRepository.findById(mcqId)
                 .orElseThrow(() -> new IllegalArgumentException("MCQ not found"));
-
+        
+        //Remove mcq question from exam
         exam.getMcqQuestions().remove(mcqQuestion);
         examRepository.save(exam);
-
+        
+        //Remove options from Option
         List<QuestionOption> optionsToRemove = mcqQuestion.getOptions();
 
         if (optionsToRemove != null) {
@@ -141,7 +143,7 @@ public class McqService {
                 questionOptionRepository.save(option);
             }
         }
-
+        //
         mcqQuestion.setOptions(new ArrayList<>());
         mcqRepository.save(mcqQuestion);
 

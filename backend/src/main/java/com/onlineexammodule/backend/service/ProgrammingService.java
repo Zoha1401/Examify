@@ -202,22 +202,7 @@ public class ProgrammingService {
 
 
 
- //Exam Management
- //Create*, update*, Delete*
 
- //Question Management
- //Add*, Update* Delete* MCQ*, 
- //Add*, Update* Delete* Programming*
- //Add* Update* Delete* TestCase
-
- //MCQ management
- //Update, Add, delete Options
-
-
- //----> Next week ----> Submit Exam -> Examinee submit answers
-//              ----> Show Exam Result.
-
-//Integration with frontend
 
 
     

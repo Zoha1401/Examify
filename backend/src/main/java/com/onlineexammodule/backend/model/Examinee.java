@@ -53,9 +53,6 @@ public class Examinee {
     @OneToMany(mappedBy = "examinee", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Answer> answers = new ArrayList<>();
 
-    @OneToMany(mappedBy = "examinee")
-    private List<Result> testResults= new ArrayList<>();
-
     public Examinee(String email, Examiner examiner) {
         this.email = email;
         

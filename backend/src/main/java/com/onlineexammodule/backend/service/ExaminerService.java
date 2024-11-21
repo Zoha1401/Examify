@@ -72,6 +72,7 @@ public class ExaminerService {
     @Transactional
     public Examinee addExaminee(Examinee examinee, String email) {
         
+        //Get examiner through email extracted from token
         Examiner examiner = examinerRepository.findByEmail(email);
        
         if(examiner==null)
@@ -80,7 +81,7 @@ public class ExaminerService {
         }
         System.out.println("Inside Service examiner id "+examiner.getExaminerId());
        
-
+        //Check if examinee is saved
         Examinee existExaminee=examineeRepository.findByEmail(examinee.getEmail());
         
          Examinee examineeToSave;
@@ -118,12 +119,14 @@ public class ExaminerService {
 
     public Examinee deleteExaminee(Long examineeId, String examiner_email) {
 
+          //Get examiner through email extracted from token
         Examiner examiner=examinerRepository.findByEmail(examiner_email);
 
         if (examiner == null) {
             throw new IllegalArgumentException("Examiner not found with email: " + examiner_email);
         }
         
+        //Find examinee and delete
         Examinee examinee = examineeRepository.findById(examineeId)
         .orElseThrow(() -> new IllegalArgumentException("Examinee not found with ID: " + examineeId));
 
@@ -147,14 +150,16 @@ public class ExaminerService {
 
 
     public Examinee updateExaminee(Examinee updatedExaminee) {
+
+        //Fetch examinee to be updated
         if (updatedExaminee.getExamineeId() == null) {
             throw new IllegalArgumentException("Examinee ID is required for update.");
         }
 
         Examinee existingExaminee = examineeRepository.findById(updatedExaminee.getExamineeId())
             .orElseThrow(() -> new IllegalArgumentException("Examinee not found with ID: " + updatedExaminee.getExamineeId()));
-
-
+        
+        //Update values if set
         if(updatedExaminee.getCollege()!=null)
         existingExaminee.setCollege(updatedExaminee.getCollege());
 
@@ -170,13 +175,15 @@ public class ExaminerService {
 
     public Examinee getExaminee(String examinee_email, String examiner_email) {
         
+        //Get examiner by email
         Examiner examiner=examinerRepository.findByEmail(examiner_email);
 
         if(examiner==null)
         {
             throw new IllegalArgumentException("Examiner not found with email "+ examiner_email);
         }
-
+        
+        //Get examinee from list of examiners.
         return examiner.getExaminees().stream()
                .filter(examinee->examinee.getEmail().equals(examinee_email))
                .findFirst()

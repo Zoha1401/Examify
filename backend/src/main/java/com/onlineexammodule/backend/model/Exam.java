@@ -62,9 +62,6 @@ public class Exam {
     private List<Examinee> examinees = new ArrayList<>();
 
     @OneToMany(mappedBy = "exam")
-    private List<Result> testResults = new ArrayList<>();
-
-    @OneToMany(mappedBy = "exam")
     private List<Answer> answers=new ArrayList<>();
 
     public void addExaminee(Examinee examinee) {
