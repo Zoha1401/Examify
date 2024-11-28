@@ -2,49 +2,47 @@ import React, {useState} from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import axiosInstance from '../../utils/axiosInstance'
 
-const ExaminerLogin = () => {
-  
-  let navigate=useNavigate()
+const ExaminerSignin = () => {
+
   const[credentials, setCredentials]=useState({email:'', password:''})
-  
+  let navigate=useNavigate()
   const onChange=(e)=>{
     setCredentials({...credentials, [e.target.name]:e.target.value})
   }
+  const handleSignin=async(e) => {
+       e.preventDefault()
+       
 
-  const handleLogin=async(e)=>{
-     e.preventDefault();
-     const{email, password}=credentials;
-
-     console.log(email, password);
+       const{email, password}=credentials;
+       console.log(email, password);
 
        try{
-        const response=await axiosInstance.post('/examiner/login',{
+        const response=await axiosInstance.post('/examiner/signin',{
           email,
           password,
         })
 
-        if(response.status===200){
-          console.log("User logged in: ", response.data)
-          localStorage.setItem('token', response.data)
-          console.log(localStorage.getItem("token"));
-          console.log("Token set in local storage")
-          navigate("/examinerdashboard")
+        if(response.status===201){
+          console.log("User signed in: ", response.data)
+          navigate("/examinerlogin")
         }
        }
        catch(error)
        {
-          console.error('Log in failed', error.response?.data || error.message);
-          if (error.response && error.response.status === 401) {
-            alert('Invalid credentials, please try again.');
-          } else {
-            alert('An error occurred, please try again later.');
-          }
+         if (error.response && error.response.status === 400){
+          console.error('Examiner already exists');
+          alert('Examiner already exists. Redirecting to login.');
+          navigate('/examinerlogin');
         }
-      
+        else{
+          console.error('Sign in failed', error.response?.data || error.message);
+        }
+       }
+
   }
   return (
     <>
-     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
+    <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <img
             alt="Your Company"
@@ -57,7 +55,7 @@ const ExaminerLogin = () => {
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form action="#" method="POST" className="space-y-6" onSubmit={handleLogin}>
+          <form action="#" method="POST" className="space-y-6" onSubmit={handleSignin}>
             <div>
               <label htmlFor="email" className="block text-sm/6 font-medium text-gray-900">
                 Email address
@@ -106,15 +104,15 @@ const ExaminerLogin = () => {
                 type="submit"
                 className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
-               Login
+                Sign in
               </button>
             </div>
           </form>
 
           <p className="mt-10 text-center text-sm/6 text-gray-500">
-            Not signed in?{' '}
-            <Link to="/examinersignin" className="font-semibold text-indigo-600 hover:text-indigo-500">
-              Sign in
+            Already signed in?{' '}
+            <Link to="/examinerlogin" className="font-semibold text-indigo-600 hover:text-indigo-500">
+              Login
             </Link>
           </p>
         </div>
@@ -123,4 +121,4 @@ const ExaminerLogin = () => {
   )
 }
 
-export default ExaminerLogin
+export default ExaminerSignin
