@@ -53,6 +53,14 @@ public class ExaminerService {
 
     public Examiner signInExaminer(Examiner examiner) {
         System.out.println(examiner);
+        String email=examiner.getEmail();
+
+        Examiner existingExaminer=examinerRepository.findByEmail(email);
+
+        if(existingExaminer!=null)
+        {
+            throw new IllegalArgumentException("Examiner already exists"); 
+        }
         return examinerRepository.save(examiner);
     }
     

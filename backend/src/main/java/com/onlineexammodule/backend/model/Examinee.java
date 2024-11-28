@@ -36,6 +36,7 @@ public class Examinee {
     private String email;
     private String college;
     private String degree;
+    private Integer year;
 
     @ManyToMany(mappedBy = "examinees")
     @JsonBackReference

@@ -39,6 +39,8 @@ public class ExamineeService {
     }
 
     public List<Exam> getAllexams(Long examineeId) {
+
+        //Get examinee and return exams.
         Examinee examinee=examineeRepository.findById(examineeId)
                           .orElseThrow(()-> new IllegalArgumentException("Examinee not found"));
         

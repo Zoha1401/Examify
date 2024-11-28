@@ -37,7 +37,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("/api/examiner")
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:3000")
 public class ExaminerController {
 
     @Autowired
@@ -63,9 +63,10 @@ public class ExaminerController {
 
     //API endpoint for examiner login
      @PostMapping("/login")
-     public String login(@RequestBody Examiner examiner) {
+     public ResponseEntity<String> login(@RequestBody Examiner examiner) {
         System.out.println(examiner.getExaminees().size());
-        return examinerService.verify(examiner);
+        String token=examinerService.verify(examiner);
+        return ResponseEntity.ok(token);
      }
 
     

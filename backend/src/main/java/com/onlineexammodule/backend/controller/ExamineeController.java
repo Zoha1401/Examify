@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("/api/examinee")
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:3000")
 public class ExamineeController {
      
     @Autowired

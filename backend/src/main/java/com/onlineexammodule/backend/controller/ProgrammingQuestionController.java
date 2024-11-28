@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @RestController
 @RequestMapping("/api/programmingQuestion")
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:3000")
 public class ProgrammingQuestionController {
 
     @Autowired

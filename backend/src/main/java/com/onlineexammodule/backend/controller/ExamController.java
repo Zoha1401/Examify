@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @RestController
 @RequestMapping("/api/exam")
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:3000")
 public class ExamController {
 
     @Autowired
