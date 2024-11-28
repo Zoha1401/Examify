@@ -1,5 +1,7 @@
 package com.onlineexammodule.backend.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -70,7 +72,11 @@ public class McqQuestionController {
         return mcqService.getMcqById(mcqId);
     }
     
-     
+    @GetMapping("/getMcqQuestionByDifficultyAndCategory")
+    public List<McqQuestion> getMethodName(@RequestParam String category, @RequestParam String difficulty) {
+        return mcqService.getMcqQuestionByDifficultyAndCategory(category, difficulty);
+    }
+    
      
 
     

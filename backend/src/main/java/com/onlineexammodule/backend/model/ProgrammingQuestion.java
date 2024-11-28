@@ -30,7 +30,7 @@ public class ProgrammingQuestion {
     @JoinColumn(name = "programming_question_id")
     private List<TestCase> testCases = new ArrayList<>();
     
-    private String difficulty_level;
+    private String difficulty;
     private String reference_answer;
 
     @JsonIgnore
@@ -41,9 +41,9 @@ public class ProgrammingQuestion {
         this.exams.remove(exam);
     }
 
-    public ProgrammingQuestion(String programmingQuestionText, List<TestCase> testCases, String difficulty_level) {
+    public ProgrammingQuestion(String programmingQuestionText, List<TestCase> testCases, String difficulty) {
         this.programmingQuestionText = programmingQuestionText;
-        this.difficulty_level = difficulty_level;
+        this.difficulty = difficulty;
     }
 }
 

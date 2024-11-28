@@ -19,6 +19,15 @@ public class MCQ {
     private String questionText;
     private String correctAnswer;
     private String category;
+    private String difficulty;
+
+    public String getDifficulty() {
+        return difficulty;
+    }
+
+    public void setDifficulty(String difficulty) {
+        this.difficulty = difficulty;
+    }
 
     private List<QuestionOption> options=new ArrayList<>();
 

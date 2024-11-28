@@ -105,8 +105,8 @@ public class ExaminerController {
      
      //API endpoint to update the examinee
      @PostMapping("/updateExaminee")
-     public ResponseEntity<Examinee> updateExaminee(@RequestBody Examinee examinee) {
-       Examinee updatedExaminee=examinerService.updateExaminee(examinee);
+     public ResponseEntity<Examinee> updateExaminee(@RequestBody Examinee examinee, @RequestParam Long examineeId) {
+       Examinee updatedExaminee=examinerService.updateExaminee(examinee, examineeId);
        return new ResponseEntity<>(updatedExaminee, HttpStatus.OK);
      }
 
@@ -131,6 +131,10 @@ public class ExaminerController {
          return examinees;
      }
      
+     @GetMapping("/getExamineeById")
+     public Examinee getExamineeById(@RequestParam Long examineeId) {
+         return examinerService.getExamineeById(examineeId);
+     }
      
 
      //Update exam

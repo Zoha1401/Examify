@@ -32,6 +32,7 @@ public class McqQuestion {
     private String questionText;
     private String correctAnswer;
     private String category;
+    private String difficulty;
     
 
     //Many to Many relationship between mcq and exam, because of option to create exam with already existing mcq. Thus, reducing redundancy.

@@ -157,14 +157,14 @@ public class ExaminerService {
     }
 
 
-    public Examinee updateExaminee(Examinee updatedExaminee) {
+    public Examinee updateExaminee(Examinee updatedExaminee, Long examineeId) {
 
         //Fetch examinee to be updated
-        if (updatedExaminee.getExamineeId() == null) {
+        if (examineeId == null) {
             throw new IllegalArgumentException("Examinee ID is required for update.");
         }
 
-        Examinee existingExaminee = examineeRepository.findById(updatedExaminee.getExamineeId())
+        Examinee existingExaminee = examineeRepository.findById(examineeId)
             .orElseThrow(() -> new IllegalArgumentException("Examinee not found with ID: " + updatedExaminee.getExamineeId()));
         
         //Update values if set
@@ -209,6 +209,15 @@ public class ExaminerService {
         }
 
         return examiner.getExaminees();
+    }
+
+
+    public Examinee getExamineeById(Long examineeId) {
+        Examinee fetchExaminee=examineeRepository.findById(examineeId)
+                               .orElseThrow(()-> new IllegalArgumentException("Examinee not found"));
+        
+        return fetchExaminee;
+
     }
 
 

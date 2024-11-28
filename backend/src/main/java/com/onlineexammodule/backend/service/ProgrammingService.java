@@ -89,8 +89,8 @@ public class ProgrammingService {
         if(toBeUpdated.getProgrammingQuestionId()==null)
         throw new IllegalArgumentException("Programming question not found");
 
-        if(programmingQuestion.getDifficulty_level()!=null)
-        toBeUpdated.setDifficulty_level(programmingQuestion.getDifficulty_level());
+        if(programmingQuestion.getDifficulty()!=null)
+        toBeUpdated.setDifficulty(programmingQuestion.getDifficulty());
 
         if(programmingQuestion.getProgrammingQuestionText()!=null)
         toBeUpdated.setProgrammingQuestionText(programmingQuestion.getProgrammingQuestionText());
@@ -131,7 +131,8 @@ public class ProgrammingService {
             .filter(progQuestion -> progQuestion.getProgrammingQuestionId().equals(proId))
             .findFirst()
             .orElseThrow(() -> new IllegalArgumentException("Programming Question not found in this Exam"));
-
+        
+            //fetch testcase to be updated
         TestCase toBeUpdatedTestCase = programmingQuestion.getTestCases().stream()
             .filter(tc -> tc.getTestcaseId().equals(testcaseId))
             .findFirst()
@@ -191,6 +192,14 @@ public class ProgrammingService {
     public ProgrammingQuestion getProgrammingQuestionById(Long proId) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getProgrammingQuestionById'");
+    }
+    
+    public List<ProgrammingQuestion> getProgrammingQuestionByDifficulty(String difficulty) {
+       if(difficulty==null || difficulty.isEmpty())
+       {
+        return programmingRepository.findAll();
+       }
+       return programmingRepository.findAllByDifficulty(difficulty);
     }
     
     

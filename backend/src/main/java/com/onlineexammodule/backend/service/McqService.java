@@ -118,6 +118,7 @@ public class McqService {
         mcqDto.setCategory(mcqQuestion.getCategory());
         mcqDto.setCorrectAnswer(mcqQuestion.getCorrectAnswer());
         mcqDto.setQuestionText(mcqQuestion.getQuestionText());
+        mcqDto.setDifficulty(mcqQuestion.getDifficulty());
         return mcqDto;
     }
     
@@ -212,6 +213,21 @@ public class McqService {
     public McqQuestion getMcqById(Long mcqId) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getMcqById'");
+    }
+
+    public List<McqQuestion> getMcqQuestionByDifficultyAndCategory(String category, String difficulty) {
+       
+        if (category == null || category.isEmpty()) {
+            throw new IllegalArgumentException("Category cannot be null or empty");
+        }
+      
+       if(difficulty==null || difficulty.isEmpty()){
+        return mcqRepository.findAllByCategory(category);
+       }
+
+       return mcqRepository.findAllByCategoryAndDifficulty(category, difficulty);
+          
+      
     }
 
 }

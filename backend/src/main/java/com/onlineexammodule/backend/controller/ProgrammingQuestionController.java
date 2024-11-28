@@ -75,5 +75,11 @@ public class ProgrammingQuestionController {
      public ProgrammingQuestion getProgrammingQuestionById(@RequestParam Long proId) {
          return programmingService.getProgrammingQuestionById(proId);
      }
+
+     @GetMapping("/getProgrammingQuestionByDifficulty")
+     public List<ProgrammingQuestion> getProgrammingQuestionByDifficulty(@RequestParam String difficulty) {
+         return programmingService.getProgrammingQuestionByDifficulty(difficulty);
+     }
+     
      
 }
