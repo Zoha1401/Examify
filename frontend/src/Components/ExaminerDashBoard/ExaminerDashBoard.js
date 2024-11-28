@@ -19,3 +19,12 @@ const ExaminerDashBoard = () => {
 }
 
 export default ExaminerDashBoard
+
+//for tomorrow
+
+//Login signup integration with examiner
+//Add fetch, delete examinees functionalities integrated with frontend
+//Fetch, create exam functionality added
+
+//Next week
+//Add Mcq and Programming question
