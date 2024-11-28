@@ -4,7 +4,7 @@ import axiosInstance from '../../utils/axiosInstance';
 import { Button } from 'react-bootstrap';
 
 const AddExaminee = () => {
-    const [credentials, setCredentials]=useState([]);
+    const [credentials, setCredentials]=useState({});
     let navigate=useNavigate();
     const onChange=(e)=>{
         setCredentials({...credentials, [e.target.name]:e.target.value})
