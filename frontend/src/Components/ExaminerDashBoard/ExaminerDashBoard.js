@@ -1,8 +1,9 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import { Link } from 'react-router-dom'
 import { Button } from 'react-bootstrap'
 
 const ExaminerDashBoard = () => {
+  
   return (
     <div>
       <h1>This is Examiner Dashboard</h1>
