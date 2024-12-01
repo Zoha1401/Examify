@@ -12,7 +12,7 @@ const Examinee = ({temp_examinee}) => {
                 console.log(token)
                 if(!token){
                     alert("You are not authorized please login again")
-                    navigate("/examinerlogin")
+                    navigate("/examiner-login")
                 }
     useEffect(() => {
         const fetchExaminee=async()=>{

@@ -21,7 +21,7 @@ const AddExaminee = () => {
         console.log(token)
         if(!token){
             alert("You are not authorized please login again")
-            navigate("/examinerlogin")
+            navigate("/examiner-login")
         }
 
       const response=await axiosInstance.post("/examiner/addExaminee", 
@@ -41,7 +41,7 @@ const AddExaminee = () => {
 
       if(response.status===201){
         alert("Examinee is successfully created");
-        navigate("/manageexaminee")  
+        navigate("/manage-examinee")  
       }
     }
     catch(error)
@@ -58,7 +58,7 @@ const AddExaminee = () => {
     
   return (
     <>
-      <Button variant="secondary"><Link to="/manageexaminee">Back Icon</Link></Button>
+      <Button variant="secondary"><Link to="/manage-examinee">Back Icon</Link></Button>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <img

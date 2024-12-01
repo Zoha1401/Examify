@@ -24,7 +24,7 @@ const ExaminerSignin = () => {
 
         if(response.status===201){
           console.log("User signed in: ", response.data)
-          navigate("/examinerlogin")
+          navigate("/examiner-login")
         }
        }
        catch(error)
@@ -32,7 +32,7 @@ const ExaminerSignin = () => {
          if (error.response && error.response.status === 400){
           console.error('Examiner already exists');
           alert('Examiner already exists. Redirecting to login.');
-          navigate('/examinerlogin');
+          navigate('/examiner-login');
         }
         else{
           console.error('Sign in failed', error.response?.data || error.message);
@@ -111,7 +111,7 @@ const ExaminerSignin = () => {
 
           <p className="mt-10 text-center text-sm/6 text-gray-500">
             Already signed in?{' '}
-            <Link to="/examinerlogin" className="font-semibold text-indigo-600 hover:text-indigo-500">
+            <Link to="/examiner-login" className="font-semibold text-indigo-600 hover:text-indigo-500">
               Login
             </Link>
           </p>

@@ -9,6 +9,8 @@ import ExaminerDashBoard from './Components/ExaminerDashBoard/ExaminerDashBoard'
 import ExaminerSignin from './Components/ExaminerSignin/ExaminerSignin';
 import ManageExaminee from './Components/ManageExaminee/ManageExaminee';
 import AddExaminee from './Components/ManageExaminee/AddExaminee';
+import CreateExam from './Components/ExamDetail/CreateExam';
+import ExamQuestions from './Components/ExamDetail/ExamQuestions';
 
 function App() {
   const router=createBrowserRouter([
@@ -17,32 +19,40 @@ function App() {
       element:<LandingPage/>
     },
     {
-      path:'/examinersignin',
+      path:'/examiner-signin',
       element:<ExaminerSignin/>
     },
     {
-      path:'/examinerlogin',
+      path:'/examiner-login',
       element:<ExaminerLogin/>
     },
     {
-      path:'/examineelogin',
+      path:'/examinee-login',
       element:<ExamineeLogin/>
     },
     {
-      path:'/examinerdashboard',
+      path:'/examiner-dashboard',
       element:<ExaminerDashBoard/>
     },
     {
-      path:'/examineedashboard',
+      path:'/examinee-dashboard',
       element:<ExamineeDashboard/>
     },
     {
-      path:'/manageexaminee',
+      path:'/manage-examinee',
       element:<ManageExaminee/>
     },
     {
-      path:'/addexaminee',
+      path:'/add-examinee',
       element:<AddExaminee/>
+    },
+    {
+      path:'/create-exam',
+      element:<CreateExam/>
+    },
+    {
+      path:'/exam-detail/:examId',
+      element:<ExamQuestions/>
     }
 
   ])

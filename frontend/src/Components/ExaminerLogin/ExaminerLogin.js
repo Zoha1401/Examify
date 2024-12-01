@@ -28,7 +28,7 @@ const ExaminerLogin = () => {
           localStorage.setItem('token', response.data)
           console.log(localStorage.getItem("token"));
           console.log("Token set in local storage")
-          navigate("/examinerdashboard")
+          navigate("/examiner-dashboard")
         }
        }
        catch(error)
@@ -113,7 +113,7 @@ const ExaminerLogin = () => {
 
           <p className="mt-10 text-center text-sm/6 text-gray-500">
             Not signed in?{' '}
-            <Link to="/examinersignin" className="font-semibold text-indigo-600 hover:text-indigo-500">
+            <Link to="/examiner-signin" className="font-semibold text-indigo-600 hover:text-indigo-500">
               Sign in
             </Link>
           </p>
