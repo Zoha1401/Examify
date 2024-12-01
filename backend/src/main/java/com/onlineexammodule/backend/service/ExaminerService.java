@@ -17,6 +17,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.onlineexammodule.backend.model.Exam;
 import com.onlineexammodule.backend.model.Examinee;
 import com.onlineexammodule.backend.model.Examiner;
 import com.onlineexammodule.backend.repo.ExamineeRepository;
@@ -218,6 +219,17 @@ public class ExaminerService {
         
         return fetchExaminee;
 
+    }
+
+
+    public List<Exam> getAllExams(String examiner_email) {
+        Examiner examiner=examinerRepository.findByEmail(examiner_email);
+                          
+        if (examiner == null) {
+            throw new IllegalArgumentException("Examiner not found with email: " + examiner_email);
+        }
+
+        return examiner.getExams();
     }
 
 

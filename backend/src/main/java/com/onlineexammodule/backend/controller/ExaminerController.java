@@ -7,8 +7,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
-
+import com.onlineexammodule.backend.model.Exam;
 import com.onlineexammodule.backend.model.Examinee;
 import com.onlineexammodule.backend.model.Examiner;
 
@@ -137,17 +136,13 @@ public class ExaminerController {
      }
      
 
-     //Update exam
-
-     //Update Mcq
-
-     //Update programming
-
-     //Delete exam
-
-     //Delete Mcq
-
-     //Delete programming
+    @GetMapping("/getAllExams")
+    public List<Exam> getAllExams(HttpServletRequest request) {
+        String token=request.getHeader("Authorization").substring(7);
+        String examiner_email=jwtService.extractEmail(token);
+        return examinerService.getAllExams(examiner_email);
+    }
+    
      
      
      

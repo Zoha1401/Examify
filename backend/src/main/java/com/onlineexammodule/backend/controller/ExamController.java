@@ -35,11 +35,11 @@ public class ExamController {
     private JWTService jwtService;
 
      @PostMapping("/createExam")
-     public Exam createExam(@RequestBody ExamRequest exam, @RequestParam Long examinerId, HttpServletRequest request) {
+     public Exam createExam(@RequestBody ExamRequest exam, HttpServletRequest request) {
         String token=request.getHeader("Authorization").substring(7);
         String examiner_email=jwtService.extractEmail(token);
         System.out.println("Examiner that wants to create an exam "+examiner_email);
-        Exam new_exam=examService.createExam(exam, examiner_email, examinerId);
+        Exam new_exam=examService.createExam(exam, examiner_email);
         return new_exam;
      }
 
@@ -71,6 +71,34 @@ public class ExamController {
      public Answer submitAnswer(@RequestBody Answer answer, @RequestParam Long examineeId, @RequestParam Long examId) {
         return examService.submitAnswer(answer, examineeId, examId);
      }
+     
+     //To create a pool of questions
+     @PostMapping("/addMcqQuestionList")
+     public List<McqQuestion> addMcqQuestionList(Long examId, @RequestBody List<McqQuestion> listMcqs) {
+         return examService.addMcqQuestionList(examId, listMcqs);
+     }
+     
+     
+     @PostMapping("/addProgrammingQuestionList")
+     public List<ProgrammingQuestion> addProgrammingQuestionList(Long examId, @RequestBody List<ProgrammingQuestion> listPro) {
+          return examService.addProgrammingQuestionList(examId, listPro);
+     }
+     
+     @GetMapping("/getExamById")
+     public Exam  getExamById(@RequestParam Long examId) {
+         return examService.getExamById(examId);
+     }
+
+     @GetMapping("/getMcqTechnical")
+     public List<McqQuestion> getMcqTechnical(@RequestParam Long examId) {
+         return examService.getMcqTechnical(examId);
+     }
+
+     @GetMapping("/getMcqAptitude")
+     public List<McqQuestion> getMcqAptitude(@RequestParam Long examId) {
+         return examService.getMcqAptitude(examId);
+     }
+     
      
      
 }
