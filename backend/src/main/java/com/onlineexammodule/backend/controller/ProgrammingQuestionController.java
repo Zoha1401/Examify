@@ -77,7 +77,7 @@ public class ProgrammingQuestionController {
      }
 
      @GetMapping("/getProgrammingQuestionByDifficulty")
-     public List<ProgrammingQuestion> getProgrammingQuestionByDifficulty(@RequestParam String difficulty) {
+     public List<ProgrammingQuestion> getProgrammingQuestionByDifficulty(@RequestParam(required = false) String difficulty) {
          return programmingService.getProgrammingQuestionByDifficulty(difficulty);
      }
      
