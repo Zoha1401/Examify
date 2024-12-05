@@ -68,8 +68,8 @@ const ExamQuestions = () => {
       {/*This will contain exam details, all mcqs and programming, they can update mcq and programming question optiion will be provided in a single page only */}
       {/*They will also be able to add mcq and programming */}
       <div className="flex">
-      <Link to="/addMcqQuestion"><Button>Add MCQ Question</Button></Link>
-      <Link to="/addProgQuestion"><Button>Add Programming Question</Button></Link>
+      <Link to={`/addMcqQuestion/${examId}`}><Button>Add MCQ Question</Button></Link>
+      <Link to={`/addProgQuestion/${examId}`}><Button>Add Programming Question</Button></Link>
       </div>
       
       <div>Technical Questions</div>
@@ -89,7 +89,7 @@ const ExamQuestions = () => {
       {loading ? (
           <p>Loading...</p>
         ): aptitudeMcqs.length===0 ? (
-          <p>You have no technical mcqs</p>
+          <p>You have no aptitude mcqs</p>
         ): (
           aptitudeMcqs.map((m)=>(
              <Mcq key={m.mcqId} mcq={m}/>
@@ -103,14 +103,18 @@ const ExamQuestions = () => {
       {loading ? (
           <p>Loading...</p>
         ): programmingQuestions.length===0 ? (
-          <p>You have no technical mcqs</p>
+          <p>You have no programming questions</p>
         ): (
           programmingQuestions.map((q)=>(
              <ProgrammingQuestion key={q.programmingQuestionId} pq={q}/>
           ))
         )}
       </div>
+      <Link to={`/mcqQuestionPool/${examId}`}><Button>Add MCQ Question</Button></Link>
+      <Link to={`/programmingQuestionPool/${examId}`}><Button>Add Programming Question</Button></Link>
     </div>
+
+  
   );
 };
 

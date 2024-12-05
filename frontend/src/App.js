@@ -11,6 +11,10 @@ import ManageExaminee from './Components/ManageExaminee/ManageExaminee';
 import AddExaminee from './Components/ManageExaminee/AddExaminee';
 import CreateExam from './Components/ExamDetail/CreateExam';
 import ExamQuestions from './Components/ExamDetail/ExamQuestions';
+import AddMcq from './Components/Question/AddMcq';
+import AddProgrammingQuestion from './Components/Question/AddProgrammingQuestion';
+import McqQuestionPool from './Components/Question/McqQuestionPool';
+import ProgrammingQuestionPool from './Components/Question/ProgrammingQuestionPool';
 
 function App() {
   const router=createBrowserRouter([
@@ -53,6 +57,22 @@ function App() {
     {
       path:'/exam-detail/:examId',
       element:<ExamQuestions/>
+    },
+    {
+      path:'/addMcqQuestion/:examId',
+      element:<AddMcq/>
+    },
+    {
+      path:'/addProgQuestion/:examId',
+      element:<AddProgrammingQuestion/>
+    },
+    {
+      path:'/mcqQuestionPool/:examId',
+      element:<McqQuestionPool/>
+    },
+    {
+      path:'/programmingQuestionPool/:examId',
+      element:<ProgrammingQuestionPool/>
     }
 
   ])
