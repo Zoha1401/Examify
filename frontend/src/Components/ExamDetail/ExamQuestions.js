@@ -60,7 +60,19 @@ const ExamQuestions = () => {
     };
   
     fetchData();
-  }, []);
+  }, [examId, token]);
+
+  const handleDeleteTechnicalMcq=(mcqId)=>{
+    setTechnicalMcqs((prev)=>prev.filter((mcq)=>mcq.mcqId!==mcqId));
+  };
+
+  const handleDeleteAptitudeMcq=(mcqId)=>{
+    setAptitudeMcqs((prev)=>prev.filter((mcq)=> mcq.mcqId!==mcqId));
+  };
+
+  const handleDeleteProgQuestion=(programmingQuestionId)=>{
+    setProgrammingQuestions((prev)=>prev.filter((pq)=>pq.programmingQuestionId!==programmingQuestionId))
+  }
   
     
   return (
@@ -68,8 +80,8 @@ const ExamQuestions = () => {
       {/*This will contain exam details, all mcqs and programming, they can update mcq and programming question optiion will be provided in a single page only */}
       {/*They will also be able to add mcq and programming */}
       <div className="flex">
-      <Link to={`/addMcqQuestion/${examId}`}><Button>Add MCQ Question</Button></Link>
-      <Link to={`/addProgQuestion/${examId}`}><Button>Add Programming Question</Button></Link>
+      <Link to={`/addMcqQuestion/${examId}`}><Button>Add new MCQ Question</Button></Link>
+      <Link to={`/addProgQuestion/${examId}`}><Button>Add new Programming Question</Button></Link>
       </div>
       
       <div>Technical Questions</div>
@@ -80,7 +92,7 @@ const ExamQuestions = () => {
           <p>You have no technical mcqs</p>
         ): (
           technicalMcqs.map((m)=>(
-             <Mcq key={m.mcqId} mcq={m}/>
+             <Mcq key={m.mcqId} mcq={m} onDelete={handleDeleteTechnicalMcq}/>
           ))
         )}
       </div>
@@ -92,7 +104,7 @@ const ExamQuestions = () => {
           <p>You have no aptitude mcqs</p>
         ): (
           aptitudeMcqs.map((m)=>(
-             <Mcq key={m.mcqId} mcq={m}/>
+             <Mcq key={m.mcqId} mcq={m} onDelete={handleDeleteAptitudeMcq}/>
           ))
         )}
       </div>
@@ -106,12 +118,12 @@ const ExamQuestions = () => {
           <p>You have no programming questions</p>
         ): (
           programmingQuestions.map((q)=>(
-             <ProgrammingQuestion key={q.programmingQuestionId} pq={q}/>
+             <ProgrammingQuestion key={q.programmingQuestionId} pq={q} onDelete={handleDeleteProgQuestion}/>
           ))
         )}
       </div>
-      <Link to={`/mcqQuestionPool/${examId}`}><Button>Add MCQ Question</Button></Link>
-      <Link to={`/programmingQuestionPool/${examId}`}><Button>Add Programming Question</Button></Link>
+      <Link to={`/mcqQuestionPool/${examId}`}><Button>Add MCQ Question from pool</Button></Link>
+      <Link to={`/programmingQuestionPool/${examId}`}><Button>Add Programming Question from pool</Button></Link>
     </div>
 
   
@@ -119,3 +131,5 @@ const ExamQuestions = () => {
 };
 
 export default ExamQuestions;
+
+//Give option to delete all.

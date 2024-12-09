@@ -24,8 +24,8 @@ const AddMcq = () => {
     alert("You are not authorized please login again");
     navigate("/examiner-login");
   }
-  const handleAddMcq=async()=>{
-       
+  const handleAddMcq=async(e)=>{
+    e.preventDefault()
     console.log("Exam ID:", examId);
     console.log("Details sent to API:", { ...details, options });
        try{
@@ -45,6 +45,7 @@ const AddMcq = () => {
         if(response.status===201){
           window.alert("MCQ added successfully")
           console.log("Sending data to backend:", details);
+          navigate(`/exam-detail/${examId}`)
           
         }
        }

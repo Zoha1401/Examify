@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import axiosInstance from "../../utils/axiosInstance";
-import DropdownButton from "react-bootstrap/DropdownButton";
 import Dropdown from "react-bootstrap/Dropdown";
 import { Button } from "react-bootstrap";
 import { Form } from 'react-bootstrap'; 
-import axios from "axios";
 
 const ProgrammingQuestionPool = () => {
   
@@ -63,6 +61,19 @@ const ProgrammingQuestionPool = () => {
         if (response.status === 200) {
           setProgQuestions(response.data);
         }
+
+        const examQuestionsResponse = await axiosInstance.get(
+          `/exam/getAllProgrammingQuestions?examId=${examId}`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+
+        const examQuestions = examQuestionsResponse.data.map((q) => q.programmingQuestionId);
+        const initialCheckedState = {};
+        response.data.forEach((question) => {
+          initialCheckedState[question.programmingQuestionId] = examQuestions.includes(question.programmingQuestionId);
+        });
+        setCheckedState(initialCheckedState);
+
       } catch (error) {
         console.error(
           "Error fetching pro questions:",
@@ -74,7 +85,7 @@ const ProgrammingQuestionPool = () => {
       }
     };
     fetchAllProgrammingQuestions();
-  }, []);
+  }, [token]);
 
 //   const handleChange = (event) => {
 //     setChecked(event.target.checked);
@@ -143,7 +154,6 @@ const ProgrammingQuestionPool = () => {
           </Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown>
-
       <div>
         {progQuestions.length > 0 ? (
           progQuestions.map((question) => (
