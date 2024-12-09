@@ -7,7 +7,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -29,7 +29,7 @@ public class McqQuestion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long mcqId;
-    private String questionText;
+    private String mcqQuestionText;
     private String correctAnswer;
     private String category;
     private String difficulty;
@@ -41,7 +41,7 @@ public class McqQuestion {
     private List<Exam> exams=new ArrayList<>();
     
  
-    @OneToMany(mappedBy = "mcqQuestion")
+    @OneToMany(mappedBy = "mcqQuestion", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<QuestionOption> options = new ArrayList<>() ;// List of options for MCQs
 

@@ -29,7 +29,7 @@ public class QuestionOption {
 
     @ManyToOne
     @JsonBackReference
-    @JoinColumn(name = "mcq_id")
+    @JoinColumn(name = "mcq_question_id")
     private McqQuestion mcqQuestion;
 
 

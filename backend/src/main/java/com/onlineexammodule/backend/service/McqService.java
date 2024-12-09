@@ -82,7 +82,7 @@ public class McqService {
                 .orElseThrow(() -> new IllegalArgumentException("MCQ not found"));
 
         //Set values
-        existingMcqQuestion.setQuestionText(updatedMcqQuestion.getQuestionText());
+        existingMcqQuestion.setMcqQuestionText(updatedMcqQuestion.getMcqQuestionText());
         existingMcqQuestion.setCategory(updatedMcqQuestion.getCategory());
         existingMcqQuestion.setCorrectAnswer(updatedMcqQuestion.getCorrectAnswer());
 
@@ -117,7 +117,7 @@ public class McqService {
         mcqDto.setMcqId(mcqQuestion.getMcqId());
         mcqDto.setCategory(mcqQuestion.getCategory());
         mcqDto.setCorrectAnswer(mcqQuestion.getCorrectAnswer());
-        mcqDto.setQuestionText(mcqQuestion.getQuestionText());
+        mcqDto.setMcqQuestionText(mcqQuestion.getMcqQuestionText());
         mcqDto.setDifficulty(mcqQuestion.getDifficulty());
         return mcqDto;
     }
@@ -135,20 +135,7 @@ public class McqService {
         exam.getMcqQuestions().remove(mcqQuestion);
         examRepository.save(exam);
         
-        //Remove options from Option
-        List<QuestionOption> optionsToRemove = mcqQuestion.getOptions();
-
-        if (optionsToRemove != null) {
-            for (QuestionOption option : optionsToRemove) {
-                option.setMcqQuestion(null);
-                questionOptionRepository.save(option);
-            }
-        }
-        //
-        mcqQuestion.setOptions(new ArrayList<>());
-        mcqRepository.save(mcqQuestion);
-
-        mcqRepository.delete(mcqQuestion);
+        mcqQuestion.getExams().remove(exam);
 
         return "Deleted";
 
@@ -228,6 +215,13 @@ public class McqService {
        return mcqRepository.findAllByCategoryAndDifficulty(category, difficulty);
           
       
+    }
+
+    public String addMcqQuestionPool(List<McqQuestion> mcqQuestions) {
+        for(McqQuestion mcqQuestion:mcqQuestions){
+            mcqRepository.save(mcqQuestion);
+        }
+        return "Added";
     }
 
 }

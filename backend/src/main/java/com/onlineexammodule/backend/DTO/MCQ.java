@@ -16,7 +16,7 @@ public class MCQ {
         this.mcqId = mcqId;
     }
 
-    private String questionText;
+    private String mcqQuestionText;
     private String correctAnswer;
     private String category;
     private String difficulty;
@@ -33,12 +33,12 @@ public class MCQ {
 
     private List<Exam> exams=new ArrayList<>();
 
-    public String getQuestionText() {
-        return questionText;
+    public String getMcqQuestionText() {
+        return mcqQuestionText;
     }
 
-    public void setQuestionText(String questionText) {
-        this.questionText = questionText;
+    public void setMcqQuestionText(String mcqQuestionText) {
+        this.mcqQuestionText = mcqQuestionText;
     }
 
     public String getCorrectAnswer() {

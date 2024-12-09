@@ -76,6 +76,11 @@ public class McqQuestionController {
     public List<McqQuestion> getMethodName(@RequestParam String category, @RequestParam String difficulty) {
         return mcqService.getMcqQuestionByDifficultyAndCategory(category, difficulty);
     }
+
+    @PostMapping("/addMcqQuestionPool")
+    public String addMcqQuestionPool(@RequestBody List<McqQuestion> mcqQuestions) {
+        return mcqService.addMcqQuestionPool(mcqQuestions);
+    }
     
      
 

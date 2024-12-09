@@ -23,6 +23,8 @@ import com.onlineexammodule.backend.repo.McqRepository;
 import com.onlineexammodule.backend.repo.ProgrammingAnswerRepository;
 import com.onlineexammodule.backend.repo.ProgrammingRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class ExamService {
 
@@ -250,7 +252,8 @@ public class ExamService {
         return answerRepository.save(new_answer);
 
     }
-
+    
+    @Transactional
     public List<McqQuestion> addMcqQuestionList(Long examId, List<McqQuestion> listMcqs) {
         Exam existingExam = examRepository.findById(examId)
                 .orElseThrow(() -> new IllegalArgumentException("Exam not found or exam ID incorrect"));
@@ -259,31 +262,49 @@ public class ExamService {
 
         for (McqQuestion mcqQuestion : listMcqs) {
             // Save the MCQ question to the repository
+
+            boolean alreadyPresent = existingExam.getMcqQuestions().stream()
+            .anyMatch(q -> q.getMcqQuestionText().equals(mcqQuestion.getMcqQuestionText()));
+
+            if(!alreadyPresent){
             McqQuestion savedMcq = mcqRepository.save(mcqQuestion);
 
             // Update relationships
             savedMcq.getExams().add(existingExam);
             existingExam.getMcqQuestions().add(savedMcq);
+            }
         }
 
         examRepository.save(existingExam);
 
         return existingExam.getMcqQuestions();
     }
-
+   
+    @Transactional
     public List<ProgrammingQuestion> addProgrammingQuestionList(Long examId, List<ProgrammingQuestion> listPro) {
         Exam existingExam = examRepository.findById(examId)
                 .orElseThrow(() -> new IllegalArgumentException("Exam not found or exam ID incorrect"));
-
+    
         for (ProgrammingQuestion programmingQuestion : listPro) {
-
-            ProgrammingQuestion savedPro = programmingRepository.save(programmingQuestion);
-            savedPro.getExams().add(existingExam);
-            existingExam.addProgrammingQuestion(savedPro);
+            // Check if the question already exists
+            boolean alreadyPresent = existingExam.getProgrammingQuestions().stream()
+                    .anyMatch(q -> q.getProgrammingQuestionText().equals(programmingQuestion.getProgrammingQuestionText()));
+    
+            if (!alreadyPresent) {
+                // Add only if not present
+                ProgrammingQuestion proQ = programmingRepository.save(programmingQuestion);
+                proQ.getExams().add(existingExam);
+                existingExam.getProgrammingQuestions().add(proQ);
+            }
         }
-
+    
+        // Save updated exam
+        examRepository.save(existingExam);
+    
         return existingExam.getProgrammingQuestions();
     }
+    
+
 
     public Exam getExamById(Long examId) {
         Exam exam = examRepository.findById(examId)

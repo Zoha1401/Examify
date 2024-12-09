@@ -81,5 +81,10 @@ public class ProgrammingQuestionController {
          return programmingService.getProgrammingQuestionByDifficulty(difficulty);
      }
      
+     @PostMapping("/addProgrammingQuestionPool")
+     public String addProgrammingQuestionPool(@RequestBody List<ProgrammingQuestion> programmingQuestions) {
+         return programmingService.addProgrammingQuestionPool(programmingQuestions);
+     }
+     
      
 }

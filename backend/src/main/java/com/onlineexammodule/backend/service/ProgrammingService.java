@@ -1,6 +1,5 @@
 package com.onlineexammodule.backend.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -26,35 +25,27 @@ public class ProgrammingService {
         this.examRepository=examRepository;
         this.testCaseRepository=testCaseRepository;
     }
-      public ProgrammingQuestion addProgrammingQuestion(ProgrammingQuestion programmingQuestion, Long examId) {
-        Exam exam = examRepository.findById(examId).orElseThrow(() -> new IllegalArgumentException("Exam not found"));
-
-        
-        System.out.println("Test case details before saving:");
-         for (TestCase testCase : programmingQuestion.getTestCases()) {
-         System.out.println("Input: " + testCase.getInput());
-         System.out.println("Expected Output: " + testCase.getExpectedOutput());
-        }
-
-        System.out.println(programmingQuestion.getTestCases().size());
-        List<TestCase> savedTestCases = new ArrayList<>();
+    
+    //ADD Pro question
+    public ProgrammingQuestion addProgrammingQuestion(ProgrammingQuestion programmingQuestion, Long examId) {
+        Exam exam = examRepository.findById(examId)
+                .orElseThrow(() -> new IllegalArgumentException("Exam not found"));
+    
+        // Set bidirectional reference
+        programmingRepository.save(programmingQuestion);
         for (TestCase testCase : programmingQuestion.getTestCases()) {
-            savedTestCases.add(testCaseRepository.save(testCase));
-            System.out.println(testCase);
+            testCase.setProgrammingQuestion(programmingQuestion);
         }
-        programmingQuestion.setTestCases(savedTestCases);
     
-        programmingQuestion = programmingRepository.save(programmingQuestion);
-    
-        // Step 3: Now link the ProgrammingQuestion to the Exam
         exam.getProgrammingQuestions().add(programmingQuestion);
         programmingQuestion.getExams().add(exam);
     
-        // Save Exam to persist the relationship
+        // Save only the exam, cascading the save operation
         examRepository.save(exam);
     
         return programmingQuestion;
     }
+    
     public List<TestCase> fetchTestCases(Long pro_id) {
        
         if(!programmingRepository.existsById(pro_id))
@@ -110,13 +101,10 @@ public class ProgrammingService {
             .orElseThrow(() -> new IllegalArgumentException("Programming Question not found in this Exam"));
 
         
-        exam.deleteProgrammingQuestion(toBeDeleted);
+        exam.getProgrammingQuestions().remove(toBeDeleted);
         examRepository.save(exam);
         
         toBeDeleted.getExams().remove(exam);
-
-        if(toBeDeleted.getExams().isEmpty())
-        programmingRepository.delete(toBeDeleted);
 
         return toBeDeleted;
     }
@@ -200,6 +188,14 @@ public class ProgrammingService {
         return programmingRepository.findAll();
        }
        return programmingRepository.findAllByDifficulty(difficulty);
+    }
+
+    public String addProgrammingQuestionPool(List<ProgrammingQuestion> programmingQuestions) {
+       for(ProgrammingQuestion programmingQuestion:programmingQuestions){
+        programmingRepository.save(programmingQuestion);
+       }
+
+       return "Added";
     }
     
     
