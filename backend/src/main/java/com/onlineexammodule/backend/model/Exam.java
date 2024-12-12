@@ -67,7 +67,6 @@ public class Exam {
     public void addExaminee(Examinee examinee) {
         if (!this.examinees.contains(examinee)) {
             this.examinees.add(examinee);
-            examinee.getExams().add(this);
         }
     }
 

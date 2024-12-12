@@ -73,12 +73,14 @@ public class ExamService {
             List<Examinee> examinees = examiner.getExaminees();
             for (Examinee examinee_temp : examinees) {
                 new_exam.addExaminee(examinee_temp); // Method in Exam
+                examinee_temp.getExams().add(new_exam);
             }
         } else if (exam.getAssignedExamineeIds() != null) {
             List<Examinee> examinees = examineeRepository.findAllById(exam.getAssignedExamineeIds());
             if (examinees != null) {
                 for (Examinee examinee_temp : examinees) {
                     new_exam.addExaminee(examinee_temp); // Method in Exam
+                    examinee_temp.getExams().add(new_exam);
                 }
             }
 

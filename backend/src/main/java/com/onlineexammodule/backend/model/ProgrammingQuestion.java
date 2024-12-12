@@ -54,3 +54,7 @@ public class ProgrammingQuestion {
 // Create an examiner
 // With three exams diff questions
 // Create a fourth exam with mixture of questions from above exam.
+
+//Tomorrow: Finish edit vala part of questions
+//By day after tomorrow: Do that create exam with questions, and select based on category. And also rectify the time format stuff
+//Start with examinee by thursday

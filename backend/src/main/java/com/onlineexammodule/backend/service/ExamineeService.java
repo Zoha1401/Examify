@@ -24,7 +24,7 @@ public class ExamineeService {
     @Autowired
     private ExamineeRepository examineeRepository;
 
-    public String verify(String email, Long examinerId)
+    public String verify(String email)
     {
         Examinee examinee=examineeRepository.findByEmail(email);
         System.out.println("Finding examinee by email"+email);
@@ -45,6 +45,12 @@ public class ExamineeService {
                           .orElseThrow(()-> new IllegalArgumentException("Examinee not found"));
         
         return examinee.getExams();
+    }
+
+    public Long getExamineeIdFromEmail(String examineeEmail) {
+        Examinee existingExaminee=examineeRepository.findByEmail(examineeEmail);
+        return existingExaminee.getExamineeId();
+        
     }
 
 

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.onlineexammodule.backend.DTO.ExamineeLoginRequest;
 import com.onlineexammodule.backend.model.Exam;
+import com.onlineexammodule.backend.model.Examinee;
 import com.onlineexammodule.backend.service.ExamineeService;
 
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,9 +33,15 @@ public class ExamineeController {
     public String LoginExaminee(@RequestBody ExamineeLoginRequest loginRequest) {
         
         System.out.println(loginRequest.getEmail());
-        return examineeService.verify(loginRequest.getEmail(), loginRequest.getExaminerId());
+        return examineeService.verify(loginRequest.getEmail());
        
     }
+
+    @GetMapping("/getExamineeIdFromEmail")
+    public Long getExamineeId(@RequestParam String examineeEmail) {
+        return examineeService.getExamineeIdFromEmail(examineeEmail); 
+    }
+    
 
     @GetMapping("/getForExaminee")
     public String greet() {

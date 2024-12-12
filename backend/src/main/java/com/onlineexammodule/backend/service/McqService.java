@@ -76,35 +76,40 @@ public class McqService {
         if (!examRepository.existsById(examId)) {
             throw new IllegalArgumentException("Exam not found");
         }
-
+        
         //Fetch existing mcq
         McqQuestion existingMcqQuestion = mcqRepository.findById(mcqId)
                 .orElseThrow(() -> new IllegalArgumentException("MCQ not found"));
 
+       
+
         //Set values
+        if( updatedMcqQuestion.getMcqQuestionText()!=null)
         existingMcqQuestion.setMcqQuestionText(updatedMcqQuestion.getMcqQuestionText());
+
+        if( updatedMcqQuestion.getMcqQuestionText()!=null)
         existingMcqQuestion.setCategory(updatedMcqQuestion.getCategory());
+
+        if( updatedMcqQuestion.getCorrectAnswer()!=null)
         existingMcqQuestion.setCorrectAnswer(updatedMcqQuestion.getCorrectAnswer());
 
         //Set options
-        List<QuestionOption> updatedOptions = new ArrayList<>();
+        List<QuestionOption> existingOptions = existingMcqQuestion.getOptions();
+        existingOptions.clear();
         for (QuestionOption option : updatedMcqQuestion.getOptions()) {
             if (option.getOptionId() != null) {
-                
                 QuestionOption existingOption = questionOptionRepository.findById(option.getOptionId())
                         .orElseThrow(() -> new IllegalArgumentException("Option not found"));
                 existingOption.setOptionText(option.getOptionText());
                 existingOption.setCorrect(option.isCorrect());
-                updatedOptions.add(existingOption); 
+                existingOptions.add(existingOption);
             } else {
-                
-                option.setMcqQuestion(existingMcqQuestion); 
-                questionOptionRepository.save(option); 
-                updatedOptions.add(option);
+                option.setMcqQuestion(existingMcqQuestion);
+                questionOptionRepository.save(option);
+                existingOptions.add(option);
             }
         }
-
-        existingMcqQuestion.setOptions(updatedOptions);
+    
         mcqRepository.save(existingMcqQuestion);
         return convertToDto(existingMcqQuestion);
 
