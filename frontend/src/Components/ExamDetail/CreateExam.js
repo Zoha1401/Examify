@@ -45,8 +45,9 @@ const CreateExam = () => {
       );
 
       if (response.status === 200) {
+        const examId=response.data.examId
         alert("Exam is successfully created");
-        navigate("/examiner-dashboard");
+        navigate(`/exam-detail/${examId}`);
       }
     } catch (error) {
       console.error(

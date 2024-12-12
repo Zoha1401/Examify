@@ -39,7 +39,7 @@ function App() {
       element:<ExaminerDashBoard/>
     },
     {
-      path:'/examinee-dashboard',
+      path:'/examinee-dashboard/:email',
       element:<ExamineeDashboard/>
     },
     {
