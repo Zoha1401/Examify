@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.onlineexammodule.backend.model.Exam;
 import com.onlineexammodule.backend.model.Examinee;
 import com.onlineexammodule.backend.model.Examiner;
+import com.onlineexammodule.backend.repo.ExamRepository;
 import com.onlineexammodule.backend.repo.ExamineeRepository;
 // import com.onlineexammodule.backend.model.ExaminerPrincipal;
 import com.onlineexammodule.backend.repo.ExaminerRepo;
@@ -31,11 +32,13 @@ public class ExaminerService {
     @Autowired
     private final ExamineeRepository examineeRepository;
     
+    private final ExamRepository examRepository;
     @Autowired
     private final ExaminerRepo examinerRepository;
-    public ExaminerService(ExaminerRepo examinerRepository, ExamineeRepository examineeRepository) {
+    public ExaminerService(ExaminerRepo examinerRepository, ExamineeRepository examineeRepository, ExamRepository examRepository) {
         this.examinerRepository = examinerRepository;
         this.examineeRepository=examineeRepository;
+        this.examRepository=examRepository;
      
     }
 
@@ -230,6 +233,39 @@ public class ExaminerService {
         }
 
         return examiner.getExams();
+    }
+
+
+    public String assignToAll(Long examId, String examiner_email) {
+       Examiner examiner=examinerRepository.findByEmail(examiner_email);
+       
+       if (examiner == null) {
+        throw new IllegalArgumentException("Examiner not found with email: " + examiner_email);
+    }
+
+       //Fetch exam from examiners all exams.
+       Exam existingExam=examiner.getExams().stream()
+               .filter(exam->exam.getExamId()==examId)
+               .findFirst()
+               .orElseThrow(()-> new IllegalArgumentException("Exam not found with ID "+ examId + " under examiner "+ examiner_email));
+
+        
+       List<Examinee> examinees=examiner.getExaminees();
+
+       for(Examinee examinee:examinees){
+        if (!examinee.getExams().contains(existingExam)) { // Avoid redundant additions
+            examinee.getExams().add(existingExam);
+            existingExam.getExaminees().add(examinee);
+            examineeRepository.save(examinee);
+        }
+       }
+
+       examRepository.save(existingExam);
+
+       return examinees.size() + " examinees added to exam ID " + examId;
+
+    
+
     }
 
 

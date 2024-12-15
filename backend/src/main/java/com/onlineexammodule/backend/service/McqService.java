@@ -3,8 +3,6 @@ package com.onlineexammodule.backend.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -201,11 +199,7 @@ public class McqService {
     //     return new ResponseEntity<>(HttpStatus.OK);
     // }
 
-    public McqQuestion getMcqById(Long mcqId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getMcqById'");
-    }
-    
+   
     public List<McqQuestion> getMcqQuestionByDifficultyAndCategory(String category, String difficulty) {
        
         if (category == null || category.isEmpty()) {

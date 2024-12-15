@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 // import org.springframework.web.bind.annotation.RequestBody;
 //import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -141,6 +142,15 @@ public class ExaminerController {
         String token=request.getHeader("Authorization").substring(7);
         String examiner_email=jwtService.extractEmail(token);
         return examinerService.getAllExams(examiner_email);
+    }
+    
+    //Assign an exam to all the examinees
+    @PostMapping("/assignToAll")
+    public ResponseEntity<?> assignToAll(@RequestParam Long examId, HttpServletRequest request) {
+        String token=request.getHeader("Authorization").substring(7);
+        String examiner_email=jwtService.extractEmail(token);
+        String val=examinerService.assignToAll(examId, examiner_email);
+        return new ResponseEntity<>(val, HttpStatus.CREATED);
     }
     
      

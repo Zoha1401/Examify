@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.onlineexammodule.backend.DTO.MCQ;
 import com.onlineexammodule.backend.model.McqQuestion;
-import com.onlineexammodule.backend.model.QuestionOption;
 import com.onlineexammodule.backend.service.McqService;
 
 import org.springframework.web.bind.annotation.PostMapping;
@@ -67,10 +66,7 @@ public class McqQuestionController {
 
     
     //Get Mcq by ID
-    @GetMapping("/getMcqById")
-    public McqQuestion getMcqById(@RequestParam Long mcqId) {
-        return mcqService.getMcqById(mcqId);
-    }
+    
     
     @GetMapping("/getMcqQuestionByDifficultyAndCategory")
     public List<McqQuestion> getMethodName(@RequestParam String category, @RequestParam String difficulty) {
