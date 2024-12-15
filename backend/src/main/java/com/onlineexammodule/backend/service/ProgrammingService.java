@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.ResourceAccessException;
 
 import com.onlineexammodule.backend.model.Exam;
 import com.onlineexammodule.backend.model.ProgrammingQuestion;
@@ -63,31 +64,41 @@ public class ProgrammingService {
     }
      // Update pro
     public ProgrammingQuestion updateProgrammingQuestion(ProgrammingQuestion programmingQuestion, Long examId, Long proId) {
+        
+        // To reduce redundancy, Multiple pro questions are shared between exams. So when
+        // examiner updates the pro question
+        // I have created the mechanism such that, a new copy is created. and the
+        // already existing pro question is removed from that exam.
 
         Exam exam = examRepository.findById(examId).orElseThrow(() -> new IllegalArgumentException("Exam not found"));
 
-        List<ProgrammingQuestion> pro_Questions=exam.getProgrammingQuestions();
-        ProgrammingQuestion toBeUpdated=new ProgrammingQuestion();
+        ProgrammingQuestion originalProQ=programmingRepository.findById(proId)
+        .orElseThrow(()->new ResourceAccessException("Programming question not found"));
 
-        for(ProgrammingQuestion programmingQuestion2: pro_Questions)
-        {
-            if(programmingQuestion2.getProgrammingQuestionId()==proId)
-            {
-                toBeUpdated=programmingQuestion2;
-            }
+        exam.getProgrammingQuestions().remove(originalProQ);
+        originalProQ.getExams().remove(exam);
+
+        ProgrammingQuestion editableProgrammingQuestion=new ProgrammingQuestion();
+        editableProgrammingQuestion.setDifficulty(programmingQuestion.getDifficulty());
+        editableProgrammingQuestion.setProgrammingQuestionText(programmingQuestion.getProgrammingQuestionText());
+        if(programmingQuestion.getReferenceAnswer()!=null){
+            editableProgrammingQuestion.setReferenceAnswer(programmingQuestion.getReferenceAnswer());
         }
 
-        if(toBeUpdated.getProgrammingQuestionId()==null)
-        throw new IllegalArgumentException("Programming question not found");
+        for(TestCase testCase:programmingQuestion.getTestCases()){
+            TestCase testCase_temp=new TestCase();
+            testCase_temp.setInput(testCase.getInput());
+            testCase_temp.setExpectedOutput(testCase.getExpectedOutput());
+            testCase_temp.setProgrammingQuestion(editableProgrammingQuestion);
+            editableProgrammingQuestion.getTestCases().add(testCase_temp);
 
-        if(programmingQuestion.getDifficulty()!=null)
-        toBeUpdated.setDifficulty(programmingQuestion.getDifficulty());
+        }
 
-        if(programmingQuestion.getProgrammingQuestionText()!=null)
-        toBeUpdated.setProgrammingQuestionText(programmingQuestion.getProgrammingQuestionText());
+        programmingRepository.save(editableProgrammingQuestion);
+        exam.addProgrammingQuestion(editableProgrammingQuestion);
+        examRepository.save(exam);
 
-        return programmingRepository.save(toBeUpdated);
-
+        return editableProgrammingQuestion;
 
 
     }

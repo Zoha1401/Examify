@@ -70,50 +70,49 @@ public class McqService {
 
     // Update MCQ
     @Transactional
-    public MCQ updateMcqQuestion(Long mcqId, McqQuestion updatedMcqQuestion, Long examId) {
-
-         //Check if exam exists
-        if (!examRepository.existsById(examId)) {
-            throw new IllegalArgumentException("Exam not found");
-        }
+    public McqQuestion updateMcqQuestion(Long mcqId, McqQuestion updatedMcqQuestion, Long examId) {
         
-        //Fetch existing mcq
-        McqQuestion existingMcqQuestion = mcqRepository.findById(mcqId)
+        // To reduce redundancy, Multiple mcqs are shared between exams. So when
+        // examiner updates the mcq
+        // I have created the mechanism such that, a new copy is created. and the
+        // already existing mcq is removed from that exam.
+
+        // Check if exam exists
+        Exam exam = examRepository.findById(examId)
+                .orElseThrow(() -> new IllegalArgumentException("Exam not found"));
+
+        // Fetch the original MCQ
+        McqQuestion originalMcq = mcqRepository.findById(mcqId)
                 .orElseThrow(() -> new IllegalArgumentException("MCQ not found"));
 
-       
+        // Disassociate the original MCQ from the exam
+        exam.getMcqQuestions().remove(originalMcq);
+        originalMcq.getExams().remove(exam);
 
-        //Set values
-        if( updatedMcqQuestion.getMcqQuestionText()!=null)
-        existingMcqQuestion.setMcqQuestionText(updatedMcqQuestion.getMcqQuestionText());
+        // Create a new custom MCQ
+        McqQuestion customMcq = new McqQuestion();
+        customMcq.setMcqQuestionText(updatedMcqQuestion.getMcqQuestionText());
+        customMcq.setCorrectAnswer(updatedMcqQuestion.getCorrectAnswer());
+        customMcq.setCategory(updatedMcqQuestion.getCategory());
+        customMcq.setDifficulty(updatedMcqQuestion.getDifficulty());
 
-        if( updatedMcqQuestion.getMcqQuestionText()!=null)
-        existingMcqQuestion.setCategory(updatedMcqQuestion.getCategory());
-
-        if( updatedMcqQuestion.getCorrectAnswer()!=null)
-        existingMcqQuestion.setCorrectAnswer(updatedMcqQuestion.getCorrectAnswer());
-
-        //Set options
-        List<QuestionOption> existingOptions = existingMcqQuestion.getOptions();
-        existingOptions.clear();
+        // Copy options
         for (QuestionOption option : updatedMcqQuestion.getOptions()) {
-            if (option.getOptionId() != null) {
-                QuestionOption existingOption = questionOptionRepository.findById(option.getOptionId())
-                        .orElseThrow(() -> new IllegalArgumentException("Option not found"));
-                existingOption.setOptionText(option.getOptionText());
-                existingOption.setCorrect(option.isCorrect());
-                existingOptions.add(existingOption);
-            } else {
-                option.setMcqQuestion(existingMcqQuestion);
-                questionOptionRepository.save(option);
-                existingOptions.add(option);
-            }
+            QuestionOption copiedOption = new QuestionOption();
+            copiedOption.setOptionText(option.getOptionText());
+            copiedOption.setCorrect(option.isCorrect());
+            copiedOption.setMcqQuestion(customMcq);
+            customMcq.getOptions().add(copiedOption);
         }
-    
-        mcqRepository.save(existingMcqQuestion);
-        return convertToDto(existingMcqQuestion);
 
+        // Save the custom MCQ and associate it with the exam
+        mcqRepository.save(customMcq);
+        exam.addMcqQuestion(customMcq);
+        examRepository.save(exam);
+
+        return customMcq;
     }
+
 
     
     @Transactional
@@ -146,67 +145,67 @@ public class McqService {
 
     }
 
-    public ResponseEntity<QuestionOption> addOption(Long mcqId, QuestionOption questionOption) {
-        // Find the MCQ to be updated
-        McqQuestion mcqQuestion = mcqRepository.findById(mcqId)
-                .orElseThrow(() -> new IllegalArgumentException("Mcq question not found"));
+    // public ResponseEntity<QuestionOption> addOption(Long mcqId, QuestionOption questionOption) {
+    //     // Find the MCQ to be updated
+    //     McqQuestion mcqQuestion = mcqRepository.findById(mcqId)
+    //             .orElseThrow(() -> new IllegalArgumentException("Mcq question not found"));
 
-        // Create a new option
-        mcqQuestion.getOptions().add(questionOption);
-        questionOption.setMcqQuestion(mcqQuestion);
-        questionOptionRepository.save(questionOption);
-        mcqRepository.save(mcqQuestion);
+    //     // Create a new option
+    //     mcqQuestion.getOptions().add(questionOption);
+    //     questionOption.setMcqQuestion(mcqQuestion);
+    //     questionOptionRepository.save(questionOption);
+    //     mcqRepository.save(mcqQuestion);
 
-        return new ResponseEntity<>(questionOption, HttpStatus.OK);
-    }
+    //     return new ResponseEntity<>(questionOption, HttpStatus.OK);
+    // }
 
-    public ResponseEntity<QuestionOption> updateOption(Long mcqId, Long optionId, QuestionOption questionOption) {
+    // public ResponseEntity<QuestionOption> updateOption(Long mcqId, Long optionId, QuestionOption questionOption) {
 
-         // Find the MCQ to be updated
-        McqQuestion mcqQuestion = mcqRepository.findById(mcqId)
-                .orElseThrow(() -> new IllegalArgumentException("Mcq question not found"));
+    //      // Find the MCQ to be updated
+    //     McqQuestion mcqQuestion = mcqRepository.findById(mcqId)
+    //             .orElseThrow(() -> new IllegalArgumentException("Mcq question not found"));
 
-        //Find option to be updated
-        QuestionOption toBeUpdatedOption = mcqQuestion.getOptions().stream()
-                .filter(option -> option.getOptionId().equals(optionId))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Option ID not found"));
+    //     //Find option to be updated
+    //     QuestionOption toBeUpdatedOption = mcqQuestion.getOptions().stream()
+    //             .filter(option -> option.getOptionId().equals(optionId))
+    //             .findFirst()
+    //             .orElseThrow(() -> new IllegalArgumentException("Option ID not found"));
         
         
-        if(questionOption.isCorrect())
-        toBeUpdatedOption.setCorrect(questionOption.isCorrect());
+    //     if(questionOption.isCorrect())
+    //     toBeUpdatedOption.setCorrect(questionOption.isCorrect());
 
-        if(questionOption.getOptionText()!=null)
-        toBeUpdatedOption.setOptionText(questionOption.getOptionText());
+    //     if(questionOption.getOptionText()!=null)
+    //     toBeUpdatedOption.setOptionText(questionOption.getOptionText());
 
-        return new ResponseEntity<>(toBeUpdatedOption, HttpStatus.OK);
-    }
+    //     return new ResponseEntity<>(toBeUpdatedOption, HttpStatus.OK);
+    // }
 
-    public ResponseEntity<QuestionOption> deleteOption(Long mcqId, Long optionId) {
+    // public ResponseEntity<QuestionOption> deleteOption(Long mcqId, Long optionId) {
 
-        //Find mcq
-        McqQuestion mcqQuestion = mcqRepository.findById(mcqId)
-                .orElseThrow(() -> new IllegalArgumentException("Mcq question not found"));
+    //     //Find mcq
+    //     McqQuestion mcqQuestion = mcqRepository.findById(mcqId)
+    //             .orElseThrow(() -> new IllegalArgumentException("Mcq question not found"));
 
 
-        //Find option
-        QuestionOption toBeDeletedOption = mcqQuestion.getOptions().stream()
-                .filter(option -> option.getOptionId().equals(optionId))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Option ID not found"));
+    //     //Find option
+    //     QuestionOption toBeDeletedOption = mcqQuestion.getOptions().stream()
+    //             .filter(option -> option.getOptionId().equals(optionId))
+    //             .findFirst()
+    //             .orElseThrow(() -> new IllegalArgumentException("Option ID not found"));
 
-        mcqQuestion.getOptions().remove(toBeDeletedOption);
-        mcqRepository.save(mcqQuestion);
+    //     mcqQuestion.getOptions().remove(toBeDeletedOption);
+    //     mcqRepository.save(mcqQuestion);
 
-        questionOptionRepository.delete(toBeDeletedOption);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
+    //     questionOptionRepository.delete(toBeDeletedOption);
+    //     return new ResponseEntity<>(HttpStatus.OK);
+    // }
 
     public McqQuestion getMcqById(Long mcqId) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getMcqById'");
     }
-
+    
     public List<McqQuestion> getMcqQuestionByDifficultyAndCategory(String category, String difficulty) {
        
         if (category == null || category.isEmpty()) {

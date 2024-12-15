@@ -266,7 +266,7 @@ public class ExamService {
             // Save the MCQ question to the repository
 
             boolean alreadyPresent = existingExam.getMcqQuestions().stream()
-            .anyMatch(q -> q.getMcqQuestionText().equals(mcqQuestion.getMcqQuestionText()));
+            .anyMatch(q -> q.getMcqId()==mcqQuestion.getMcqId());
 
             if(!alreadyPresent){
             McqQuestion savedMcq = mcqRepository.save(mcqQuestion);
@@ -290,7 +290,7 @@ public class ExamService {
         for (ProgrammingQuestion programmingQuestion : listPro) {
             // Check if the question already exists
             boolean alreadyPresent = existingExam.getProgrammingQuestions().stream()
-                    .anyMatch(q -> q.getProgrammingQuestionText().equals(programmingQuestion.getProgrammingQuestionText()));
+                    .anyMatch(q -> q.getProgrammingQuestionId()==programmingQuestion.getProgrammingQuestionId());
     
             if (!alreadyPresent) {
                 // Add only if not present

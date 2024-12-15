@@ -38,8 +38,8 @@ public class McqQuestionController {
      }
 
      @PostMapping("/updateMcqQuestion")
-     public ResponseEntity<MCQ> updateMcqQuestion(@RequestParam Long mcqId, @RequestBody McqQuestion McqQuestion, @RequestParam Long examId) {
-         MCQ updated_mcq=mcqService.updateMcqQuestion(mcqId, McqQuestion, examId);
+     public ResponseEntity<McqQuestion> updateMcqQuestion(@RequestParam Long mcqId, @RequestBody McqQuestion McqQuestion, @RequestParam Long examId) {
+         McqQuestion updated_mcq=mcqService.updateMcqQuestion(mcqId, McqQuestion, examId);
          return new ResponseEntity<>(updated_mcq, HttpStatus.OK);
      }
 
@@ -49,21 +49,21 @@ public class McqQuestionController {
          return string;
      }
 
-     @PostMapping("/addOption")
-     public ResponseEntity<QuestionOption> addOption(@RequestBody QuestionOption questionOption, @RequestParam Long mcqId) {
-         return mcqService.addOption(mcqId, questionOption);
-     }
+    //  @PostMapping("/addOption")
+    //  public ResponseEntity<QuestionOption> addOption(@RequestBody QuestionOption questionOption, @RequestParam Long mcqId) {
+    //      return mcqService.addOption(mcqId, questionOption);
+    //  }
 
      
-     @PostMapping("/updateOption")
-     public ResponseEntity<QuestionOption> updateOption(@RequestBody QuestionOption questionOption, @RequestParam Long mcqId, @RequestParam Long optionId) {
-         return mcqService.updateOption(mcqId, optionId, questionOption);
-     }
+    //  @PostMapping("/updateOption")
+    //  public ResponseEntity<QuestionOption> updateOption(@RequestBody QuestionOption questionOption, @RequestParam Long mcqId, @RequestParam Long optionId) {
+    //      return mcqService.updateOption(mcqId, optionId, questionOption);
+    //  }
 
-     @DeleteMapping("/deleteOption")
-     public ResponseEntity<QuestionOption> deleteOption(@RequestParam Long mcqId, @RequestParam Long optionId) {
-        return mcqService.deleteOption(mcqId, optionId);
-    }
+    //  @DeleteMapping("/deleteOption")
+    //  public ResponseEntity<QuestionOption> deleteOption(@RequestParam Long mcqId, @RequestParam Long optionId) {
+    //     return mcqService.deleteOption(mcqId, optionId);
+    // }
 
     
     //Get Mcq by ID
