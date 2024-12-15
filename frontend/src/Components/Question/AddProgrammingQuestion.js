@@ -4,8 +4,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import axiosInstance from "../../utils/axiosInstance";
 
 const AddProgrammingQuestion = () => {
-  const json=useParams();
-  const examId=json.examId;
+  const {examId}=useParams();
   const [progQuestion, setProgQuestion]=useState([{programmingQuestionText:"", referenceAnswer:"", testCases:[]}])
   const [testCases, setTestCases]=useState([{input:"", expectedOutput:""}]);
   let navigate = useNavigate();

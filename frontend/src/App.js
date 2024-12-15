@@ -3,8 +3,8 @@ import './App.css';
 import {createBrowserRouter, RouterProvider} from 'react-router-dom'
 import LandingPage from './Components/LandingPage/LandingPage'
 import ExaminerLogin from './Components/ExaminerLogin/ExaminerLogin'
-import ExamineeLogin from './Components/ExamineeLogin/ExamineeLogin'
-import ExamineeDashboard from './Components/ExamineeDashBoard/ExamineeDashBoard'
+import ExamineeLogin from './Components/Examinee/ExamineeLogin'
+import ExamineeDashboard from './Components/Examinee/ExamineeDashBoard'
 import ExaminerDashBoard from './Components/ExaminerDashBoard/ExaminerDashBoard';
 import ExaminerSignin from './Components/ExaminerSignin/ExaminerSignin';
 import ManageExaminee from './Components/ManageExaminee/ManageExaminee';

@@ -91,7 +91,7 @@ const McqQuestionPool = () => {
       }
     } catch (error) {
       console.error("Error adding selected questions:", error);
-      alert("Failed to add selected questions. Please try again.");
+      alert("Failed to add selected questions. Please try again.", error.message);
     }
   };
 
@@ -124,7 +124,8 @@ const McqQuestionPool = () => {
           <p>Loading questions...</p>
         ) : mcqQuestions.length > 0 ? (
           mcqQuestions.map((question) => (
-            <div key={question.mcqId} className="flex">
+            <div key={question.mcqId}>
+              <div className='flex'>
               <Form.Check
                 type="checkbox"
                 checked={checkedState[question.mcqId] || false}
@@ -135,7 +136,21 @@ const McqQuestionPool = () => {
               <p>Answer: {question.correctAnswer}</p>
               <p>Difficulty: {question.difficulty}</p>
               <p>Category: {question.category}</p>
+              </div>
+              <div className='flex'>
+              {question.options.map((option, index) => (
+                  <div key={option.optionId || index}>
+                    {option.optionText}{" "}
+                    {option.isCorrect && (
+                      <strong classname="font-light bg-green-200">
+                        (Correct)
+                      </strong>
+                    )}
+                    </div>
+              ))}
+              </div>
             </div>
+            
           ))
         ) : (
           <p>No questions found for this category and difficulty level.</p>
