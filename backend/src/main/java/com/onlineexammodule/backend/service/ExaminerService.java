@@ -263,9 +263,39 @@ public class ExaminerService {
        examRepository.save(existingExam);
 
        return examinees.size() + " examinees added to exam ID " + examId;
+    }
+    public String assignToSpecificExaminee(List<Examinee> examinees, Long examId, String examiner_email) {
 
-    
+        //Fetch examiner
+        Examiner examiner=examinerRepository.findByEmail(examiner_email);
+       
+       if (examiner == null) {
+        throw new IllegalArgumentException("Examiner not found with email: " + examiner_email);
+    }
 
+       //Fetch exam from examiners all exams.
+       Exam existingExam=examiner.getExams().stream()
+               .filter(exam->exam.getExamId().equals(examId))
+               .findFirst()
+               .orElseThrow(()-> new IllegalArgumentException("Exam not found with ID "+ examId + " under examiner "+ examiner_email));
+        
+        //Add exam to the list of examinees
+        for(Examinee examinee:examinees){
+            Examinee existingExaminee = examineeRepository.findById(examinee.getExamineeId())
+            .orElseThrow(() -> new IllegalArgumentException("Examinee not found with ID: " + examinee.getExamineeId()));
+
+                if (!existingExaminee.getExams().contains(existingExam)) { // Avoid redundant additions
+                    existingExaminee.getExams().add(existingExam);
+                    existingExam.getExaminees().add(existingExaminee);
+                    
+                }
+                examineeRepository.save(existingExaminee);
+               }
+        
+        //Save
+        examRepository.save(existingExam);
+        
+        return examinees.size() + " examinees added to exam ID " + examId;
     }
 
 

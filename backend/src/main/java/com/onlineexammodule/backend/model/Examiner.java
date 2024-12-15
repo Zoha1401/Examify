@@ -54,10 +54,4 @@ public class Examiner {
    public void removeExaminee(Examinee examinee) {
       examinees.remove(examinee);
    }
-
-public Examiner orElseThrow(Object object) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'orElseThrow'");
-}
-
 }
