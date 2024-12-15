@@ -74,6 +74,21 @@ const ExamQuestions = () => {
     setProgrammingQuestions((prev)=>prev.filter((pq)=>pq.programmingQuestionId!==programmingQuestionId))
   }
   
+  const handleMcqUpdate = (updatedMcq) => {
+    setTechnicalMcqs((prevMcqs) =>
+      prevMcqs.map((mcq) => (mcq.mcqId === updatedMcq.mcqId ? updatedMcq : mcq))
+    );
+
+    setAptitudeMcqs((prevMcqs) =>
+      prevMcqs.map((mcq) => (mcq.mcqId === updatedMcq.mcqId ? updatedMcq : mcq))
+    );
+  };
+
+  const handleProgUpdate=(programmingQuestion)=>{
+    setProgrammingQuestions((prevProg)=>
+    prevProg.map((progQuestion)=> (progQuestion.programmingQuestionId===programmingQuestion.programmingQuestionId ? programmingQuestion:progQuestion)))
+  }
+  
     
   return (
     <div>
@@ -92,7 +107,7 @@ const ExamQuestions = () => {
           <p>You have no technical mcqs</p>
         ): (
           technicalMcqs.map((m)=>(
-             <Mcq key={m.mcqId} mcq={m} onDelete={handleDeleteTechnicalMcq}/>
+             <Mcq key={m.mcqId} mcq={m} onDelete={handleDeleteTechnicalMcq} onUpdate={handleMcqUpdate}/>
           ))
         )}
       </div>
@@ -104,7 +119,7 @@ const ExamQuestions = () => {
           <p>You have no aptitude mcqs</p>
         ): (
           aptitudeMcqs.map((m)=>(
-             <Mcq key={m.mcqId} mcq={m} onDelete={handleDeleteAptitudeMcq}/>
+             <Mcq key={m.mcqId} mcq={m} onDelete={handleDeleteAptitudeMcq} onUpdate={handleProgUpdate}/>
           ))
         )}
       </div>

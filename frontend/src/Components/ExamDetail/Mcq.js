@@ -4,7 +4,7 @@ import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
 import { useNavigate, useParams } from "react-router-dom";
 import axiosInstance from "../../utils/axiosInstance";
 
-const Mcq = ({ mcq, onDelete }) => {
+const Mcq = ({ mcq, onDelete, onUpdate }) => {
   const { examId } = useParams();
 
   const [editableMcq, setEditableMcq] = useState(null);
@@ -20,9 +20,16 @@ const Mcq = ({ mcq, onDelete }) => {
 
   const handleUpdateMcq = async () => {
     try{
+
+      const payload = {
+        ...editableMcq, 
+        options,        
+    };
+
       const response=await axiosInstance.post(`/mcqQuestion/updateMcqQuestion?mcqId=${editableMcq.mcqId}&examId=${examId}`,
-         { editableMcq,
-          ...options,},
+        {
+          ...payload,
+        },
 
           {
               headers:{
@@ -33,7 +40,8 @@ const Mcq = ({ mcq, onDelete }) => {
       if(response.status===200)
       {
           alert("Mcq updated")
-          window.location.reload();
+          onUpdate(response.data)
+          setEditableMcq(null); 
       }
   }
   catch(error)
@@ -145,3 +153,14 @@ const Mcq = ({ mcq, onDelete }) => {
 };
 
 export default Mcq;
+
+
+//Programming question updation to be done
+//Assign exams to examinee after creation of exam. (Dropdown, fetches all examinees, Assigned->checked, Not Assigned->Unchecked, state manage)
+//Assign all examinee one or more exam after exam creation (Checkbox beside every exam)
+
+//Examinee side exam design
+
+
+
+//Need to check the whole redundancy wala database and everything

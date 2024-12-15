@@ -1,16 +1,15 @@
-import React from 'react';
-import TestCase from './TestCase';
+import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axiosInstance from '../../utils/axiosInstance';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ModeEditOutlineIcon from '@mui/icons-material/ModeEditOutline';
 
-const ProgrammingQuestion = ({pq, onDelete}) => {
+const ProgrammingQuestion = ({pq, onDelete, onUpdate}) => {
+  
+  const [editableProQ, setEditableProQ]=useState(null);
+  const [testCases, setTestCases]=useState([]) 
 
-  const json = useParams();
-  console.log(json.examId);
-  const examId=json.examId;
-  console.log(examId)
+  const {examId}=useParams();
 
   let navigate=useNavigate();
   const token = localStorage.getItem("token");
@@ -20,6 +19,35 @@ const ProgrammingQuestion = ({pq, onDelete}) => {
     navigate("/examiner-login");
   }
 
+  const handleUpdateProQ=async()=>{
+    try{
+        const payload={
+          ...editableProQ,
+          testCases,
+        };
+
+        const response=await axiosInstance.post(`/programmingQuestion/updateProgrammingQuestion?examId=${examId}&proId=${editableProQ.programmingQuestionId}`,
+          {
+            ...payload,
+          },
+          {
+            headers:{
+                Authorization:`Bearer ${token}`
+            }
+          }
+
+        )
+        if(response.status===200){
+        alert("Programming Question Updated")
+        onUpdate(response.data)
+        setEditableProQ(null)
+        }
+    }
+    catch(error){
+      console.error("Error updating pro q:", error.response?.data || error.message);
+      alert("Error updating pro q. Please try again.");
+    }
+  }
   
   const handleDeleteProgrammingQuestion=async()=>{
      try{
@@ -42,17 +70,74 @@ const ProgrammingQuestion = ({pq, onDelete}) => {
       alert("Failed to delete question. Please try again.");
      }
   }
+
+  const onChange=(e)=>{
+    setEditableProQ({...editableProQ, [e.target.name]:e.target.value})
+  }
+
+  const handleEdit=()=>{
+    setEditableProQ(pq);
+    setTestCases(pq.testCases || [])
+  }
+
+  const handleTestCaseChange = (index, field, value) => {
+    const updatedTestCases = testCases.map((testCase, i) =>
+      i === index ? { ...testCase, [field]: value } : testCase
+    );
+    setTestCases(updatedTestCases);
+  }
   return (
     <>
     <div className='flex'>
         <h1>{pq.programmingQuestionText}</h1>
         <div className="flex">
           {pq.testCases && pq.testCases.map((t)=>(
-            <TestCase key={t.testcaseId} testcase={t} programmingQuestionId={pq.programmingQuestionId}/> 
+            <div className='flex'>
+              Input : {t.input}{" "}
+              Output: {t.expectedOutput}
+            </div>
            
           ))}
         </div>
-        <ModeEditOutlineIcon/>
+        <ModeEditOutlineIcon onClick={handleEdit}/>
+        {editableProQ && (
+          <form onSubmit={handleUpdateProQ}>
+              <input
+                type="text"
+                name="programmingQuestionText"
+                value={editableProQ.programmingQuestionText || ""}
+                onChange={onChange}
+              ></input>
+              <div className="flex">
+                {testCases.map((t, index) => (
+                  <div key={t.programmingQuestionId || index}>
+                    {t.input}{" "}
+                    {t.expectedOutput}{" "}
+                    <input
+                      type="text"
+                      name="input"
+                      value={t.input || ""}
+                      onChange={(e) =>
+                        handleTestCaseChange(index, "input", e.target.value)
+                      }
+                    ></input>
+                    <input
+                      type="text"
+                      name="expectedOutput"
+                      value={t.expectedOutput || ""}
+                      onChange={(e) =>
+                        handleTestCaseChange(index, "expectedOutput", e.target.value)
+                      }
+                    ></input>
+                   
+                  </div>
+                ))}
+              </div>
+              <button type="submit">Update Programming Question</button>
+          </form>
+        )}
+         
+        
         <DeleteIcon onClick={handleDeleteProgrammingQuestion}/>
     </div>
     </>
