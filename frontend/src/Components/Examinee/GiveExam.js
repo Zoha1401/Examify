@@ -9,7 +9,7 @@ const GiveExam = () => {
   const [programmingQuestions, setProgrammingQuestions] = useState([]);
   const [answers, setAnswers] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  let navigate=useNavigate();
+  let navigate = useNavigate();
   const token = localStorage.getItem("token");
   console.log(token);
   if (!token) {
@@ -18,9 +18,9 @@ const GiveExam = () => {
   }
 
   useEffect(() => {
-    const fetchAllMcqs = async () => {
+    const fetchQuestions = async () => {
       try {
-        const response = await axiosInstance.get(
+        const mcqResponse = await axiosInstance.get(
           `/examinee/getAllMcqQuestions?examId=${examId}`,
           {
             headers: {
@@ -28,8 +28,18 @@ const GiveExam = () => {
             },
           }
         );
-        console.log(response.data)
-        setMcqQuestions(response.data);
+
+        const programmingResponse = await axiosInstance.get(
+          `/examinee/getAllProgrammingQuestions?examId=${examId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        console.log(mcqResponse.data);
+        setMcqQuestions(mcqResponse.data);
+        setProgrammingQuestions(programmingResponse.data);
       } catch (error) {
         console.error("Error fetching MCQ:", error, error.message);
         alert("Failed to fetch MCQ. Please try again.");
@@ -37,8 +47,8 @@ const GiveExam = () => {
     };
 
     if (token && examId) {
-        fetchAllMcqs();
-      }
+      fetchQuestions();
+    }
   }, [token, examId]);
 
   const handleOptionChange = (mcqId, optionId) => {
@@ -48,39 +58,63 @@ const GiveExam = () => {
     });
   };
 
-  const handleSubmit=async()=>{
-
-  }
-  const currentMcq = mcqQuestions[currentQuestionIndex];
-
-  return (
-    <>
+  const renderMcq = (mcq) => {
+    return (
       <div>
-        {mcqQuestions.length===0 ? (
-            <div>No MCQ Questions found</div>
-        ):(
-            <div>
         <h2>Question {currentQuestionIndex + 1}</h2>
-        <p>{currentMcq.mcqQuestionText}</p>
+        <p>{mcq.mcqQuestionText}</p>
         <div className="options-container">
-          {currentMcq.options.map((option) => (
+          {mcq.options.map((option) => (
             <div key={option.optionId}>
               <input
                 type="radio"
-                name={`mcq-${currentMcq.mcqId}`}
+                name={`mcq-${mcq.mcqId}`}
                 value={option.optionId}
                 checked={
-                  answers.find((a) => a.mcqId === currentMcq.mcqId)
+                  answers.find((a) => a.mcqId === mcq.mcqId)
                     ?.selectedOptionId === option.optionId
                 }
-                onChange={() =>
-                  handleOptionChange(currentMcq.mcqId, option.optionId)
-                }
+                onChange={() => handleOptionChange(mcq.mcqId, option.optionId)}
               />
               {option.optionText}
             </div>
           ))}
         </div>
+      </div>
+    );
+  };
+
+  const renderProgrammingQuestion = (pq) => {
+    return (
+        <div>
+        <h2>Question {currentQuestionIndex + 1}</h2>
+        <p>{pq.programmingQuestionText}</p>
+        <div className="testcase-container">
+          {pq.testCases.map((t) => (
+            <div key={t.testcaseId}>
+              <p>{t.input}</p>
+              <p>{t.expectedOutput}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    )
+  };
+  const handleSubmit = async () => {};
+  const currentMcq = mcqQuestions[currentQuestionIndex];
+  const currentProgrammingQuestion=programmingQuestions[currentQuestionIndex-mcqQuestions.length]
+
+  return (
+    <>
+      <div>
+      {currentQuestionIndex < mcqQuestions.length ? (
+        renderMcq(currentMcq)
+      ) : currentProgrammingQuestion ? (
+        renderProgrammingQuestion(currentProgrammingQuestion)
+      ) : (
+        <div>No questions found.</div>
+      )}
+
         <div className="navigation-container">
           <button
             disabled={currentQuestionIndex === 0}
@@ -90,15 +124,13 @@ const GiveExam = () => {
           </button>
 
           <button
-            disabled={currentQuestionIndex === mcqQuestions.length-1}
+            disabled={currentQuestionIndex === mcqQuestions.length + programmingQuestions.length - 1}
             onClick={() => setCurrentQuestionIndex((prev) => prev + 1)}
           >
             Next
           </button>
         </div>
         <button onClick={handleSubmit}>Submit</button>
-        </div>
-        )}
       </div>
     </>
   );
