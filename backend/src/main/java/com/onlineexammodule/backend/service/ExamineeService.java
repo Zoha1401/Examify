@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 
 import com.onlineexammodule.backend.model.Exam;
 import com.onlineexammodule.backend.model.Examinee;
-
+import com.onlineexammodule.backend.model.McqQuestion;
+import com.onlineexammodule.backend.model.ProgrammingQuestion;
+import com.onlineexammodule.backend.repo.ExamRepository;
 // import com.onlineexammodule.backend.model.Examiner;
 import com.onlineexammodule.backend.repo.ExamineeRepository;
 // import org.springframework.security.core.AuthenticationException;
@@ -23,6 +25,11 @@ public class ExamineeService {
 
     @Autowired
     private ExamineeRepository examineeRepository;
+    private ExamRepository examRepository;
+
+    public ExamineeService(ExamRepository examRepository){
+        this.examRepository=examRepository;
+    }
 
     public String verify(String email)
     {
@@ -51,6 +58,20 @@ public class ExamineeService {
         Examinee existingExaminee=examineeRepository.findByEmail(examineeEmail);
         return existingExaminee.getExamineeId();
         
+    }
+
+    public List<McqQuestion> getAllMcqQuestions(Long examId) {
+        Exam existingExam = examRepository.findById(examId)
+                .orElseThrow(() -> new IllegalArgumentException("Exam not found or exam ID incorrect"));
+
+        return existingExam.getMcqQuestions();
+    }
+
+    public List<ProgrammingQuestion> getAllProgrammingQuestions(Long examId) {
+        Exam existingExam = examRepository.findById(examId)
+                .orElseThrow(() -> new IllegalArgumentException("Exam not found or exam ID incorrect"));
+
+        return existingExam.getProgrammingQuestions();
     }
 
 

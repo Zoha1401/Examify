@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.onlineexammodule.backend.DTO.ExamineeLoginRequest;
 import com.onlineexammodule.backend.model.Exam;
+import com.onlineexammodule.backend.model.McqQuestion;
+import com.onlineexammodule.backend.model.ProgrammingQuestion;
 import com.onlineexammodule.backend.service.ExamineeService;
 
 import org.springframework.web.bind.annotation.PostMapping;
@@ -50,6 +52,16 @@ public class ExamineeController {
     @GetMapping("/getAllExams")
     public List<Exam> getAllExams(@RequestParam Long examineeId) {
         return examineeService.getAllexams(examineeId);
+    }
+
+    @GetMapping("/getAllMcqQuestions")
+    public List<McqQuestion> getAllMcqQuestions(@RequestParam Long examId) {
+        return examineeService.getAllMcqQuestions(examId);
+    }
+    
+    @GetMapping("/getAllProgrammingQuestions")
+    public List<ProgrammingQuestion> getAllProQuestions(@RequestParam Long examId) {
+        return examineeService.getAllProgrammingQuestions(examId);
     }
     
    

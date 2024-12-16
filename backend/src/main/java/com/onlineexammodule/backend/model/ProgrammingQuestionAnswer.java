@@ -21,8 +21,7 @@ public class ProgrammingQuestionAnswer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long programmingAnswerId;
     
-    @Transient
-    private Long programmingQuestionId;
+    private String language;
     
     @ManyToOne
     @JoinColumn(name="programming_question_id", nullable = false)
