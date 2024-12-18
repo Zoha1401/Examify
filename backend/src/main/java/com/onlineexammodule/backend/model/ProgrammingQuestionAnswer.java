@@ -1,7 +1,6 @@
 package com.onlineexammodule.backend.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -32,7 +31,7 @@ public class ProgrammingQuestionAnswer {
 
     @ManyToOne
     @JoinColumn(name = "answer_id", nullable = false)
-    @JsonIgnore
+    @JsonBackReference("programmingReference")
     private Answer answer;
 
 

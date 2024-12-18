@@ -6,8 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
 
-import com.onlineexammodule.backend.DTO.AnswerDTO;
-import com.onlineexammodule.backend.DTO.MCQ;
 import com.onlineexammodule.backend.model.Answer;
 import com.onlineexammodule.backend.model.Exam;
 import com.onlineexammodule.backend.model.Examinee;
@@ -35,10 +33,6 @@ public class ExamineeService {
     private final ExamineeRepository examineeRepository;
     private final AnswerRepository answerRepository;
     private final ExamRepository examRepository;
-
-    private final McqRepository mcqRepository;
-
-    private final ProgrammingRepository programmingRepository;
     private final McqAnswerRepository mcqAnswerRepository;
     private final ProgrammingAnswerRepository programmingAnswerRepository;
 
@@ -47,8 +41,6 @@ public class ExamineeService {
             AnswerRepository answerRepository, ProgrammingAnswerRepository programmingAnswerRepository,
             McqAnswerRepository mcqAnswerRepository) {
         this.examRepository = examRepository;
-        this.mcqRepository = mcqRepository;
-        this.programmingRepository = programmingRepository;
         this.examineeRepository = examineeRepository;
         this.answerRepository = answerRepository;
         this.mcqAnswerRepository = mcqAnswerRepository;
@@ -172,6 +164,8 @@ public class ExamineeService {
             new_pro_answer.setAnswer(new_answer);
             programmingAnswerRepository.save(new_pro_answer);
         }
+        existingExam.getAnswers().add(new_answer);
+        examRepository.save(existingExam);
 
         // Save and return
         return answerRepository.save(new_answer);

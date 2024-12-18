@@ -47,11 +47,11 @@ public class Answer {
     
     
     @OneToMany(mappedBy = "answer", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
+    @JsonManagedReference("mcqAnswerReference")
     private List<McqAnswer> mcqAnswers = new ArrayList<>();
 
     @OneToMany(mappedBy = "answer", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
+    @JsonManagedReference("programmingReference")
     private List<ProgrammingQuestionAnswer> programmingQuestionAnswers = new ArrayList<>();
 
     
