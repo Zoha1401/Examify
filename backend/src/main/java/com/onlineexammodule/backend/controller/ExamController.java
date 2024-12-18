@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.onlineexammodule.backend.DTO.ExamRequest;
 import com.onlineexammodule.backend.model.Answer;
 import com.onlineexammodule.backend.model.Exam;
+import com.onlineexammodule.backend.model.McqAnswer;
 import com.onlineexammodule.backend.model.McqQuestion;
 import com.onlineexammodule.backend.model.ProgrammingQuestion;
+import com.onlineexammodule.backend.model.ProgrammingQuestionAnswer;
 import com.onlineexammodule.backend.service.ExamService;
 import com.onlineexammodule.backend.service.JWTService;
 
@@ -66,11 +68,6 @@ public class ExamController {
          return examService.getAllProgrammingQuestions(examId);
      }
      
-
-     @PostMapping("/submitExam")
-     public Answer submitAnswer(@RequestBody Answer answer, @RequestParam Long examineeId, @RequestParam Long examId) {
-        return examService.submitAnswer(answer, examineeId, examId);
-     }
      
      //To create a pool of questions
      @PostMapping("/addMcqQuestionList")

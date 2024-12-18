@@ -178,13 +178,5 @@ public class ExamineeService {
         
     }
 
-    public AnswerDTO convertToDTO(Answer answer){
-        AnswerDTO answerDTO=new AnswerDTO();
-        answerDTO.setAnswerId(answer.getAnswerId());
-        answerDTO.setMcqScore(answer.getMcqScore());
-        answerDTO.setPassed(answer.isPassed());
-        return answerDTO;
-
-    }
 
 }

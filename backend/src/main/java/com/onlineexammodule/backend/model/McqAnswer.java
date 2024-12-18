@@ -1,5 +1,8 @@
 package com.onlineexammodule.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -19,23 +22,16 @@ public class McqAnswer {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long mcqAnswerId;
+    private Long mcqAnswerId;
     
-    @Transient
     private Long mcqQuestionId;
 
-    @Transient
     private Long selectedOptionId;
-    
-    @ManyToOne
-    @JoinColumn(name = "mcq_id", nullable = false)
-    private McqQuestion mcqQuestion; 
 
-    @ManyToOne
-    @JoinColumn(name="option_id")
-    private QuestionOption selectedQuestionOption;
-
+    private boolean isCorrect;
+   
     @ManyToOne
     @JoinColumn(name = "answer_id", nullable = false)
+    @JsonIgnore
     private Answer answer;
 }

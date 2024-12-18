@@ -6,14 +6,11 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import com.onlineexammodule.backend.DTO.ExamRequest;
-import com.onlineexammodule.backend.model.Answer;
 import com.onlineexammodule.backend.model.Exam;
 import com.onlineexammodule.backend.model.Examinee;
 import com.onlineexammodule.backend.model.Examiner;
-import com.onlineexammodule.backend.model.McqAnswer;
 import com.onlineexammodule.backend.model.McqQuestion;
 import com.onlineexammodule.backend.model.ProgrammingQuestion;
-import com.onlineexammodule.backend.model.ProgrammingQuestionAnswer;
 import com.onlineexammodule.backend.repo.AnswerRepository;
 import com.onlineexammodule.backend.repo.ExamRepository;
 import com.onlineexammodule.backend.repo.ExamineeRepository;
@@ -30,14 +27,11 @@ public class ExamService {
 
     private final ExaminerRepo examinerRepository;
     private final ExamineeRepository examineeRepository;
-    private final AnswerRepository answerRepository;
     private final ExamRepository examRepository;
 
     private final McqRepository mcqRepository;
 
     private final ProgrammingRepository programmingRepository;
-    private final McqAnswerRepository mcqAnswerRepository;
-    private final ProgrammingAnswerRepository programmingAnswerRepository;
 
     public ExamService(ExaminerRepo examinerRepository, ExamRepository examRepository, McqRepository mcqRepository,
             ProgrammingRepository programmingRepository, ExamineeRepository examineeRepository,
@@ -48,9 +42,6 @@ public class ExamService {
         this.mcqRepository = mcqRepository;
         this.programmingRepository = programmingRepository;
         this.examineeRepository = examineeRepository;
-        this.answerRepository = answerRepository;
-        this.mcqAnswerRepository = mcqAnswerRepository;
-        this.programmingAnswerRepository = programmingAnswerRepository;
     }
 
     public Exam createExam(ExamRequest exam, String examiner_email) {
@@ -69,6 +60,8 @@ public class ExamService {
 
         // Option for examiner to create an exam for already existing examinee or not
         // all examinees.
+        System.out.println("isAssign"+ exam.isAssignToAllExaminees());
+        System.out.println("size"+ examiner.getExaminees().size());
         if (exam.isAssignToAllExaminees()) {
             List<Examinee> examinees = examiner.getExaminees();
             for (Examinee examinee_temp : examinees) {
@@ -204,56 +197,6 @@ public class ExamService {
         return existingExam.getProgrammingQuestions();
     }
 
-    public Answer submitAnswer(Answer answer, Long examineeId, Long examId) {
-
-        // Check in exam table if exam exists.
-        Exam existingExam = examRepository.findById(examId)
-                .orElseThrow(() -> new IllegalArgumentException("Exam not found or exam ID incorrect"));
-
-        // Check if examinee exists
-        Examinee existingExaminee = examineeRepository.findById(examineeId)
-                .orElseThrow(() -> new IllegalArgumentException("Examinee not found"));
-
-        // Check if examinee exists in that particular exam
-        if (!existingExam.getExaminees().contains(existingExaminee))
-            throw new IllegalArgumentException("Examinee not there for exam");
-
-        // Creating a new answer object
-        Answer new_answer = new Answer();
-
-        // Setting all values
-        new_answer.setExam(existingExam);
-        new_answer.setExaminee(existingExaminee);
-        new_answer.setMcqScore(answer.getMcqScore());
-        new_answer.setSubmitted(answer.isSubmitted());
-        new_answer.setPassed(answer.isPassed());
-        new_answer.setSubmitDateTime(answer.getSubmitDateTime());
-
-        // Save answer for mcq
-        for (McqAnswer mcqAnswer : answer.getMcqAnswers()) {
-            McqAnswer new_mcq_answer = new McqAnswer();
-            new_mcq_answer.setAnswer(new_answer);
-            McqQuestion mcqQuestion = mcqRepository.getReferenceById(mcqAnswer.getMcqQuestionId());
-            new_mcq_answer.setMcqQuestion(mcqQuestion);
-            new_mcq_answer.setSelectedQuestionOption(mcqAnswer.getSelectedQuestionOption());
-
-            mcqAnswerRepository.save(mcqAnswer);
-        }
-
-        // save answer for prograamming.
-        for (ProgrammingQuestionAnswer programmingQuestionAnswer : answer.getProgrammingQuestionAnswers()) {
-            ProgrammingQuestionAnswer new_pro_answer = new ProgrammingQuestionAnswer();
-            new_pro_answer.setAnswer(new_answer);
-            new_pro_answer.setCodeSubmission(programmingQuestionAnswer.getCodeSubmission());
-            new_pro_answer.setProgrammingQuestion(
-                    programmingRepository.getReferenceById(programmingQuestionAnswer.getProgrammingQuestionId()));
-
-            programmingAnswerRepository.save(new_pro_answer);
-        }
-        // save and return
-        return answerRepository.save(new_answer);
-
-    }
     
     @Transactional
     public List<McqQuestion> addMcqQuestionList(Long examId, List<McqQuestion> listMcqs) {
