@@ -54,21 +54,20 @@ const GiveExam = () => {
     }
   }, [token, examId]);
 
-  const handleOptionChange = (mcqId, optionId) => {
+  const handleOptionChange = (mcqQuestionId, optionId) => {
     setMcqAnswers((prevAnswers) => {
-      const updatedAnswers = prevAnswers.filter((a) => a.mcqId !== mcqId);
-      return [...updatedAnswers, { mcqId, selectedOptionId: optionId }];
+      const updatedAnswers = prevAnswers.filter((a) => a.mcqQuestionId !== mcqQuestionId);
+      return [...updatedAnswers, { mcqQuestionId, selectedOptionId: optionId }];
     });
     console.log(mcqAnswers);
   };
 
-  const onChangeCodeAnswer=(pqId, language, code)=>{
-    setCodeAnswers((prev)=>{
-        const updatedAnswers=prev.filter((a)=>a.pqId!==pqId);
-        return [...updatedAnswers, {pqId, language, codeSubmission:code}]
-    })
-        
-  }
+  const onChangeCodeAnswer = (pqId, language, code) => {
+    setCodeAnswers((prev) => {
+      const updatedAnswers = prev.filter((a) => a.pqId !== pqId);
+      return [...updatedAnswers, { pqId, language, codeSubmission: code }];
+    });
+  };
 
   const handleLanguageChange = (pqId, newLanguage) => {
     setCodeAnswers((prev) => {
@@ -81,9 +80,7 @@ const GiveExam = () => {
         return [...prev, { pqId, language: newLanguage, codeSubmission: "" }];
       }
     });
-    
   };
-  
 
   const renderMcq = (mcq) => {
     return (
@@ -98,7 +95,7 @@ const GiveExam = () => {
                 name={`mcq-${mcq.mcqId}`}
                 value={option.optionId}
                 checked={
-                  mcqAnswers.find((a) => a.mcqId === mcq.mcqId)
+                  mcqAnswers.find((a) => a.mcqQuestionId === mcq.mcqId)
                     ?.selectedOptionId === option.optionId
                 }
                 onChange={() => handleOptionChange(mcq.mcqId, option.optionId)}
@@ -112,7 +109,8 @@ const GiveExam = () => {
   };
 
   const renderProgrammingQuestion = (pq) => {
-    const currentAnswer = codeAnswers.find((a) => a.pqId === pq.programmingQuestionId) || {};
+    const currentAnswer =
+      codeAnswers.find((a) => a.pqId === pq.programmingQuestionId) || {};
     const { language = "C++", codeSubmission = "" } = currentAnswer;
     console.log(codeAnswers);
     return (
@@ -120,46 +118,95 @@ const GiveExam = () => {
         <Dropdown>
           <Dropdown.Toggle variant="secondary">{language}</Dropdown.Toggle>
           <Dropdown.Menu>
-            <Dropdown.Item onClick={() => handleLanguageChange(pq.programmingQuestionId, "C++")}>
+            <Dropdown.Item
+              onClick={() =>
+                handleLanguageChange(pq.programmingQuestionId, "C++")
+              }
+            >
               C++
             </Dropdown.Item>
-            <Dropdown.Item onClick={() => handleLanguageChange(pq.programmingQuestionId, "Java")}>
+            <Dropdown.Item
+              onClick={() =>
+                handleLanguageChange(pq.programmingQuestionId, "Java")
+              }
+            >
               Java
             </Dropdown.Item>
-            <Dropdown.Item onClick={() => handleLanguageChange(pq.programmingQuestionId, "Python")}>
+            <Dropdown.Item
+              onClick={() =>
+                handleLanguageChange(pq.programmingQuestionId, "Python")
+              }
+            >
               Python
             </Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
-  
+
         <div className="programming-question">
           <h2>Question {currentQuestionIndex + 1}</h2>
           <p>{pq.programmingQuestionText}</p>
           <div className="testcase-container">
             {pq.testCases.map((t) => (
               <div key={t.testcaseId} className="testcase">
-                <p><strong>Input:</strong> {t.input}</p>
-                <p><strong>Expected Output:</strong> {t.expectedOutput}</p>
+                <p>
+                  <strong>Input:</strong> {t.input}
+                </p>
+                <p>
+                  <strong>Expected Output:</strong> {t.expectedOutput}
+                </p>
               </div>
             ))}
           </div>
-  
+
           <div>
-            <label htmlFor={`codeSubmission-${pq.programmingQuestionId}`}>Your Code:</label>
+            <label htmlFor={`codeSubmission-${pq.programmingQuestionId}`}>
+              Your Code:
+            </label>
             <textarea
               id={`codeSubmission-${pq.programmingQuestionId}`}
               rows="10"
               cols="50"
               value={codeSubmission}
-              onChange={(e) => onChangeCodeAnswer(pq.programmingQuestionId, language, e.target.value)}
+              onChange={(e) =>
+                onChangeCodeAnswer(
+                  pq.programmingQuestionId,
+                  language,
+                  e.target.value
+                )
+              }
             ></textarea>
           </div>
         </div>
       </div>
     );
   };
+
+  const handleSubmit = async () => {
+    try {
+      const payload = {
+        mcqAnswers,
+        programmingQuestionAnswers: codeAnswers,
+      };
   
-  const handleSubmit = async () => {};
+      console.log(payload)
+      const response = await axiosInstance.post(
+        `/examinee/submitExam?examId=${examId}`,
+       payload,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log(response);
+      alert("Exam submitted");
+      //Submit screen
+      navigate("/");
+    } catch (error) {
+      console.error("Error submiting exam:", error, error.message);
+      alert("Failed to submit exam. Please try again.");
+    }
+  };
   const currentMcq = mcqQuestions[currentQuestionIndex];
   const currentProgrammingQuestion =
     programmingQuestions[currentQuestionIndex - mcqQuestions.length];
@@ -200,3 +247,8 @@ const GiveExam = () => {
 };
 
 export default GiveExam;
+
+//For this week
+
+//Integrate Frontend with submit exam
+//Integrate assign to all examinees
