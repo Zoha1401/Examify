@@ -158,9 +158,3 @@ export default Mcq;
 //Programming question updation to be done
 //Assign exams to examinee after creation of exam. (Dropdown, fetches all examinees, Assigned->checked, Not Assigned->Unchecked, state manage)
 //Assign all examinee one or more exam after exam creation (Checkbox beside every exam)
-
-//Examinee side exam design
-
-
-
-//Need to check the whole redundancy wala database and everything

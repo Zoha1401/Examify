@@ -13,7 +13,7 @@ const ExaminerDashBoard = () => {
     const fetchAllExams = async () => {
       try {
         const token = localStorage.getItem("token");
-        console.log(token);
+        console.log("Token:", token); 
         if (!token) {
           alert("You are not authorized please login again");
           navigate("/examiner-login");

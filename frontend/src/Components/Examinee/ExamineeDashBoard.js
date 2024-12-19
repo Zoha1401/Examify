@@ -6,8 +6,8 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 const ExamineeDashBoard = () => {
   const [exams, setExams] = useState([]);
   let navigate = useNavigate();
-  const parameter=useParams();
-  const examineeEmail=parameter.email
+  const parameter = useParams();
+  const examineeEmail = parameter.email;
 
   const token = localStorage.getItem("token");
   console.log(token);
@@ -25,11 +25,10 @@ const ExamineeDashBoard = () => {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
-      
+
         console.log(responseId.data);
-      
+
         const examineeId = responseId.data;
-        
 
         const response = await axiosInstance.get(
           `/examinee/getAllExams?examineeId=${examineeId}`,
@@ -52,17 +51,19 @@ const ExamineeDashBoard = () => {
     <>
       <div>Exams:</div>
       <div className="flex">
-        {exams.length>0 ? (exams.map((exam, index) => (
-          <div key={exam.examId || index} className="mx-2">
-            {exam.startTime}
-            {exam.duration} min
-          </div>
-        ))):(
+        {exams.length > 0 ? (
+          exams.map((exam, index) => (
+            <div key={exam.examId || index} className="mx-2">
+              {exam.startTime}
+              {exam.duration} min
+              <Link to={`/startExam/${exam.examId}`}>
+                <Button>Start Exam</Button>
+              </Link>
+            </div>
+          ))
+        ) : (
           <p>No exams available</p>
         )}
-        <Link to="/">
-          <Button>Start Exam</Button>
-        </Link>
       </div>
     </>
   );
