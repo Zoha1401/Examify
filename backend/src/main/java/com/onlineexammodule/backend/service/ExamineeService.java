@@ -159,13 +159,15 @@ public class ExamineeService {
             new_pro_answer.setLanguage(programmingQuestionAnswer.getLanguage());
             new_pro_answer.setCodeSubmission(programmingQuestionAnswer.getCodeSubmission());
             System.out.println("Saving ProgrammingQuestionAnswer: " + new_pro_answer);
-           
+            new_pro_answer.setPqId(programmingQuestionAnswer.getPqId());
             new_answer.getProgrammingQuestionAnswers().add(new_pro_answer);
             new_pro_answer.setAnswer(new_answer);
             programmingAnswerRepository.save(new_pro_answer);
         }
         existingExam.getAnswers().add(new_answer);
         examRepository.save(existingExam);
+        existingExaminee.getAnswers().add(new_answer);
+        examineeRepository.save(existingExaminee);
 
         // Save and return
         return answerRepository.save(new_answer);

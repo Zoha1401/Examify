@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import com.onlineexammodule.backend.DTO.ExamRequest;
+import com.onlineexammodule.backend.model.Answer;
 import com.onlineexammodule.backend.model.Exam;
 import com.onlineexammodule.backend.model.Examinee;
 import com.onlineexammodule.backend.model.Examiner;
@@ -277,6 +278,13 @@ public class ExamService {
                 .collect(Collectors.toList());
         
         return mcqQuestions;
+    }
+
+    public List<Answer> getAllAnswers(Long examId) {
+        Exam exam = examRepository.findById(examId)
+                .orElseThrow(() -> new IllegalArgumentException("Exam does not exist, Incorrect exam Id"));
+        
+        return exam.getAnswers();
     }
 
     // public Exam createExamWithQuestions(Exam exam, List<Long> mcqQuestionIds,
