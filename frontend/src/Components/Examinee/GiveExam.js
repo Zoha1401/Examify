@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axiosInstance from "../../utils/axiosInstance";
 import { useNavigate, useParams } from "react-router-dom";
 import { Dropdown } from "react-bootstrap";
+import { ClipboardEvent } from "react"
 
 const GiveExam = () => {
   const { examId } = useParams();
@@ -15,6 +16,7 @@ const GiveExam = () => {
   const [mcqAnswers, setMcqAnswers] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [deadline, setDeadline] = useState(0);
+  const [clipBoardContent, setClipBoardContent]= useState("")
 
   let navigate = useNavigate();
   const token = localStorage.getItem("token");
@@ -23,6 +25,7 @@ const GiveExam = () => {
     navigate("/examinee-login");
   }
 
+  
   useEffect(() => {
     const fetchExamById = async () => {
       try {
@@ -86,11 +89,11 @@ const GiveExam = () => {
 
   useEffect(() => {
     if (!deadline) return; // Ensure deadline is set
-    console.log("Deadline is ", deadline)
+    console.log("Deadline is ", deadline);
     const interval = setInterval(() => {
       const now = Date.now();
       const timeLeft = deadline - now;
-  
+
       if (timeLeft <= 0) {
         clearInterval(interval);
         setMinutes(0);
@@ -99,11 +102,11 @@ const GiveExam = () => {
         handleSubmit(); // Automatically submit the exam
         return;
       }
-  
+
       setMinutes(Math.floor((timeLeft / 1000 / 60) % 60));
       setSeconds(Math.floor((timeLeft / 1000) % 60));
     }, 1000);
-  
+
     return () => clearInterval(interval); // Cleanup on unmount
   }, [deadline]);
 
@@ -137,6 +140,46 @@ const GiveExam = () => {
     });
   };
 
+  // const preventCopyPaste = (e) => {
+  //   e.preventDefault()
+  //   alert("Copying and pasting is not allowed!")
+  // }
+
+  const handleCopy = (e) => {
+    const selectedText = e.target.value.substring(
+      e.target.selectionStart,
+      e.target.selectionEnd
+    );
+    if (selectedText) {
+      e.clipboardData.setData("text/plain", selectedText);
+      setClipBoardContent(selectedText); // Store copied text internally
+      e.preventDefault();
+    }
+  };
+
+  const handleCut = (e) => {
+    const selectedText = e.target.value.substring(
+      e.target.selectionStart,
+      e.target.selectionEnd
+    );
+    if (selectedText) {
+      e.clipboardData.setData("text/plain", selectedText);
+      setClipBoardContent(selectedText);
+      e.target.value = e.target.value.selectionEnd
+      e.preventDefault();
+    }
+  };
+  
+
+  const handlePaste = (e) => {
+    const pastedText = e.clipboardData.getData("text/plain");
+    if (pastedText !== clipBoardContent) {
+      e.preventDefault();
+      alert("Pasting from outside is not allowed!");
+    }
+  };
+
+
   const renderMcq = (mcq) => {
     return (
       <div>
@@ -168,6 +211,7 @@ const GiveExam = () => {
       codeAnswers.find((a) => a.pqId === pq.programmingQuestionId) || {};
     const { language = "C++", codeSubmission = "" } = currentAnswer;
     console.log(codeAnswers);
+  
     return (
       <div>
         <Dropdown>
@@ -229,6 +273,9 @@ const GiveExam = () => {
                   e.target.value
                 )
               }
+              onCopy={(e) => handleCopy(e)}
+              onPaste={(e) => handlePaste(e)}
+              onCut={(e) => handleCut(e)}
             ></textarea>
           </div>
         </div>
@@ -269,18 +316,18 @@ const GiveExam = () => {
   return (
     <>
       <div className="timer">
-      <div className="col-4">
-        <div className="box">
-          <p id="minute">{minutes < 10 ? "0" + minutes : minutes}</p>
-          <span className="text">Minutes</span>
+        <div className="col-4">
+          <div className="box">
+            <p id="minute">{minutes < 10 ? "0" + minutes : minutes}</p>
+            <span className="text">Minutes</span>
+          </div>
         </div>
-      </div>
-      <div className="col-4">
-        <div className="box">
-          <p id="second">{seconds < 10 ? "0" + seconds : seconds}</p>
-          <span className="text">Seconds</span>
+        <div className="col-4">
+          <div className="box">
+            <p id="second">{seconds < 10 ? "0" + seconds : seconds}</p>
+            <span className="text">Seconds</span>
+          </div>
         </div>
-      </div>
       </div>
 
       <div>
