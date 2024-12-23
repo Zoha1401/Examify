@@ -6,21 +6,50 @@ import { Dropdown } from "react-bootstrap";
 const GiveExam = () => {
   const { examId } = useParams();
 
+  const [minutes, setMinutes] = useState(0);
+  const [seconds, setSeconds] = useState(0);
+  const [exam, setExam] = useState({});
   const [mcqQuestions, setMcqQuestions] = useState([]);
   const [programmingQuestions, setProgrammingQuestions] = useState([]);
   const [codeAnswers, setCodeAnswers] = useState([]);
   const [mcqAnswers, setMcqAnswers] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [deadline, setDeadline] = useState(0);
 
   let navigate = useNavigate();
   const token = localStorage.getItem("token");
-  console.log(token);
   if (!token) {
     alert("You are not authorized please login again");
     navigate("/examinee-login");
   }
 
   useEffect(() => {
+    const fetchExamById = async () => {
+      try {
+        const examResponse = await axiosInstance.get(
+          `/examinee/getExamById?examId=${examId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        console.log(examResponse);
+        const { duration } = examResponse.data;
+        setExam(examResponse.data);
+        console.log("Duration:", duration);
+        if (!duration || duration <= 0) {
+          console.error("Invalid duration:", duration);
+          alert("Invalid exam duration.");
+          return;
+        }
+        const calculatedEndTime = Date.now() + duration * 60 * 1000;
+        setDeadline(calculatedEndTime);
+      } catch (error) {
+        console.error("Error fetching exam:", error, error.message);
+        alert("Failed to fetch exam. Please try again.");
+      }
+    };
     const fetchQuestions = async () => {
       try {
         const mcqResponse = await axiosInstance.get(
@@ -51,12 +80,38 @@ const GiveExam = () => {
 
     if (token && examId) {
       fetchQuestions();
+      fetchExamById();
     }
   }, [token, examId]);
 
+  useEffect(() => {
+    if (!deadline) return; // Ensure deadline is set
+    console.log("Deadline is ", deadline)
+    const interval = setInterval(() => {
+      const now = Date.now();
+      const timeLeft = deadline - now;
+  
+      if (timeLeft <= 0) {
+        clearInterval(interval);
+        setMinutes(0);
+        setSeconds(0);
+        alert("Time's up!");
+        handleSubmit(); // Automatically submit the exam
+        return;
+      }
+  
+      setMinutes(Math.floor((timeLeft / 1000 / 60) % 60));
+      setSeconds(Math.floor((timeLeft / 1000) % 60));
+    }, 1000);
+  
+    return () => clearInterval(interval); // Cleanup on unmount
+  }, [deadline]);
+
   const handleOptionChange = (mcqQuestionId, optionId) => {
     setMcqAnswers((prevAnswers) => {
-      const updatedAnswers = prevAnswers.filter((a) => a.mcqQuestionId !== mcqQuestionId);
+      const updatedAnswers = prevAnswers.filter(
+        (a) => a.mcqQuestionId !== mcqQuestionId
+      );
       return [...updatedAnswers, { mcqQuestionId, selectedOptionId: optionId }];
     });
     console.log(mcqAnswers);
@@ -187,11 +242,11 @@ const GiveExam = () => {
         mcqAnswers,
         programmingQuestionAnswers: codeAnswers,
       };
-  
-      console.log(payload)
+
+      console.log(payload);
       const response = await axiosInstance.post(
         `/examinee/submitExam?examId=${examId}`,
-       payload,
+        payload,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -213,6 +268,21 @@ const GiveExam = () => {
 
   return (
     <>
+      <div className="timer">
+      <div className="col-4">
+        <div className="box">
+          <p id="minute">{minutes < 10 ? "0" + minutes : minutes}</p>
+          <span className="text">Minutes</span>
+        </div>
+      </div>
+      <div className="col-4">
+        <div className="box">
+          <p id="second">{seconds < 10 ? "0" + seconds : seconds}</p>
+          <span className="text">Seconds</span>
+        </div>
+      </div>
+      </div>
+
       <div>
         {currentQuestionIndex < mcqQuestions.length ? (
           renderMcq(currentMcq)
