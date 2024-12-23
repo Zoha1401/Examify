@@ -2,23 +2,44 @@ import React, { useState } from "react";
 import { Button } from "react-bootstrap";
 import axiosInstance from "../../utils/axiosInstance";
 import { Link, useNavigate } from "react-router-dom";
-import Form from "react-bootstrap/Form";
+import dayjs from "dayjs";
 import InputGroup from "react-bootstrap/InputGroup";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 
 const CreateExam = () => {
   const [data, setData] = useState({});
-  const [assignToAllExaminee, setAssignToAllExaminee]=useState(false);
+  const [assignToAllExaminee, setAssignToAllExaminee] = useState(false);
   let navigate = useNavigate();
 
-  const onChange = (e) => {
-    setData({ ...data, [e.target.name]: e.target.value });
+  const onChange = (key, value) => {
+    setData({ ...data, [key]: value });
+  };
+  
+  const combineAndFormatDateTime = (date, time) => {
+    if (dayjs(date).isValid() && dayjs(time).isValid()) {
+      const combined = dayjs(date)
+        .hour(dayjs(time).hour())
+        .minute(dayjs(time).minute())
+        .second(0); // Set seconds to 0 if not provided
+      return combined.format("YYYY-MM-DDTHH:mm:ss");
+    } else {
+      return "Invalid date or time";
+    }
   };
 
   const handleAdd = async (e) => {
     e.preventDefault();
 
-    const { startTime, endTime, mcqPassingScore, duration } = data;
-    console.log(startTime, duration, mcqPassingScore);
+    const { date, startTime, endTime, mcqPassingScore, duration } = data;
+    // console.log(startTime, duration, mcqPassingScore);
+    const formattedStartTime=combineAndFormatDateTime(date, startTime)
+    const formattedEndTime=combineAndFormatDateTime(date, endTime)
+    console.log(formattedStartTime)
+    console.log(formattedEndTime)
     try {
       const token = localStorage.getItem("token");
       console.log(token);
@@ -30,11 +51,11 @@ const CreateExam = () => {
       const response = await axiosInstance.post(
         "/exam/createExam",
         {
-          startTime,
-          endTime,
+          startTime:formattedStartTime,
+          endTime:formattedEndTime,
           duration,
           mcqPassingScore,
-          assignToAllExaminee
+          assignToAllExaminee,
         },
 
         {
@@ -45,7 +66,7 @@ const CreateExam = () => {
       );
 
       if (response.status === 200) {
-        const examId=response.data.examId
+        const examId = response.data.examId;
         alert("Exam is successfully created");
         navigate(`/exam-detail/${examId}`);
       }
@@ -58,136 +79,71 @@ const CreateExam = () => {
     }
   };
 
-  const handleCheckboxChange=(e)=>{
-     setAssignToAllExaminee(e.target.checked);
-  }
+  const handleCheckboxChange = (e) => {
+    setAssignToAllExaminee(e.target.checked);
+  };
 
   return (
     <>
       <Button variant="secondary">
-        <Link to="/examiner-dashboard">Back Icon</Link>
+        <Link to="/examiner-dashboard">Back</Link>
       </Button>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
-        <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-          <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">
-            Add Exam
-          </h2>
-        </div>
-
-        <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form
-            action="#"
-            method="POST"
-            className="space-y-6"
-            onSubmit={handleAdd}
-          >
+        <h2 className="text-center text-2xl font-bold">Add Exam</h2>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <form className="space-y-6" onSubmit={handleAdd}>
             <div>
-              <label
-                htmlFor="startTime"
-                className="block text-sm/6 font-medium text-gray-900"
-              >
-                Start Time
-              </label>
-              <div className="mt-2">
-                <input
-                  id="startTime"
-                  name="startTime"
-                  type="startTime"
-                  required
-                  autoComplete="startTime"
-                  value={data.startTime}
-                  onChange={onChange}
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
-                />
-              </div>
+              <label>Date</label>
+              <DatePicker
+                label="Pick a date"
+                value={data.date}
+                onChange={(value) => onChange("date", value)}
+              />
             </div>
-
             <div>
-              <div className="flex items-center justify-between">
-                <label
-                  htmlFor="endTime"
-                  className="block text-sm/6 font-medium text-gray-900"
-                >
-                  End Time
-                </label>
-              </div>
-              <div className="mt-2">
-                <input
-                  id="endTime"
-                  name="endTime"
-                  required
-                  autoComplete="current-password"
-                  value={data.endTime}
-                  onChange={onChange}
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
-                />
-              </div>
+              <label>Start Time</label>
+              <TimePicker
+                label="Select start time"
+                value={data.startTime}
+                onChange={(value) => onChange("startTime", value)}
+              />
             </div>
-
             <div>
-              <div className="flex items-center justify-between">
-                <label
-                  htmlFor="mcqPassingScore"
-                  className="block text-sm/6 font-medium text-gray-900"
-                >
-                  MCQ Passing Score
-                </label>
-              </div>
-              <div className="mt-2">
-                <input
-                  id="mcqPassingScore"
-                  name="mcqPassingScore"
-                  required
-                  autoComplete="current-password"
-                  value={data.mcqPassingScore}
-                  onChange={onChange}
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
-                />
-              </div>
+              <label>End Time</label>
+              <TimePicker
+                label="Select end time"
+                value={data.endTime}
+                onChange={(value) => onChange("endTime", value)}
+              />
             </div>
-
             <div>
-              <div className="flex items-center justify-between">
-                <label
-                  htmlFor="duration"
-                  className="block text-sm/6 font-medium text-gray-900"
-                >
-                  Duration
-                </label>
-              </div>
-              <div className="mt-2">
-                <input
-                  id="duration"
-                  name="duration"
-                  required
-                  autoComplete="current-password"
-                  value={data.duration}
-                  onChange={onChange}
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
-                />
-              </div>
+              <label>MCQ Passing Score</label>
+              <input
+                type="number"
+                value={data.mcqPassingScore}
+                onChange={(e) => onChange("mcqPassingScore", e.target.value)}
+              />
             </div>
-
             <div>
-              <InputGroup className="mb-3">
-                <InputGroup.Checkbox aria-label="Checkbox for following text input" 
-                checked={assignToAllExaminee}
-                onChange={handleCheckboxChange} />
+              <label>Duration</label>
+              <input
+                type="number"
+                value={data.duration}
+                onChange={(e) => onChange("duration", e.target.value)}
+              />
+            </div>
+            <div>
+              <InputGroup>
+                <InputGroup.Checkbox
+                  checked={assignToAllExaminee}
+                  onChange={handleCheckboxChange}
+                />
                 Assign to all Examinees
-                <Form.Control aria-label="Assign to all examinees" className="mx-2" /> 
               </InputGroup>
             </div>
-
-            <div>
-              <button
-                type="submit"
-                className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              >
-                Add Examinee
-              </button>
-            </div>
+            <button type="submit">Add Exam</button>
           </form>
-        </div>
+        </LocalizationProvider>
       </div>
     </>
   );
