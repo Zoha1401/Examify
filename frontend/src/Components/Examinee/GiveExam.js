@@ -183,8 +183,8 @@ const GiveExam = () => {
   const renderMcq = (mcq) => {
     return (
       <div>
-        <h2>Question {currentQuestionIndex + 1}</h2>
-        <p>{mcq.mcqQuestionText}</p>
+        <h2 className="select-none">Question {currentQuestionIndex + 1}</h2>
+        <p className="select-none">{mcq.mcqQuestionText}</p>
         <div className="options-container">
           {mcq.options.map((option) => (
             <div key={option.optionId}>
@@ -242,16 +242,16 @@ const GiveExam = () => {
         </Dropdown>
 
         <div className="programming-question">
-          <h2>Question {currentQuestionIndex + 1}</h2>
-          <p>{pq.programmingQuestionText}</p>
+          <h2 className="select-none">Question {currentQuestionIndex + 1}</h2>
+          <p className="select-none">{pq.programmingQuestionText}</p>
           <div className="testcase-container">
             {pq.testCases.map((t) => (
               <div key={t.testcaseId} className="testcase">
                 <p>
-                  <strong>Input:</strong> {t.input}
+                  <strong className="select-none">Input:</strong> {t.input}
                 </p>
                 <p>
-                  <strong>Expected Output:</strong> {t.expectedOutput}
+                  <strong className="select-none">Expected Output:</strong> {t.expectedOutput}
                 </p>
               </div>
             ))}
