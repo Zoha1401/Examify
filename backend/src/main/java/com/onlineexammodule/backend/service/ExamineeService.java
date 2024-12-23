@@ -174,5 +174,12 @@ public class ExamineeService {
         
     }
 
+    public Exam getExamById(Long examId) {
+        Exam existingExam = examRepository.findById(examId)
+        .orElseThrow(() -> new IllegalArgumentException("Exam not found for ID: " + examId));
+        System.out.println("Exam found: " + existingExam.getExamId());
+        return existingExam;
+    }
+
 
 }

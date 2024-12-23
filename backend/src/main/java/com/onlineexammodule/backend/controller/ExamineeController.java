@@ -91,6 +91,12 @@ public class ExamineeController {
     public String getMethodName(@RequestParam String param) {
         return new String();
     }
+
+    @GetMapping("/getExamById")
+    public Exam getExamById(@RequestParam Long examId) {
+        return examineeService.getExamById(examId);
+    }
+    
     
     
 }
