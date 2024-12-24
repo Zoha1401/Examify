@@ -7,13 +7,13 @@ import Exam from "./ExamDetail/Exam";
 const ExaminerDashBoard = () => {
   const [exams, setExams] = useState([]);
   const [loading, setLoading] = useState(false);
-  let navigate=useNavigate();
+  let navigate = useNavigate();
 
   useEffect(() => {
     const fetchAllExams = async () => {
       try {
         const token = localStorage.getItem("token");
-        console.log("Token:", token); 
+        console.log("Token:", token);
         if (!token || !token.includes(".")) {
           alert("You are not authorized please login again");
           navigate("/examiner-login");
@@ -38,48 +38,66 @@ const ExaminerDashBoard = () => {
       } finally {
         setLoading(false);
       }
-      
     };
     fetchAllExams();
   }, []);
 
   return (
-    <div>
-      <h1>This is Examiner Dashboard</h1>
-      <div>
+    <>
+    <div className="flex flex-col bg-white justify-center items-center px-4 py-6">
+     <h1 className="text-2xl font-bold text-center mb-6">Examiner Dashboard</h1>
+      <div className="flex flex-row my-2 mb-4 px-2">
+      
+        <Link to="/manage-examinee">
+          <Button variant="dark" className="px-3 my-3 mx-2">
+            Manage Examinees
+          </Button>
+        </Link>
+         {/* This will show a list of all examinees added by examiner, where he/she can add, update or delete examinee. Can also assign an exam from here to examinee, also bulk upload examinee*/}
+        <Link to="/create-exam">
+          <Button variant="dark" className="px-3 my-3 mx-2">
+            Create Exam
+          </Button>
+        </Link>
+      </div>
+      <div className="grid grid-cols-5 gap-4 text-center font-semibold">
+        <span>Exam ID</span>
+        <span>Date</span>
+        <span>Start Time</span>
+        <span>End Time</span>
+        <span>Duration</span>
+      </div>
+      </div>     
+      
+      <div className="">
         {loading ? (
           <p>Loading...</p>
-        ): exams.length===0 ? (
+        ) : exams.length === 0 ? (
           <p>You have no exams</p>
-        ): (
-          exams.map((e)=>(
-             <Exam key={e.examId} temp_exam={e}/>
-          ))
+        ) : (
+          exams.map((e) => <Exam key={e.examId} temp_exam={e}/>)
         )}
       </div>
-      <Button variant="info">
-        <Link to="/manage-examinee">Manage examinees</Link>{" "}
-      </Button>
-      {/* This will show a list of all examinees added by examiner, where he/she can add, update or delete examinee. Can also assign an exam from here to examinee, also bulk upload examinee*/}
-     
-      <Button>
-        <Link to="/create-exam">Create Exam</Link>
-      </Button>
-    </div>
+   
+    </>
   );
 };
 
 export default ExaminerDashBoard;
 
- {/* Dashboard will show a button to create exam and all the existing exams of examiner. Add a filter to show the most recent exam in first and finished exams at end
-       Edit exam takes you to a new page where you can delete/Update/add questions  .... will see about question pool */}
-      {/*have a dropdown that will show all examinees assigned to that exam and their respective result if exam done or nothing*/}
-      {/*An exam on click will see all the questions in different sections and be able to edit */}
+{
+  /* Dashboard will show a button to create exam and all the existing exams of examiner. Add a filter to show the most recent exam in first and finished exams at end
+       Edit exam takes you to a new page where you can delete/Update/add questions  .... will see about question pool */
+}
+{
+  /*have a dropdown that will show all examinees assigned to that exam and their respective result if exam done or nothing*/
+}
+{
+  /*An exam on click will see all the questions in different sections and be able to edit */
+}
 
-
-
-
-{/* A button create a exam, navigate where retrieve all the data then go to a page where add Mcq question or add programming question.
+{
+  /* A button create a exam, navigate where retrieve all the data then go to a page where add Mcq question or add programming question.
       Add technical question, add logical question and add programming question. save-> navigate to dashboard
       
       In add mcq question-> Pool of mcq questions for examiner to select based on difficulty and category and also add option
@@ -91,4 +109,5 @@ export default ExaminerDashBoard;
       Then focus on examinee stuff.
       
       By mid december complete project with only minor bugs and UI enhanced.
-      Last week-> Deployment and extra features*/}
+      Last week-> Deployment and extra features*/
+}
