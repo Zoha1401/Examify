@@ -316,6 +316,13 @@ public class ExamService {
         //Iterate, find passed answers, fetch their examinee and store and send
     }
 
+    public List<Examinee> getExaminees(Long examId) {
+        Exam exam = examRepository.findById(examId)
+        .orElseThrow(() -> new IllegalArgumentException("Exam does not exist, Incorrect exam Id"));
+        
+        return exam.getExaminees();
+    }
+
    
 
     // public Exam createExamWithQuestions(Exam exam, List<Long> mcqQuestionIds,

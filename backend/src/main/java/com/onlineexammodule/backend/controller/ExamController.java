@@ -104,6 +104,12 @@ public class ExamController {
      public List<Examinee> getMethodName(@RequestParam Long examId) {
          return examService.getPassedExaminees(examId);
      }
+
+     @GetMapping("/getExaminees")
+     public List<Examinee> getExaminees(@RequestParam Long examId) {
+         return examService.getExaminees(examId);
+     }
+     
      
      
      
