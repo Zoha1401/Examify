@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 // import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -35,7 +36,10 @@ public class Exam {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private int duration;
-    private int McqpassingScore;
+    private int mcqpassingScore;
+
+    @JsonProperty
+    private boolean assignToAllExaminees;
 
     @JsonBackReference
     @ManyToOne

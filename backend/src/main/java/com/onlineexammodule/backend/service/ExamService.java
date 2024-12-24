@@ -1,5 +1,6 @@
 package com.onlineexammodule.backend.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -52,13 +53,13 @@ public class ExamService {
         new_exam.setDuration(exam.getDuration());
         new_exam.setEndTime(exam.getEndTime());
         new_exam.setStartTime(exam.getStartTime());
-        new_exam.setMcqpassingScore(exam.getMcqPassingScore());
+        new_exam.setMcqpassingScore(exam.getMcqpassingScore());
 
         // Finding email of examiner
         Examiner examiner = examinerRepository.findByEmail(examiner_email);
         ;
         new_exam.setExaminer(examiner);
-
+        new_exam.setAssignToAllExaminees(exam.isAssignToAllExaminees());
         // Option for examiner to create an exam for already existing examinee or not
         // all examinees.
         System.out.println("isAssign"+ exam.isAssignToAllExaminees());
@@ -154,8 +155,8 @@ public class ExamService {
             existingExam.setDuration(examRequest.getDuration());
         }
 
-        if (examRequest.getMcqPassingScore() != 0) {
-            existingExam.setMcqpassingScore(examRequest.getMcqPassingScore());
+        if (examRequest.getMcqpassingScore() != 0) {
+            existingExam.setMcqpassingScore(examRequest.getMcqpassingScore());
         }
 
         if (examRequest.getStartTime() != null) {
@@ -264,6 +265,7 @@ public class ExamService {
         Exam exam = examRepository.findById(examId)
                 .orElseThrow(() -> new IllegalArgumentException("Exam does not exist, Incorrect exam Id"));
         
+                //Get technical mcqs only
         List<McqQuestion> mcqQuestions=exam.getMcqQuestions().stream().filter(mcqQuestion-> "Technical".equals(mcqQuestion.getCategory()))
         .collect(Collectors.toList());
 
@@ -274,6 +276,7 @@ public class ExamService {
         Exam exam = examRepository.findById(examId)
                 .orElseThrow(() -> new IllegalArgumentException("Exam does not exist, Incorrect exam Id"));
 
+                //Get Aptitude mcqs
         List<McqQuestion> mcqQuestions=exam.getMcqQuestions().stream().filter(mcqQuestion-> "Aptitude".equals(mcqQuestion.getCategory()))
                 .collect(Collectors.toList());
         
@@ -281,11 +284,39 @@ public class ExamService {
     }
 
     public List<Answer> getAllAnswers(Long examId) {
+
         Exam exam = examRepository.findById(examId)
                 .orElseThrow(() -> new IllegalArgumentException("Exam does not exist, Incorrect exam Id"));
         
+                //Get all the answers belonging to the exam
         return exam.getAnswers();
     }
+
+    public List<Examinee> getPassedExaminees(Long examId) {
+       
+       Exam exam = examRepository.findById(examId)
+                .orElseThrow(() -> new IllegalArgumentException("Exam does not exist, Incorrect exam Id"));
+        
+        List<Answer> answers=exam.getAnswers();
+        int mcqPassingScore=exam.getMcqpassingScore();
+        List<Examinee> examinees=new ArrayList<>();
+        //Find passed answers and get the examinee from there
+        for(Answer answer:answers){
+
+            if(answer.getMcqScore()>=mcqPassingScore){
+                examinees.add(answer.getExaminee());
+            }
+        }
+
+        return examinees;
+
+
+        //Get exam
+        //Get answers
+        //Iterate, find passed answers, fetch their examinee and store and send
+    }
+
+   
 
     // public Exam createExamWithQuestions(Exam exam, List<Long> mcqQuestionIds,
     // List<Long> programmingQuestionIds) {

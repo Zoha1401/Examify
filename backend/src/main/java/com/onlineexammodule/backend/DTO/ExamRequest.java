@@ -8,7 +8,7 @@ public class ExamRequest {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private int duration;
-    private int mcqPassingScore;  // Passing score specific to MCQs
+    private int mcqpassingScore;  // Passing score specific to MCQs
     
     private String examinerEmail;  // Email of the examiner creating the exam
 
@@ -45,12 +45,12 @@ public class ExamRequest {
         this.duration = duration;
     }
 
-    public int getMcqPassingScore() {
-        return mcqPassingScore;
+    public int getMcqpassingScore() {
+        return mcqpassingScore;
     }
 
-    public void setMcqPassingScore(int mcqPassingScore) {
-        this.mcqPassingScore = mcqPassingScore;
+    public void setMcqpassingScore(int mcqPassingScore) {
+        this.mcqpassingScore = mcqPassingScore;
     }
 
     public String getExaminerEmail() {
