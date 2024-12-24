@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams , Link} from "react-router-dom";
-import axiosInstance from "../../utils/axiosInstance";
+import axiosInstance from "../../../utils/axiosInstance";
 import { useNavigate } from "react-router-dom";
 import ProgrammingQuestion from "./ProgrammingQuestion";
 import Mcq from "./Mcq";

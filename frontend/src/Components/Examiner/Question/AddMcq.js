@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { Button, Dropdown } from "react-bootstrap";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import axiosInstance from "../../utils/axiosInstance";
+import axiosInstance from "../../../utils/axiosInstance";
+
 
 const AddMcq = () => {
 

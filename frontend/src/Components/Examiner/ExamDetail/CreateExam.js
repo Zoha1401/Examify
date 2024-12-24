@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Button } from "react-bootstrap";
-import axiosInstance from "../../utils/axiosInstance";
+import axiosInstance from "../../../utils/axiosInstance";
 import { Link, useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 import InputGroup from "react-bootstrap/InputGroup";

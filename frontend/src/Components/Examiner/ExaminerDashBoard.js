@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import axiosInstance from "../../utils/axiosInstance";
-import Exam from "../ExamDetail/Exam";
+import Exam from "./ExamDetail/Exam";
 
 const ExaminerDashBoard = () => {
   const [exams, setExams] = useState([]);
@@ -14,7 +14,7 @@ const ExaminerDashBoard = () => {
       try {
         const token = localStorage.getItem("token");
         console.log("Token:", token); 
-        if (!token) {
+        if (!token || !token.includes(".")) {
           alert("You are not authorized please login again");
           navigate("/examiner-login");
         }

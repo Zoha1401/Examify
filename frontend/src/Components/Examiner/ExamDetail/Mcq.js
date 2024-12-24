@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
 import { useNavigate, useParams } from "react-router-dom";
-import axiosInstance from "../../utils/axiosInstance";
+import axiosInstance from "../../../utils/axiosInstance";
 
 const Mcq = ({ mcq, onDelete, onUpdate }) => {
   const { examId } = useParams();

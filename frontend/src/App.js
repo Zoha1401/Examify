@@ -2,19 +2,19 @@
 import './App.css';
 import {createBrowserRouter, RouterProvider} from 'react-router-dom'
 import LandingPage from './Components/LandingPage/LandingPage'
-import ExaminerLogin from './Components/ExaminerLogin/ExaminerLogin'
+import ExaminerLogin from './Components/Examiner/ExaminerLogin'
 import ExamineeLogin from './Components/Examinee/ExamineeLogin'
 import ExamineeDashboard from './Components/Examinee/ExamineeDashBoard'
-import ExaminerDashBoard from './Components/ExaminerDashBoard/ExaminerDashBoard';
-import ExaminerSignin from './Components/ExaminerSignin/ExaminerSignin';
-import ManageExaminee from './Components/ManageExaminee/ManageExaminee';
-import AddExaminee from './Components/ManageExaminee/AddExaminee';
-import CreateExam from './Components/ExamDetail/CreateExam';
-import ExamQuestions from './Components/ExamDetail/ExamQuestions';
-import AddMcq from './Components/Question/AddMcq';
-import AddProgrammingQuestion from './Components/Question/AddProgrammingQuestion';
-import McqQuestionPool from './Components/Question/McqQuestionPool';
-import ProgrammingQuestionPool from './Components/Question/ProgrammingQuestionPool';
+import ExaminerDashBoard from './Components/Examiner/ExaminerDashBoard';
+import ExaminerSignin from './Components/Examiner/ExaminerSignin';
+import ManageExaminee from './Components/Examiner/ManageExaminee/ManageExaminee';
+import AddExaminee from './Components/Examiner/ManageExaminee/AddExaminee';
+import CreateExam from './Components/Examiner/ExamDetail/CreateExam';
+import ExamQuestions from './Components/Examiner/ExamDetail/ExamQuestions';
+import AddMcq from './Components/Examiner/Question/AddMcq';
+import AddProgrammingQuestion from './Components/Examiner/Question/AddProgrammingQuestion';
+import McqQuestionPool from './Components/Examiner/Question/McqQuestionPool';
+import ProgrammingQuestionPool from './Components/Examiner/Question/ProgrammingQuestionPool';
 import GiveExam from './Components/Examinee/GiveExam';
 
 function App() {

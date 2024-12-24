@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import { Link, useNavigate } from 'react-router-dom'
-import axiosInstance from '../../utils/axiosInstance';
+import axiosInstance from '../../../utils/axiosInstance';
 import { Button } from 'react-bootstrap';
 
 const AddExaminee = () => {

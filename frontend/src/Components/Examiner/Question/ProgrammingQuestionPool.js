@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import axiosInstance from "../../utils/axiosInstance";
+import axiosInstance from "../../../utils/axiosInstance";
 import Dropdown from "react-bootstrap/Dropdown";
 import { Button } from "react-bootstrap";
 import { Form } from 'react-bootstrap'; 
