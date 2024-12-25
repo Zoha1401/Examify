@@ -1,11 +1,20 @@
 import React, {useState, useEffect} from 'react';
 import axiosInstance from '../../../utils/axiosInstance';
 import {useNavigate} from 'react-router-dom'
-import { Button } from 'react-bootstrap';
+import { Button, Form, InputGroup } from 'react-bootstrap';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 const Exam = ({ temp_exam }) => {
   const [editableExam, setEditableExam] = useState(null);
-  const [exam, setExam] = useState({});
+  const [examinees, setExaminees]=useState([]);
+  const [checkedState, setCheckedState]=useState(false);
+  const [showExaminees, setShowExaminees]=useState(false);
+  const [selectedExaminees, setSelectedExaminees]=useState([])
+
+  const toggleDropDown=()=>{
+    setShowExaminees(!showExaminees);
+  }
+
   let navigate = useNavigate();
   console.log(temp_exam);
   const token = localStorage.getItem("token");
@@ -14,31 +23,51 @@ const Exam = ({ temp_exam }) => {
     alert("You are not authorized please login again");
     navigate("/examiner-login");
   }
+
   useEffect(() => {
-    const fetchExam = async () => {
+    const fetchExaminees = async () => {
       try {
-        const response = await axiosInstance.get(
-          `/exam/getExamById?examId=${temp_exam.examId}`,
+        const examExamineesFetched = await axiosInstance.get(
+          `/exam/getExaminees?examId=${temp_exam.examId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
             },
           }
         );
-        console.log(response.data);
-        setExam(response.data);
+
+        const response=await axiosInstance.get( `/examiner/getAllExaminee`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          })
+        console.log(examExamineesFetched.data);
+        setExaminees(response.data)
+
+
+        const examExaminees = examExamineesFetched.data.map((e) => e.examineeId);
+        const initialCheckedState = {};
+        response.data.forEach((examinee) => {
+          initialCheckedState[examinee.examineeId] = examExaminees.includes(examinee.examineeId);
+          console.log("examinee Id ", examinee.examineeId, "Initial state ", initialCheckedState)
+        });
+        
+        setCheckedState(initialCheckedState);
+        
         // setExam(examData);
       } catch (error) {
-        console.error("Error fetching exam", error.message);
+        console.error("Error fetching examinees", error.message);
       }
     };
-    fetchExam();
-  }, [exam.examId]);
-
+    fetchExaminees();
+  }, [temp_exam.examId]);
+ 
+  console.log("Tempp exam", temp_exam.startTime)
   const handleDelete = async () => {
     try {
       const response = await axiosInstance.delete(
-        `/exam/deleteExam?examId=${exam.examId}`,
+        `/exam/deleteExam?examId=${temp_exam.examId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -59,7 +88,7 @@ const Exam = ({ temp_exam }) => {
   };
 
   const handleEdit = () => {
-    setEditableExam(exam);
+    setEditableExam(temp_exam);
   };
 
   const handleUpdate = async () => {
@@ -94,18 +123,59 @@ const Exam = ({ temp_exam }) => {
   };
 
   const viewQuestions=()=>{
-    navigate(`/exam-detail/${exam.examId}`);
+    navigate(`/exam-detail/${temp_exam.examId}`);
   }
+
+  const viewAnswers=()=>{
+     navigate(`/examAnswers/${temp_exam.examId}`);
+  }
+  const extractDateTime = (datetime) => {
+    const [date, time_temp] = datetime.split("T");
+    const time=time_temp.slice(0,5)
+    return { date, time};
+  };
+
+  const { date: date1, time: time1 } = extractDateTime(temp_exam.startTime);
+  const { date: date2, time: time2 } = extractDateTime(temp_exam.endTime);
+
+  const handleCheckboxChange = (id) => {
+    setCheckedState((prevState) => {
+      const updatedState = { ...prevState, [id]: !prevState[id] };
+      updateSelectedExaminees(updatedState);
+      return updatedState;
+    });
+  };
+
+  const updateSelectedExaminees = (updatedState) => {
+    const selectedExaminees = Object.keys(updatedState).filter(
+      (id) => updatedState[id]
+    );
+    setSelectedExaminees(selectedExaminees);
+  };
+
+  const handleSearch=()=>{
+
+  }
+
   return (
-    <div className="flex">
-      <h1>{temp_exam.examId}</h1>
-      <h1>{exam.startTime}</h1>
-      <h1>{exam.endTime}</h1>
-      <h1>{exam.mcqPassingScore}</h1>
-      <h1>{exam.duration}</h1> min
-      <Button onClick={handleDelete}>Delete</Button>
-      <Button onClick={handleEdit}>Update</Button>
-      <Button onClick={viewQuestions}>View Questions</Button>
+    <div className="flex flex-row mb-3 mx-2 mt-2 my-2 border-1 px-2 py-2 rounded-lg">
+      <h4 className='mx-2'>{temp_exam.examId}</h4>
+      <h4 className='mx-2'>{date1}</h4>
+      <h4 className='mx-2'>{time1}</h4>
+      <h4 className='mx-2'>{time2}</h4>
+      <h4 className='mx-2'>{temp_exam.mcqPassingScore}</h4>
+      <h4 className='mx-2'>{temp_exam.duration} min</h4> 
+      <div className="flex mx-2">
+      <Button onClick={handleDelete} variant="danger" className="mx-2">Delete</Button>
+      <Button onClick={handleEdit} variant="primary" className="mx-2">Update</Button>
+      <Button onClick={viewQuestions} variant="dark" className="mx-2">View Questions</Button>
+      <Button onClick={viewAnswers} variant="dark" className="mx-2">View Answers</Button>
+      
+      </div>
+      <div>
+      <KeyboardArrowDownIcon onClick={toggleDropDown}/>
+      </div>
+      
       {
         editableExam && (
             <form onSubmit={handleUpdate}>
@@ -136,6 +206,38 @@ const Exam = ({ temp_exam }) => {
             </form>
         )
       }
+
+{showExaminees && (
+        <div className="mt-3 p-3 border rounded bg-light shadow-sm">
+          <h5 className="mb-3">Examinees</h5>
+          <InputGroup className="mb-3">
+            <Form.Control
+              type="text"
+              placeholder="Search examinees..."
+              onChange={handleSearch}
+              value=""
+            />
+          </InputGroup>
+          <div className="max-h-64 overflow-y-auto">
+            {examinees.map((examinee) => (
+              <div
+                key={examinee.examineeId}
+                className="flex items-center justify-between mb-2"
+              >
+                <span>{examinee.email}</span>
+                <span>{examinee.degree}</span>
+                <span>{examinee.college}</span>
+                <span>{examinee.year}</span>
+                <Form.Check
+                  type="checkbox"
+                  checked={checkedState[examinee.examineeId || false]}
+                  onChange={() => handleCheckboxChange(examinee.examineeId)}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
