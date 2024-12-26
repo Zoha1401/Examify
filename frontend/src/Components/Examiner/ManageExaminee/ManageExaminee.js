@@ -53,9 +53,16 @@ const ManageExaminee = () => {
   }, [examinees]); // This will log the updated state whenever it changes
 
   return (
-    <div>
-      Your examinees
-      <div>
+    <>
+    <div className="flex flex-col justify-center items-center my-4">
+      <h1 className="text-2xl font-bold text-center mb-6">Examinees</h1>
+      <div className="flex flex-row my-2 mb-4 px-2">
+      <Link to="/add-examinee">
+        <Button variant="primary">Add Examinee</Button>
+      </Link>
+      </div>
+    </div>   
+      <div className="">
         {loading ? (
           <p>Loading...</p>
         ) : examinees.length === 0 ? (
@@ -66,11 +73,7 @@ const ManageExaminee = () => {
           ))
         )}
       </div>
-      <Link to="/add-examinee">
-        {" "}
-        <Button variant="info">Add Examinee</Button>
-      </Link>
-    </div>
+    </>
   );
 };
 

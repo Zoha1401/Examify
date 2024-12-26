@@ -4,7 +4,6 @@ import axiosInstance from "../../../utils/axiosInstance";
 import { Link, useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 import InputGroup from "react-bootstrap/InputGroup";
-import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -12,7 +11,7 @@ import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 
 const CreateExam = () => {
   const [data, setData] = useState({});
-  const [assignToAllExaminee, setAssignToAllExaminee] = useState(false);
+  const [assignToAllExaminees, setAssignToAllExaminees] = useState(false);
   let navigate = useNavigate();
 
   const onChange = (key, value) => {
@@ -55,7 +54,7 @@ const CreateExam = () => {
           endTime:formattedEndTime,
           duration,
           mcqPassingScore,
-          assignToAllExaminee,
+          assignToAllExaminees,
         },
 
         {
@@ -80,7 +79,7 @@ const CreateExam = () => {
   };
 
   const handleCheckboxChange = (e) => {
-    setAssignToAllExaminee(e.target.checked);
+    setAssignToAllExaminees(e.target.checked);
   };
 
   return (
@@ -135,7 +134,7 @@ const CreateExam = () => {
             <div>
               <InputGroup>
                 <InputGroup.Checkbox
-                  checked={assignToAllExaminee}
+                  checked={assignToAllExaminees}
                   onChange={handleCheckboxChange}
                 />
                 Assign to all Examinees

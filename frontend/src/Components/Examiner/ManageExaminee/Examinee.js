@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import axiosInstance from '../../../utils/axiosInstance';
 import {useNavigate} from 'react-router-dom'
-import { Button } from 'react-bootstrap';
+import { Button, Row, Col } from 'react-bootstrap';
 
 const Examinee = ({temp_examinee}) => {
     const [editableExaminee, setEditableExaminee]=useState(null);
@@ -90,41 +90,46 @@ const Examinee = ({temp_examinee}) => {
     }
   return (
     <>
-    <div className='flex'>
-      <h1>{examinee.email}</h1>
-      <h1>{examinee.degree}</h1> 
-      <h1>{examinee.college}</h1>
-      <Button onClick={handleEdit}>Update</Button>
+    <div className='flex flex-row mb-3 mx-2 mt-2 my-2 border-1 px-2 py-2 rounded-lg'>
+      <h4 className='mx-2'>{examinee.email}</h4>
+      <h4 className='mx-2'>{examinee.degree}</h4> 
+      <h4 className='mx-2'>{examinee.college}</h4>
+      <h4 className='mx-4'>{examinee.year}</h4>
+      <Button onClick={handleEdit} className='mx-2' size="sm">Update</Button>
       {
         editableExaminee && (
-            <form onSubmit={handleUpdate}>
+            <form onSubmit={handleUpdate} className='flex'>
                 <input type="email"
                 name="email"
                 value={editableExaminee.email}
                 onChange={onChange}
+                className='rounded-lg border-1 mx-2'
                 ></input>
                 <input type="college"
                 name="college"
                 value={editableExaminee.college}
                 onChange={onChange}
+                className='rounded-lg border-1 mx-1'
                 ></input>
                 <input type="degree"
                 name="degree"
                 value={editableExaminee.degree}
                 onChange={onChange}
+                className='rounded-lg border-1 mx-1'
                 ></input>
                 <input type="year"
                 name="year"
                 value={editableExaminee.year}
                 onChange={onChange}
+                className='rounded-lg border-1 mx-2'
                 ></input>
                 
-                 <button type="submit">Update</button>
-                 <button onClick={() => setEditableExaminee(null)}>Cancel</button>
+                 <Button type="submit" className='mx-1' variant='success' size="sm">Save</Button>
+                 <Button onClick={() => setEditableExaminee(null)} className='mx-1' variant='warning'>Cancel</Button>
             </form>
         )
       }
-      <Button onClick={handleDelete}>Delete</Button>
+      <Button onClick={handleDelete} variant='danger' size="sm">Delete</Button>
     </div>
     </>
   );

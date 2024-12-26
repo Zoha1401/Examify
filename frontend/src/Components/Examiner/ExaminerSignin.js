@@ -24,21 +24,21 @@ const ExaminerSignin = () => {
           password,
         })
 
-        if(response.status===201){
+        
+         if(response.status===201){
           console.log("User signed in: ", response.data)
           navigate("/examiner-login")
         }
-       }
+        
+      }
        catch(error)
        {
-         if (error.response && error.response.status === 400){
-          console.error('Examiner already exists');
+         if (error.response){
+          console.error('Sign in failed', error.response?.data || error.message);
           alert('Examiner already exists. Redirecting to login.');
           navigate('/examiner-login');
-        }
-        else{
-          console.error('Sign in failed', error.response?.data || error.message);
-        }
+         }
+        
        }
 
   }
