@@ -2,16 +2,19 @@ package com.onlineexammodule.backend.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
 import com.onlineexammodule.backend.DTO.McqAnswerDTO;
+import com.onlineexammodule.backend.DTO.ProgrammingAnswerDTO;
 import com.onlineexammodule.backend.model.Answer;
 import com.onlineexammodule.backend.model.Examinee;
 import com.onlineexammodule.backend.model.McqAnswer;
 import com.onlineexammodule.backend.model.McqQuestion;
+import com.onlineexammodule.backend.model.ProgrammingQuestion;
+import com.onlineexammodule.backend.model.ProgrammingQuestionAnswer;
 import com.onlineexammodule.backend.model.QuestionOption;
+import com.onlineexammodule.backend.model.TestCase;
 import com.onlineexammodule.backend.repo.AnswerRepository;
 import com.onlineexammodule.backend.repo.ExamineeRepository;
 import com.onlineexammodule.backend.repo.McqRepository;
@@ -74,5 +77,32 @@ public class AnswerService {
 
     return answers;
 }
+
+    public List<ProgrammingAnswerDTO> getProgrammingAnswerDetail(Long answerId) {
+        Answer answer = answerRepository.findById(answerId)
+        .orElseThrow(() -> new IllegalArgumentException("Answer not found"));
+
+        List<ProgrammingQuestionAnswer> programmingQuestionAnswers = answer.getProgrammingQuestionAnswers();
+
+        List<ProgrammingAnswerDTO> answers=new ArrayList<>();
+
+        for(ProgrammingQuestionAnswer programmingQuestionAnswer:programmingQuestionAnswers){
+            ProgrammingQuestion programmingQuestion = programmingRepository.findById(programmingQuestionAnswer.getPqId())
+                .orElseThrow(() -> new IllegalArgumentException("MCQ question not found"));
+    
+            List<TestCase> testCases=programmingQuestion.getTestCases();
+            ProgrammingAnswerDTO dto = new ProgrammingAnswerDTO();
+            dto.setCodeSubmission(programmingQuestionAnswer.getCodeSubmission());
+            dto.setProgrammingQuestionText(programmingQuestion.getProgrammingQuestionText());
+            dto.setTestCases(testCases);
+            dto.setPqAnswerId(programmingQuestionAnswer.getProgrammingAnswerId());
+            
+            answers.add(dto);
+        }
+
+        return answers;
+
+
+    }
 
 }
