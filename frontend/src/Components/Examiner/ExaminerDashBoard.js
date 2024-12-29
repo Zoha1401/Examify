@@ -42,6 +42,14 @@ const ExaminerDashBoard = () => {
     fetchAllExams();
   }, []);
 
+  const handleDeleteExam=(examId)=>{
+    setExams((prev)=>prev.filter((exam)=> exam.examId!==examId))
+  }
+
+  const handleUpdateExam=(updatedExam)=>{
+    setExams((prevExams)=> prevExams.map((exam)=> (exam.examId===updatedExam.examId? updatedExam: exam)))
+  }
+
   return (
     <>
     <div className="flex flex-col bg-white justify-center items-center px-4 py-6">
@@ -75,7 +83,7 @@ const ExaminerDashBoard = () => {
         ) : exams.length === 0 ? (
           <p>You have no exams</p>
         ) : (
-          exams.map((e) => <Exam key={e.examId} temp_exam={e}/>)
+          exams.map((e) => <Exam key={e.examId} temp_exam={e} onDelete={handleDeleteExam} onUpdate={handleUpdateExam}/>)
         )}
       </div>
    
@@ -101,13 +109,5 @@ export default ExaminerDashBoard;
       Add technical question, add logical question and add programming question. save-> navigate to dashboard
       
       In add mcq question-> Pool of mcq questions for examiner to select based on difficulty and category and also add option
-      Same for programming
-      
-      
-      
-      Try to complete All above things over in next week along with UI.
-      Then focus on examinee stuff.
-      
-      By mid december complete project with only minor bugs and UI enhanced.
-      Last week-> Deployment and extra features*/
+      Same for programming*/
 }

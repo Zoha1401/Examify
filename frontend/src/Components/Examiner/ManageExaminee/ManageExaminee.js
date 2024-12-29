@@ -48,6 +48,14 @@ const ManageExaminee = () => {
     fetchAllExaminees();
   }, []);
 
+  const handleDeleteExaminee=(examineeId)=>{
+    setExaminees((prev)=>prev.filter((examinee)=> examinee.examineeId!==examineeId))
+  }
+
+  const handleUpdateExaminee=(updatedExaminee)=>{
+    setExaminees((prevExaminees)=> prevExaminees.map((examinee)=> (examinee.examineeId===updatedExaminee.examineeId? updatedExaminee: examinee)))
+  }
+
   useEffect(() => {
     console.log("Updated examinees:", examinees);
   }, [examinees]); // This will log the updated state whenever it changes
@@ -69,7 +77,7 @@ const ManageExaminee = () => {
           <p>You have no examinees</p>
         ) : (
           examinees.map((e) => (
-            <Examinee key={e.examineeId} temp_examinee={e} />
+            <Examinee key={e.examineeId} temp_examinee={e} onUpdate={handleUpdateExaminee} onDelete={handleDeleteExaminee}/>
           ))
         )}
       </div>

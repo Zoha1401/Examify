@@ -3,7 +3,7 @@ import axiosInstance from '../../../utils/axiosInstance';
 import {useNavigate} from 'react-router-dom'
 import { Button, Row, Col } from 'react-bootstrap';
 
-const Examinee = ({temp_examinee}) => {
+const Examinee = ({temp_examinee, onUpdate, onDelete}) => {
     const [editableExaminee, setEditableExaminee]=useState(null);
     const[examinee, setExaminee]=useState({})
     let navigate=useNavigate();
@@ -45,11 +45,10 @@ const Examinee = ({temp_examinee}) => {
                 }
             }
         )
-        if(response.status===200)
-        {
+       
             alert("Examinee deleted")
-            window.location.reload();
-        }
+            onDelete(temp_examinee.examineeId)
+        
     }
     catch(error)
     {
@@ -72,11 +71,10 @@ const Examinee = ({temp_examinee}) => {
                     }
                 }
             )
-            if(response.status===200)
-            {
+           
                 alert("Examinee updated")
-                window.location.reload();
-            }
+                onUpdate(response.data)
+            
         }
         catch(error)
         {
@@ -95,6 +93,7 @@ const Examinee = ({temp_examinee}) => {
       <h4 className='mx-2'>{examinee.degree}</h4> 
       <h4 className='mx-2'>{examinee.college}</h4>
       <h4 className='mx-4'>{examinee.year}</h4>
+      <h4 className='mx-2'>{examinee.phoneNumber}</h4>
       <Button onClick={handleEdit} className='mx-2' size="sm">Update</Button>
       {
         editableExaminee && (
@@ -103,26 +102,33 @@ const Examinee = ({temp_examinee}) => {
                 name="email"
                 value={editableExaminee.email}
                 onChange={onChange}
-                className='rounded-lg border-1 mx-2'
+                className='rounded-lg border-1 mx-2 px-2'
                 ></input>
                 <input type="college"
                 name="college"
                 value={editableExaminee.college}
                 onChange={onChange}
-                className='rounded-lg border-1 mx-1'
+                className='rounded-lg border-1 mx-1 px-2'
                 ></input>
                 <input type="degree"
                 name="degree"
                 value={editableExaminee.degree}
                 onChange={onChange}
-                className='rounded-lg border-1 mx-1'
+                className='rounded-lg border-1 mx-1 px-2'
                 ></input>
                 <input type="year"
                 name="year"
                 value={editableExaminee.year}
                 onChange={onChange}
-                className='rounded-lg border-1 mx-2'
+                className='rounded-lg border-1 mx-2 px-2'
                 ></input>
+                <input type='phoneNumber'
+                name="phoneNumber"
+                value={editableExaminee.phoneNumber}
+                onChange={onChange}
+                  className='rounded-lg border-1 mx-2 px-2'
+                  ></input>
+
                 
                  <Button type="submit" className='mx-1' variant='success' size="sm">Save</Button>
                  <Button onClick={() => setEditableExaminee(null)} className='mx-1' variant='warning'>Cancel</Button>
