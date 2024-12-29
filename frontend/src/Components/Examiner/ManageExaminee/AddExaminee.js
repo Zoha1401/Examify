@@ -13,8 +13,8 @@ const AddExaminee = () => {
     const handleAdd=async(e)=>{
       e.preventDefault();
 
-      const{email, degree, year, college}=credentials;
-      console.log(email, college, degree);
+      const{email, degree, year, college, phoneNumber}=credentials;
+      console.log(email, college, degree, phoneNumber);
       try{
 
         const token=localStorage.getItem('token')
@@ -30,6 +30,7 @@ const AddExaminee = () => {
         college,
         degree,
         year,
+        phoneNumber,
         },
     
         {
@@ -147,6 +148,26 @@ const AddExaminee = () => {
                 />
               </div>
             </div>
+
+            <div>
+              <div className="flex items-center justify-between">
+                <label htmlFor="phoneNumber" className="block text-sm/6 font-medium text-gray-900">
+                  Phone Number     
+                </label>
+              </div>
+              <div className="mt-2">
+                <input
+                  id="phoneNumber"
+                  name="phoneNumber"
+                  type='number'
+                  required
+                  value={credentials.phoneNumber}
+                  onChange={onChange}
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
+                />
+              </div>
+            </div>
+
 
 
             <div>
