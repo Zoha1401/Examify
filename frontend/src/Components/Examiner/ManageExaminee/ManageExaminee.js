@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import axiosInstance from "../../../utils/axiosInstance";
 import Examinee from "./Examinee";
+import Navigationbar from "../Navigationbar";
 
 const ManageExaminee = () => {
   let navigate = useNavigate();
@@ -62,6 +63,7 @@ const ManageExaminee = () => {
 
   return (
     <>
+    <Navigationbar/>
     <div className="flex flex-col justify-center items-center my-4">
       <h1 className="text-2xl font-bold text-center mb-6">Examinees</h1>
       <div className="flex flex-row my-2 mb-4 px-2">

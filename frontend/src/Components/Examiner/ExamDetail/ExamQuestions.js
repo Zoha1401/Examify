@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import ProgrammingQuestion from "./ProgrammingQuestion";
 import Mcq from "./Mcq";
 import { Button } from "react-bootstrap";
+import Navigationbar from "../Navigationbar";
 
 const ExamQuestions = () => {
   const json = useParams();
@@ -94,6 +95,7 @@ const ExamQuestions = () => {
     <div>
       {/*This will contain exam details, all mcqs and programming, they can update mcq and programming question optiion will be provided in a single page only */}
       {/*They will also be able to add mcq and programming */}
+      <Navigationbar/>
       <div className="flex">
       <Link to={`/addMcqQuestion/${examId}`}><Button>Add new MCQ Question</Button></Link>
       <Link to={`/addProgQuestion/${examId}`}><Button>Add new Programming Question</Button></Link>

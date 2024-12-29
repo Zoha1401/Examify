@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axiosInstance from "../../../utils/axiosInstance";
+import Navigationbar from "../Navigationbar";
 
 const ExamAnswers = () => {
   const [examinees, setExaminees] = useState([]);
@@ -69,6 +70,7 @@ const ExamAnswers = () => {
 
   return (
     <div>
+      <Navigationbar/>
       {loading ? (
         <p>Loading...</p>
       ) : examinees.length === 0 ? (

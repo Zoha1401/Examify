@@ -8,6 +8,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
+import Navigationbar from "../Navigationbar";
 
 const CreateExam = () => {
   const [data, setData] = useState({});
@@ -84,6 +85,7 @@ const CreateExam = () => {
 
   return (
     <>
+    <Navigationbar/>
       <Button variant="secondary">
         <Link to="/examiner-dashboard">Back</Link>
       </Button>

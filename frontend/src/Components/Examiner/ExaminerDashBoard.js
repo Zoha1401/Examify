@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import axiosInstance from "../../utils/axiosInstance";
 import Exam from "./ExamDetail/Exam";
+import Navigationbar from "./Navigationbar";
 
 const ExaminerDashBoard = () => {
   const [exams, setExams] = useState([]);
@@ -52,6 +53,7 @@ const ExaminerDashBoard = () => {
 
   return (
     <>
+    <Navigationbar/>
     <div className="flex flex-col bg-white justify-center items-center px-4 py-6">
      <h1 className="text-2xl font-bold text-center mb-6">Examiner Dashboard</h1>
       <div className="flex flex-row my-2 mb-4 px-2">
