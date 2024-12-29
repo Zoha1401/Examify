@@ -4,7 +4,7 @@ import {useNavigate} from 'react-router-dom'
 import { Button, Form, InputGroup } from 'react-bootstrap';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
-const Exam = ({ temp_exam }) => {
+const Exam = ({ temp_exam, onDelete, onUpdate }) => {
   const [editableExam, setEditableExam] = useState(null);
   const [examinees, setExaminees]=useState([]);
   const [checkedState, setCheckedState]=useState(false);
@@ -76,7 +76,7 @@ const Exam = ({ temp_exam }) => {
       );
       if (response.status === 200) {
         alert("Exam deleted");
-        window.location.reload();
+        onDelete(temp_exam.examId)
       }
     } catch (error) {
       console.error(
@@ -102,10 +102,10 @@ const Exam = ({ temp_exam }) => {
           },
         }
       );
-      if (response.status === 200) {
+    
         alert("Exam updated");
-        window.location.reload();
-      }
+        onUpdate(response.data)
+      
     } catch (error) {
       console.error(
         "Error updating exam:",
@@ -152,9 +152,59 @@ const Exam = ({ temp_exam }) => {
     );
     setSelectedExaminees(selectedExaminees);
   };
+ 
+  console.log(selectedExaminees)
+  const handleAddSelectedExaminees=()=>{
+    const toBeAddedexaminees = examinees.filter((e) =>
+      selectedExaminees.includes(String(e.examineeId))
+    );
+    try{
+      const response=axiosInstance.post(`/examiner/assignToSpecificExaminee?examId=${temp_exam.examId}`,
+       toBeAddedexaminees,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+
+      alert("Examinees succesfully added to exam");
+      navigate("/examiner-dashboard")
+    }
+    catch(error){
+      console.error(
+        "Error adding examinees:",
+        error.response?.data || error.message
+      );
+      alert("Error adding examinees. Please try again.");
+    }
+  }
 
   const handleSearch=()=>{
 
+  }
+
+  const handleAddAllExaminees=()=>{
+    try{
+      const response=axiosInstance.post(`/examiner/assignToAll?examId=${temp_exam.examId}`,
+       examinees,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+
+      alert("Examinees succesfully added to exam");
+      navigate("/examiner-dashboard")
+    }
+    catch(error){
+      console.error(
+        "Error adding examinees:",
+        error.response?.data || error.message
+      );
+      alert("Error adding examinees. Please try again.");
+    }
   }
 
   return (
@@ -233,8 +283,11 @@ const Exam = ({ temp_exam }) => {
                   checked={checkedState[examinee.examineeId || false]}
                   onChange={() => handleCheckboxChange(examinee.examineeId)}
                 />
+               
               </div>
             ))}
+             <Button variant='dark' onClick={handleAddSelectedExaminees}>Add selected examinees</Button>
+             <Button variant='dark' onClick={handleAddAllExaminees}>Add all examinees</Button>
           </div>
         </div>
       )}
