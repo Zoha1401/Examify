@@ -121,7 +121,7 @@ public class ExaminerService {
             examiner.getExaminees().add(examineeToSave);
         }
 
-        String phone=Integer.toString(examinee.getPhoneNumber());
+        String phone=Long.toString(examinee.getPhoneNumber());
         examineeToSave.setPhoneHash(phone);
         System.out.println(examineeToSave.getPassword());
     

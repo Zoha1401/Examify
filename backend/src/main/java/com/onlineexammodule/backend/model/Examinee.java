@@ -41,7 +41,7 @@ public class Examinee {
     private String college;
     private String degree;
     private Integer year;
-    private Integer phoneNumber;
+    private Long phoneNumber;
 
     @Column
     private String password;
