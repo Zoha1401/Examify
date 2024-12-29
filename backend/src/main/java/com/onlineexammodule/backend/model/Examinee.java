@@ -4,12 +4,15 @@ package com.onlineexammodule.backend.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -38,6 +41,21 @@ public class Examinee {
     private String college;
     private String degree;
     private Integer year;
+    private Integer phoneNumber;
+
+    @Column
+    private String password;
+
+    //Hashing the phonw number for examinee side authentication and security
+    public void setPhoneHash(String phoneNumber) {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        this.password = encoder.encode(phoneNumber);
+    }
+
+    public boolean isPhoneNumberMatch(String phoneNumber) {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        return encoder.matches(phoneNumber, this.password);
+    }
 
     @ManyToMany(mappedBy = "examinees")
     @JsonBackReference

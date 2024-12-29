@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.onlineexammodule.backend.DTO.ExamRequest;
-import com.onlineexammodule.backend.model.Answer;
 import com.onlineexammodule.backend.model.Exam;
 import com.onlineexammodule.backend.model.Examinee;
 import com.onlineexammodule.backend.model.McqQuestion;
@@ -95,13 +94,9 @@ public class ExamController {
          return examService.getMcqAptitude(examId);
      }
      
-     @GetMapping("/getAllAnswers")
-     public List<Answer> getAnswers(@RequestParam Long examId) {
-         return examService.getAllAnswers(examId);
-     }
 
      @GetMapping("/getPassedExaminees")
-     public List<Examinee> getMethodName(@RequestParam Long examId) {
+     public List<Examinee> getPassedExaminees(@RequestParam Long examId) {
          return examService.getPassedExaminees(examId);
      }
 

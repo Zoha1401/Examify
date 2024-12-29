@@ -47,11 +47,15 @@ public class ExamineeService {
         this.programmingAnswerRepository = programmingAnswerRepository;
     }
 
-    public String verify(String email) {
+    public String verify(String email, String password) {
         Examinee examinee = examineeRepository.findByEmail(email);
         System.out.println("Finding examinee by email" + email);
         if (examinee == null) {
-            System.out.println("Examinee not found for the provided email and examiner ID.");
+            System.out.println("Examinee not found for the provided email and phone Number");
+            throw new RuntimeException("Invalid credentials");
+        }
+        if (!examinee.isPhoneNumberMatch(password)) {
+            System.out.println("Phone number does not match for the provided email");
             throw new RuntimeException("Invalid credentials");
         }
 

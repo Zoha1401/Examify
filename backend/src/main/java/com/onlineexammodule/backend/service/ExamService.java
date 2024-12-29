@@ -133,6 +133,14 @@ public class ExamService {
             }
         }
 
+        // List<Answer> answers=toBeDeleteExam.getAnswers();
+        // if(answers!=null){
+        //     for(Answer answer:answers){
+        //         answer.removeExam(toBeDeleteExam);
+                
+        //     }
+        // }
+
         // Remove exam from examiner
         Examiner examiner = toBeDeleteExam.getExaminer();
         if (examiner != null) {
@@ -281,15 +289,6 @@ public class ExamService {
                 .collect(Collectors.toList());
         
         return mcqQuestions;
-    }
-
-    public List<Answer> getAllAnswers(Long examId) {
-
-        Exam exam = examRepository.findById(examId)
-                .orElseThrow(() -> new IllegalArgumentException("Exam does not exist, Incorrect exam Id"));
-        
-                //Get all the answers belonging to the exam
-        return exam.getAnswers();
     }
 
     public List<Examinee> getPassedExaminees(Long examId) {

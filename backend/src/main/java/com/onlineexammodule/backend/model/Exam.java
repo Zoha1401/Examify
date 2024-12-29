@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -66,7 +67,7 @@ public class Exam {
     @JsonIgnore
     private List<Examinee> examinees = new ArrayList<>();
 
-    @OneToMany(mappedBy = "exam")
+    @OneToMany(mappedBy = "exam" , cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference("exam")
     private List<Answer> answers=new ArrayList<>();
 

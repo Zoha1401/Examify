@@ -96,7 +96,7 @@ public class ExaminerService {
         //Check if examinee is saved
         Examinee existExaminee=examineeRepository.findByEmail(examinee.getEmail());
         
-         Examinee examineeToSave;
+         Examinee examineeToSave=new Examinee();
         if (existExaminee!=null) {
             // Use existing examinee
             examineeToSave = existExaminee;
@@ -120,6 +120,10 @@ public class ExaminerService {
         if (!examiner.getExaminees().contains(examineeToSave)) {
             examiner.getExaminees().add(examineeToSave);
         }
+
+        String phone=Integer.toString(examinee.getPhoneNumber());
+        examineeToSave.setPhoneHash(phone);
+        System.out.println(examineeToSave.getPassword());
     
         Examinee savedExaminee = examineeRepository.save(examineeToSave);
     
@@ -180,6 +184,12 @@ public class ExaminerService {
 
         if(updatedExaminee.getDegree()!=null)
         existingExaminee.setDegree(updatedExaminee.getDegree());
+
+        if(updatedExaminee.getYear()!=null)
+        existingExaminee.setYear(updatedExaminee.getYear());
+
+        if(updatedExaminee.getPhoneNumber()!=null)
+        existingExaminee.setPhoneNumber(updatedExaminee.getPhoneNumber());
     
         return examineeRepository.save(existingExaminee);
     }

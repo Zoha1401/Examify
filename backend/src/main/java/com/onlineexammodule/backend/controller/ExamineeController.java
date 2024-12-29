@@ -8,13 +8,14 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.onlineexammodule.backend.DTO.AnswerSubmissionRequest;
-import com.onlineexammodule.backend.DTO.ExamineeLoginRequest;
 import com.onlineexammodule.backend.model.Answer;
 import com.onlineexammodule.backend.model.Exam;
+import com.onlineexammodule.backend.model.Examinee;
 import com.onlineexammodule.backend.model.McqAnswer;
 import com.onlineexammodule.backend.model.McqQuestion;
 import com.onlineexammodule.backend.model.ProgrammingQuestion;
 import com.onlineexammodule.backend.model.ProgrammingQuestionAnswer;
+import com.onlineexammodule.backend.service.AnswerService;
 import com.onlineexammodule.backend.service.ExamineeService;
 import com.onlineexammodule.backend.service.JWTService;
 
@@ -38,13 +39,16 @@ public class ExamineeController {
     private ExamineeService examineeService;
 
     @Autowired
+    private AnswerService answerService;
+    
+    @Autowired
     private JWTService jwtService;
 
     @PostMapping("/login")
-    public String LoginExaminee(@RequestBody ExamineeLoginRequest loginRequest) {
+    public String LoginExaminee(@RequestBody Examinee loginRequest) {
         
-        System.out.println(loginRequest.getEmail());
-        return examineeService.verify(loginRequest.getEmail());
+        System.out.println(loginRequest.getEmail() + loginRequest.getPassword());
+        return examineeService.verify(loginRequest.getEmail(), loginRequest.getPassword());
        
     }
 
@@ -96,6 +100,12 @@ public class ExamineeController {
     public Exam getExamById(@RequestParam Long examId) {
         return examineeService.getExamById(examId);
     }
+
+    @GetMapping("/getExamSpecificAnswer")
+    public Answer getExamSpecificAnswer(@RequestParam Long examineeId, @RequestParam Long examId) {
+        return answerService.getExamSpecificAnswers(examineeId, examId);
+    }
+    
     
     
     
