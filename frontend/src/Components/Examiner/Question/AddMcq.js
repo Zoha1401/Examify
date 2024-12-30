@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Button, Dropdown } from "react-bootstrap";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import axiosInstance from "../../../utils/axiosInstance";
+import Navigationbar from "../Navigationbar";
 
 
 const AddMcq = () => {
@@ -84,23 +85,17 @@ const AddMcq = () => {
 
   return (
     <>
-      <Button variant="secondary">
-        <Link to={`/exam-detail/${examId}`}>Back Icon</Link>
-      </Button>
-      <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
-        <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-          <img
-            alt="Your Company"
-            src="https://tailwindui.com/plus/img/logos/mark.svg?color=indigo&shade=600"
-            className="mx-auto h-10 w-auto"
-          />
-          <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">
+
+      <Navigationbar/>
+      <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-10 lg:px-8">
+       
+          <h2 className="mt-1 text-center text-2xl/9 font-bold tracking-tight text-gray-900">
             Add Mcq
           </h2>
-        </div>
+       
 
-        <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form onSubmit={handleAddMcq} className="space-y-6 mt-10">
+        <div className="mt-6 sm:mx-auto sm:w-full sm:max-w-sm bg-gray-100 px-4 rounded-lg py-2 shadow-xl">
+        <form onSubmit={handleAddMcq} className="mt-4 space-y-5">
           <div>
             <label htmlFor="mcqQuestionText" className="block font-medium">
               Question

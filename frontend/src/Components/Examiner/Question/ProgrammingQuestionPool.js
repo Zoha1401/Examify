@@ -4,6 +4,7 @@ import axiosInstance from "../../../utils/axiosInstance";
 import Dropdown from "react-bootstrap/Dropdown";
 import { Button } from "react-bootstrap";
 import { Form } from 'react-bootstrap'; 
+import Navigationbar from "../Navigationbar";
 
 const ProgrammingQuestionPool = () => {
   
@@ -136,7 +137,10 @@ const ProgrammingQuestionPool = () => {
   //Add the selected questions to exam
  
   return (
-    <div>
+    <>
+    <Navigationbar/>
+    <div className="flex justify-center px-2 mx-2 py-3" >
+
       <Dropdown data-bs-theme="dark">
         <Dropdown.Toggle id="dropdown-button-dark-example1" variant="secondary">
           {difficulty || "Select Difficulty"}
@@ -154,10 +158,14 @@ const ProgrammingQuestionPool = () => {
           </Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown>
-      <div>
+      <Link to="/addProgQuestion" className="mx-2">
+        <Button>Add new Programming Question</Button>
+      </Link> 
+      </div>
+      <div className="flex-row px-2">
         {progQuestions.length > 0 ? (
           progQuestions.map((question) => (
-            <div key={question.programmingQuestionId} className="flex">
+            <div key={question.programmingQuestionId}  className='px-2 border-1 rounded-lg py-2 my-2'>
                  <Form.Check
                 type="checkbox"
                 checked={checkedState[question.programmingQuestionId] || false} // Check if the question's checkbox is checked
@@ -165,21 +173,28 @@ const ProgrammingQuestionPool = () => {
                 className="mb-2"
               />
               <p>Question: {question.programmingQuestionText}</p>
-              <p>Answer: {question.reference_answer}</p>
-              <p>Difficulty: {question.difficulty}</p>
+              <p>Reference answer: {question.referenceAnswer}</p>
+              <div className="flex-col">
+          {question.testCases && question.testCases.map((t)=>(
+            <div className='flex'>
+              <b className="px-2">Input </b>: {t.input}{" "}
+              <b className="px-2">Output:</b> {t.expectedOutput}
+            </div>
+           
+          ))}
+        </div>
             </div>
           ))
         ) : (
           <p>No questions found for this difficulty level.</p>
         )}
       </div>
-      <div className="flex">
-      <Link to="/addProgQuestion">
-        <Button>Add new Programming Question</Button>
-      </Link> 
-      <Button onClick={handleAdditionOfSelected} disabled={selectedQuestions.length === 0}> {selectedQuestions.length > 0 ? "Add Selected Questions" : "No Questions Selected"}</Button> 
+      <div className="flex justify-content-end">
+      
+      <Button onClick={handleAdditionOfSelected} className="mx-2" disabled={selectedQuestions.length === 0}> {selectedQuestions.length > 0 ? "Add Selected Questions" : "No Questions Selected"}</Button> 
       </div>
-    </div>
+  
+    </>
   );
 };
 

@@ -88,11 +88,11 @@ const ProgrammingQuestion = ({pq, onDelete, onUpdate}) => {
   }
   return (
     <>
-    <div className='flex'>
-        <h1>{pq.programmingQuestionText}</h1>
-        <div className="flex">
+    <div className='flex-col'>
+        <div className='px-2'>{pq.programmingQuestionText}</div>
+        <div className="flex-col">
           {pq.testCases && pq.testCases.map((t)=>(
-            <div className='flex'>
+            <div className='flex px-2'>
               Input : {t.input}{" "}
               Output: {t.expectedOutput}
             </div>
@@ -150,13 +150,27 @@ export default ProgrammingQuestion;
 //summarise results
 //passed examinees
 //assign exam functionality debugging and proper frontend (Assigned exmainee dekhava joiye ane assign kari sake)
-//Google oauth
+
 
 //Results are getting fetched now have to enhance UI and show
 
 //Enhance UI
+
+
+//Sequence of Importance (To finish it beautifully) 
+
+
+
+////Google oauth
+//Enhance UI
 //Try to load questions from CSV.
 //Try to load examinees from CSV.
-//Organize backendd code based on return type
+
+
+//Done
 //State management
+//Have examinee enter phone number as password.
+//Organize backendd code based on return type
+//Once exam deleted delete all asociated answers****
 //assign to all examinee frontend***
+

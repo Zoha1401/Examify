@@ -6,7 +6,6 @@ import axiosInstance from "../../../utils/axiosInstance";
 
 const Mcq = ({ mcq, onDelete, onUpdate }) => {
   const { examId } = useParams();
-
   const [editableMcq, setEditableMcq] = useState(null);
   const [options, setOptions]=useState([]);
 
@@ -95,7 +94,7 @@ const Mcq = ({ mcq, onDelete, onUpdate }) => {
 
   return (
     <>
-      <div className="flex">
+      <div className="flex-col px-2 border-1 py-2">
         <div>{mcq.mcqQuestionText}</div>
         <div className="flex">
           {mcq.options.map((option, index) => (

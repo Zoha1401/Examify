@@ -94,7 +94,12 @@ const Examinee = ({temp_examinee, onUpdate, onDelete}) => {
       <h4 className='mx-2'>{examinee.college}</h4>
       <h4 className='mx-4'>{examinee.year}</h4>
       <h4 className='mx-2'>{examinee.phoneNumber}</h4>
+      <div className='flex justify-content-end'>
       <Button onClick={handleEdit} className='mx-2' size="sm">Update</Button>
+      <Button onClick={handleDelete} variant='danger' size="sm">Delete</Button>
+      </div>
+      </div>
+      
       {
         editableExaminee && (
             <form onSubmit={handleUpdate} className='flex'>
@@ -135,8 +140,9 @@ const Examinee = ({temp_examinee, onUpdate, onDelete}) => {
             </form>
         )
       }
-      <Button onClick={handleDelete} variant='danger' size="sm">Delete</Button>
-    </div>
+    
+      
+    
     </>
   );
 }

@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import axiosInstance from "../../../utils/axiosInstance";
 import Dropdown from "react-bootstrap/Dropdown";
 import { Button, Form } from "react-bootstrap"; 
+import Navigationbar from '../Navigationbar';
 
 const McqQuestionPool = () => {
   const { examId } = useParams();
@@ -94,12 +95,15 @@ const McqQuestionPool = () => {
       alert("Failed to add selected questions. Please try again.", error.message);
     }
   };
+console.log(mcqQuestions)
+
 
   return (
     <div>
-      <div className="flex">
-        <Dropdown>
-          <Dropdown.Toggle variant="secondary">
+      <Navigationbar/>
+      <div className="flex justify-center px-2 mx-2 py-3">
+        <Dropdown className='px-2'>
+          <Dropdown.Toggle variant="secondary" className='px-2'>
             {difficulty || "Select Difficulty"}
           </Dropdown.Toggle>
           <Dropdown.Menu>
@@ -118,28 +122,31 @@ const McqQuestionPool = () => {
             <Dropdown.Item onClick={() => setCategory("Other")}>Other</Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
+
+        <Link to={`/addMcqQuestion/${examId}`} className='px-2'>
+        <Button>Add new MCQ Question</Button>
+      </Link>
       </div>
       <div className="mx-2">
         {loading ? (
           <p>Loading questions...</p>
         ) : mcqQuestions.length > 0 ? (
           mcqQuestions.map((question) => (
-            <div key={question.mcqId}>
+            <div key={question.mcqId} className='px-2 border-1 rounded-lg py-2 my-2'>
               <div className='flex'>
               <Form.Check
                 type="checkbox"
                 checked={checkedState[question.mcqId] || false}
                 onChange={() => handleCheckboxChange(question.mcqId)}
-                className="mb-2"
+                className="mb-2 mx-2"
               />
-              <p>Question: {question.mcqQuestionText}</p>
-              <p>Answer: {question.correctAnswer}</p>
-              <p>Difficulty: {question.difficulty}</p>
-              <p>Category: {question.category}</p>
+              <div className='flex-col'><p>Question: {question.mcqQuestionText}</p>
+             </div>
+              
               </div>
               <div className='flex'>
               {question.options.map((option, index) => (
-                  <div key={option.optionId || index}>
+                  <div key={option.optionId || index} className='px-2'>
                     {option.optionText}{" "}
                     {option.isCorrect && (
                       <strong classname="font-light bg-green-200">
@@ -156,12 +163,12 @@ const McqQuestionPool = () => {
           <p>No questions found for this category and difficulty level.</p>
         )}
       </div>
-      <Link to={`/addMcqQuestion/${examId}`}>
-        <Button>Add MCQ Question</Button>
-      </Link>
-      <Button onClick={handleAdditionOfSelected} disabled={selectedQuestions.length === 0}>
+      
+      <div className="flex justify-content-end">
+      <Button onClick={handleAdditionOfSelected} disabled={selectedQuestions.length === 0} className="mx-2">
         {selectedQuestions.length > 0 ? "Add Selected Questions" : "No Questions Selected"}
       </Button>
+      </div>
     </div>
   );
 };

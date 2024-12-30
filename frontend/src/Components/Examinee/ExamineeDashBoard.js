@@ -47,17 +47,52 @@ const ExamineeDashBoard = () => {
     };
     fetchExams();
   }, [token, examineeEmail]);
+
+  const checkIfAlreadyGiven=async(exam)=>{
+    try {
+      const examineeIdResponse=await axiosInstance(`/examinee/getExamineeIdFromEmail/examineeEmail=${examineeEmail}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+
+      const examineeId=examineeIdResponse.data
+      console.log("ExamineeId",examineeId)
+      const response = await axiosInstance(
+        `/answer/getExamSpecificAnswer?examineeId=${examineeId}&examId=${exam.examId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const {isSubmitted}=response.data
+      console.log("Is submitted", isSubmitted)
+      if(isSubmitted)
+        return isSubmitted
+      else
+        return false
+    }
+    catch(error){
+      console.error('Error in fetching answer', error.response?.data || error.message);
+      return false;
+       
+    }
+  }
   return (
     <>
-      <div>Exams:</div>
-      <div className="flex">
+      <div className="font-bold mt-2 mx-2">Exams:</div>
+      <div className="flex mx-2">
         {exams.length > 0 ? (
           exams.map((exam, index) => (
             <div key={exam.examId || index} className="mx-2">
               {exam.startTime}
               {exam.duration} min
               <Link to={`/startExam/${exam.examId}`}>
-                <Button>Start Exam</Button>
+                <Button disabled={()=>checkIfAlreadyGiven(exam)}>Start Exam</Button>
               </Link>
             </div>
           ))

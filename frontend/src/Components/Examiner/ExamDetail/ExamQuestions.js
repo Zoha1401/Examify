@@ -96,13 +96,15 @@ const ExamQuestions = () => {
       {/*This will contain exam details, all mcqs and programming, they can update mcq and programming question optiion will be provided in a single page only */}
       {/*They will also be able to add mcq and programming */}
       <Navigationbar/>
-      <div className="flex">
-      <Link to={`/addMcqQuestion/${examId}`}><Button>Add new MCQ Question</Button></Link>
-      <Link to={`/addProgQuestion/${examId}`}><Button>Add new Programming Question</Button></Link>
+      <div className="flex flex-row justify-center">
+      <Link to={`/addMcqQuestion/${examId}`} className="mx-2 my-2 py-2"><Button>Add new MCQ Question</Button></Link>
+      <Link to={`/addProgQuestion/${examId}`} className="mx-2 my-2 py-2"><Button>Add new Programming Question</Button></Link>
+      <Link to={`/mcqQuestionPool/${examId}`} className="mx-2 my-2 py-2"><Button>Add MCQ Question from pool</Button></Link>
+      <Link to={`/programmingQuestionPool/${examId}`} className="mx-2 my-2 py-2"><Button>Add Programming Question from pool</Button></Link>
       </div>
       
-      <div>Technical Questions</div>
-      <div>
+      <div className="bg-yellow-100 border-1 px-4 py-2">Technical Questions</div>
+      <div className="py-2">
         {loading ? (
           <p>Loading...</p>
         ): technicalMcqs.length===0 ? (
@@ -113,8 +115,8 @@ const ExamQuestions = () => {
           ))
         )}
       </div>
-      <div>Aptitude Questions</div>
-      <div>
+      <div className="bg-yellow-100 border-1 px-4 py-2">Aptitude Questions</div>
+      <div className="py-2">
       {loading ? (
           <p>Loading...</p>
         ): aptitudeMcqs.length===0 ? (
@@ -125,7 +127,7 @@ const ExamQuestions = () => {
           ))
         )}
       </div>
-      <div>
+      <div className="bg-yellow-100 border-1 px-4 py-2">
         Programming Questions
       </div>
       <div>
@@ -139,8 +141,7 @@ const ExamQuestions = () => {
           ))
         )}
       </div>
-      <Link to={`/mcqQuestionPool/${examId}`}><Button>Add MCQ Question from pool</Button></Link>
-      <Link to={`/programmingQuestionPool/${examId}`}><Button>Add Programming Question from pool</Button></Link>
+     
     </div>
 
   

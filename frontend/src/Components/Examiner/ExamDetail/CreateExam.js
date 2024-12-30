@@ -86,64 +86,70 @@ const CreateExam = () => {
   return (
     <>
     <Navigationbar/>
-      <Button variant="secondary">
-        <Link to="/examiner-dashboard">Back</Link>
-      </Button>
-      <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
-        <h2 className="text-center text-2xl font-bold">Add Exam</h2>
+      <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8 bg-gray-100">
+        <h2 className="text-center text-2xl font-bold mb-8">Add Exam</h2>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <div className="mx-auto bg-white max-w-lg rounded-lg shadow-lg p-6">
           <form className="space-y-6" onSubmit={handleAdd}>
             <div>
-              <label>Date</label>
+              <label className="block text-sm font-medium">Date</label>
               <DatePicker
                 label="Pick a date"
                 value={data.date}
                 onChange={(value) => onChange("date", value)}
+                className="mt-2 w-full shadow-sm rounded-md"
               />
             </div>
             <div>
-              <label>Start Time</label>
+              <label className="block text-sm font-medium">Start Time</label>
               <TimePicker
                 label="Select start time"
                 value={data.startTime}
                 onChange={(value) => onChange("startTime", value)}
+                 className="mt-2 w-full shadow-sm rounded-md"
+                 required
               />
             </div>
             <div>
-              <label>End Time</label>
+              <label className="block text-sm font-medium">End Time</label>
               <TimePicker
                 label="Select end time"
                 value={data.endTime}
                 onChange={(value) => onChange("endTime", value)}
+                 className="mt-2 w-full shadow-sm rounded-md"
               />
             </div>
             <div>
-              <label>MCQ Passing Score</label>
+              <label className="block text-sm font-medium">MCQ Passing Score</label>
               <input
                 type="number"
                 value={data.mcqPassingScore}
                 onChange={(e) => onChange("mcqPassingScore", e.target.value)}
+                 className="mt-2 w-full shadow-sm rounded-md"
               />
             </div>
             <div>
-              <label>Duration</label>
+              <label className="block text-sm font-medium">Duration</label>
               <input
                 type="number"
                 value={data.duration}
+                 className="mt-2 w-full shadow-sm rounded-md"
                 onChange={(e) => onChange("duration", e.target.value)}
+                required
               />
             </div>
-            <div>
+            <div className="flex items-center">
               <InputGroup>
                 <InputGroup.Checkbox
                   checked={assignToAllExaminees}
                   onChange={handleCheckboxChange}
                 />
-                Assign to all Examinees
+                <div className="mx-2 mt-1">Assign to all Examinees</div>
               </InputGroup>
             </div>
-            <button type="submit">Add Exam</button>
+            <Button type="submit" variant="dark" className="justify-center items-center w-full">Add Exam</Button>
           </form>
+          </div>
         </LocalizationProvider>
       </div>
     </>
