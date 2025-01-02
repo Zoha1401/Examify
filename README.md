@@ -3,6 +3,7 @@
 Technologies: React, Java Springboot
 
 **For frontend setup:**
+Requirements: Node Package manager
 
 Follow these steps:
 
@@ -20,3 +21,7 @@ Follow these steps:
 1) Requirements: JDK 17, Maven, SQL server.
 
 2) Dependencies: Lombok, Spring Security, JWT
+
+3) Run mvn clean install to install all dependencies
+
+4) Update application.properties with your username password and database name
