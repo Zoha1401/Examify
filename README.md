@@ -23,3 +23,5 @@ Follow these steps:
 2) Dependencies: Lombok, Spring Security, JWT
 
 3) Run mvn clean install to install all dependencies
+
+4) Update application.properties with your username password and database name
