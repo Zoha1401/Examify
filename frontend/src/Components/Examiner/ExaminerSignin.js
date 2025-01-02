@@ -48,7 +48,7 @@ const ExaminerSignin = () => {
         <div className="sm:mx-auto sm:w-full sm:max-w-sm flex flex-col items-center">
          <EditIcon className='text-white text-lg '/>
           <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-white font-serif">
-            Sign in to your account
+            Sign up to login
           </h2>
         </div>
 
@@ -102,13 +102,13 @@ const ExaminerSignin = () => {
                 type="submit"
                 className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
-                Sign in
+                Sign up
               </button>
             </div>
           </form>
 
           <p className="mt-10 text-center text-sm/6 text-gray-500">
-            Already signed in?{' '}
+            Already signed up?{' '}
             <Link to="/examiner-login" className="font-semibold text-indigo-600 hover:text-indigo-500">
               Login
             </Link>

@@ -9,6 +9,7 @@ const ManageExaminee = () => {
   let navigate = useNavigate();
   const [examinees, setExaminees] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   useEffect(() => {
     const fetchAllExaminees = async () => {
       //Getting the tokenn for authorization
@@ -61,6 +62,12 @@ const ManageExaminee = () => {
     console.log("Updated examinees:", examinees);
   }, [examinees]); // This will log the updated state whenever it changes
 
+  const filteredExaminees = examinees.filter((examinee) =>
+    examinee.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    examinee.degree.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    examinee.college.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    String(examinee.year).includes(searchQuery)
+  );
   return (
     <>
     <Navigationbar/>
@@ -70,20 +77,28 @@ const ManageExaminee = () => {
       <Link to="/add-examinee">
         <Button variant="primary">Add Examinee</Button>
       </Link>
+      <input
+          type="text"
+          placeholder="Search examinees..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="mx-2 px-2 rounded-md border-2"
+        />
+      
       </div>
     </div>   
       <div className="">
         {loading ? (
           <p>Loading...</p>
-        ) : examinees.length === 0 ? (
+        ) : filteredExaminees.length === 0 ? (
           <p>You have no examinees</p>
         ) : (
-          examinees.map((e) => (
+          filteredExaminees.map((e) => (
             <Examinee key={e.examineeId} temp_examinee={e} onUpdate={handleUpdateExaminee} onDelete={handleDeleteExaminee}/>
           ))
         )}
       </div>
-    </>
+    </> 
   );
 };
 

@@ -231,7 +231,7 @@ const Exam = ({ temp_exam, onDelete, onUpdate }) => {
       <Button onClick={handleEdit} variant="primary" className="mx-2">Update</Button>
       <Button onClick={viewQuestions} variant="dark" className="mx-2">View Questions</Button>
       <Button onClick={viewAnswers} variant="dark" className="mx-2">View Answers</Button>
-      <KeyboardArrowDownIcon onClick={toggleDropDown}/>
+      <Button onClick={toggleDropDown} className='hover:cursor-pointer' variant="success">Examinees</Button>
       </div>
       </div>
       

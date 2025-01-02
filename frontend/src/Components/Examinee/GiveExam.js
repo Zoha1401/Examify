@@ -96,7 +96,7 @@ const GiveExam = () => {
       }
     };
     const disableKeys=(event)=>{
-      const forbiddenKeys=["Tab", "Alt", "Shift", "Meta"]
+      const forbiddenKeys=["Tab", "Alt", "Meta"]
       if(forbiddenKeys.includes(event.key)){
         event.preventDefault();
         alert(`Usage of ${event.key} is not allowed outside exam`)

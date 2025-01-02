@@ -34,8 +34,8 @@ const CreateExam = () => {
   const handleAdd = async (e) => {
     e.preventDefault();
 
-    const { date, startTime, endTime, mcqPassingScore, duration } = data;
-    // console.log(startTime, duration, mcqPassingScore);
+    const { date, startTime, endTime, mcqpassingScore, duration } = data;
+    // console.log(startTime, duration, mcqpassingScore);
     const formattedStartTime=combineAndFormatDateTime(date, startTime)
     const formattedEndTime=combineAndFormatDateTime(date, endTime)
     console.log(formattedStartTime)
@@ -54,7 +54,7 @@ const CreateExam = () => {
           startTime:formattedStartTime,
           endTime:formattedEndTime,
           duration,
-          mcqPassingScore,
+          mcqpassingScore,
           assignToAllExaminees,
         },
 
@@ -123,17 +123,17 @@ const CreateExam = () => {
               <label className="block text-sm font-medium">MCQ Passing Score</label>
               <input
                 type="number"
-                value={data.mcqPassingScore}
-                onChange={(e) => onChange("mcqPassingScore", e.target.value)}
-                 className="mt-2 w-full shadow-sm rounded-md"
+                value={data.mcqpassingScore}
+                onChange={(e) => onChange("mcqpassingScore", e.target.value)}
+                 className="mt-2 w-full shadow-sm rounded-md px-1 p-2"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium">Duration</label>
+              <label className="block text-sm font-medium">Duration (in minutes)</label>
               <input
                 type="number"
                 value={data.duration}
-                 className="mt-2 w-full shadow-sm rounded-md"
+                 className="mt-2 w-full shadow-sm rounded-md p-2"
                 onChange={(e) => onChange("duration", e.target.value)}
                 required
               />
