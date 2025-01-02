@@ -33,13 +33,13 @@ const ExamQuestions = () => {
         setLoading(true);
   
         const [technicalRes, aptitudeRes, programmingRes] = await Promise.all([
-          axiosInstance.get(`/exam/getMcqTechnical?examId=${examId}`, {
+          axiosInstance.get(`/mcqQuestion/getMcqTechnical?examId=${examId}`, {
             headers: { Authorization: `Bearer ${token}` },
           }),
-          axiosInstance.get(`/exam/getMcqAptitude?examId=${examId}`, {
+          axiosInstance.get(`/mcqQuestion/getMcqAptitude?examId=${examId}`, {
             headers: { Authorization: `Bearer ${token}` },
           }),
-          axiosInstance.get(`/exam/getAllProgrammingQuestions?examId=${examId}`, {
+          axiosInstance.get(`/programmingQuestion/getAllProgrammingQuestions?examId=${examId}`, {
             headers: { Authorization: `Bearer ${token}` },
           }),
         ]);
@@ -53,7 +53,7 @@ const ExamQuestions = () => {
         console.error(
           "Error fetching data:",
           error.response?.data || error.message
-        );
+        ); 
         alert("Failed to fetch data. Please try again.");
       } finally {
         setLoading(false);

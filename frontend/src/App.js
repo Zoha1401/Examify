@@ -18,6 +18,7 @@ import ProgrammingQuestionPool from './Components/Examiner/Question/ProgrammingQ
 import GiveExam from './Components/Examinee/GiveExam';
 import ExamAnswers from './Components/Examiner/ExamDetail/ExamAnswers';
 import Answer from './Components/Examiner/ExamDetail/Answer';
+import SubmitPage from './Components/Examinee/SubmitPage';
 
 function App() {
   const router=createBrowserRouter([
@@ -88,6 +89,10 @@ function App() {
     {
       path:'/detail-answer/:examineeId/:examId',
       element:<Answer/>
+    },
+    {
+      path:'/submitPage',
+      element:<SubmitPage/>
     }
 
   ])

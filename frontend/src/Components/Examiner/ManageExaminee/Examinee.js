@@ -88,16 +88,17 @@ const Examinee = ({temp_examinee, onUpdate, onDelete}) => {
     }
   return (
     <>
-    <div className='flex flex-row mb-3 mx-2 mt-2 my-2 border-1 px-2 py-2 rounded-lg'>
-      <h4 className='mx-2'>{examinee.email}</h4>
+    <div className='flex flex-row mb-3 mx-2 mt-2 my-2 border-1 px-2 py-2 rounded-lg justify-between'>
+        <div className='flex flex-row'> <h4 className='mx-2'>{examinee.email}</h4>
       <h4 className='mx-2'>{examinee.degree}</h4> 
       <h4 className='mx-2'>{examinee.college}</h4>
       <h4 className='mx-4'>{examinee.year}</h4>
-      <h4 className='mx-2'>{examinee.phoneNumber}</h4>
+      <h4 className='mx-2'>{examinee.phoneNumber}</h4></div>
+     
       <div className='flex justify-content-end'>
       <Button onClick={handleEdit} className='mx-2' size="sm">Update</Button>
       <Button onClick={handleDelete} variant='danger' size="sm">Delete</Button>
-      </div>
+    </div>
       </div>
       
       {

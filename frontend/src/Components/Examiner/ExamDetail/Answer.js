@@ -74,21 +74,21 @@ const Answer = () => {
   return (
     <div>
       <Navigationbar/>
-
-      <div className="flex-col font-bold"><b>Mcq Answers</b></div>
-      Mcq Score: {mcqScore}
-      {passed && <div>The examinee has passed</div>}
+      <div className="bg-indigo-200 text-center font-bold text-lg rounded-md shadow-md p-4">Examination Results</div>
+      <div className="p-4 flex-col flex"><p className="font-semibold text-xl">Mcq Answers</p>
+      <span className="text-gray-700">Mcq Score: {mcqScore}</span>
+      {passed && <div className="bg-green-200 w-full rounded-md shadow-sm p-2 mb-2 mt-2">The examinee has passed</div>}
       {loading ? (
         <p>Loading...</p>
       ) : mcqAnswers.length === 0 ? (
         <p>No MCQ answers found</p>
       ) : (
         mcqAnswers.map((m) => (
-          <div className="flex-col bg-gray-100 rounded-lg px-2 my-2 mx-2 py-2">
-            <div className="mx-2 px-2">{m.questionText}</div>
-            <div className="flex mt-3 mx-2">{m.options.map((o) => (
+          <div className="flex-col bg-gray-100 rounded-lg my-2">
+            <div className="mx-2 my-2 px-2 font-semibold">{m.questionText}</div>
+            <div className="flex mt-3 mx-2 my-2">{m.options.map((o) => (
               //Have two divisions here when mcq is correct and when wrong.
-              <div>
+              <div className="mx-2">
                 <input
                   type="radio"
                   checked={o.optionId === m.selectedOptionId}
@@ -107,23 +107,29 @@ const Answer = () => {
            
           </div>
         ))
-      )}
-      <div>
-        <b>Programming Answers:</b>
+      )}</div>
+      
+      <div className="flex flex-col p-4">
+        <div className="text-xl font-semibold">Programming Answers:</div>
         {loading ? (
           <p>Loading...</p>
         ) : programmingAnswers && programmingAnswers.length > 0 ? (
           programmingAnswers.map((answer, index) => (
             <div key={index}>
-              <p>Question: {answer.programmingQuestionText}</p>
-              <p>Code Submission: {answer.codeSubmission}</p>
+              <p className="mt-3"><span className="font-bold text-lg mt-3">Question:</span> {answer.programmingQuestionText}</p>
+              <p className="font-semibold">Code Submission:</p>
+                <pre className="mt-2 p-3 rounded-md bg-gray-200 overflow-x-auto">{answer.codeSubmission}</pre>
               <div>
                 <h4>Test Cases:</h4>
                 {answer.testCases?.length > 0 ? (
                   answer.testCases.map((testCase, idx) => (
-                    <div key={idx}>
-                      <p>Input: {testCase.input}</p>
-                      <p>Expected Output: {testCase.expectedOutput}</p>
+                    <div key={idx} className="flex flex-row p-2">
+                      <p className="text-gray-700">
+                    <strong>Input:</strong> {testCase.input}
+                  </p>
+                  <p className="text-gray-700">
+                    <strong className="p-1">Expected Output:</strong> {testCase.expectedOutput}
+                  </p>
                     </div>
                   ))
                 ) : (

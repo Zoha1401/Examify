@@ -3,6 +3,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
 import { useNavigate, useParams } from "react-router-dom";
 import axiosInstance from "../../../utils/axiosInstance";
+import { Button } from "react-bootstrap";
 
 const Mcq = ({ mcq, onDelete, onUpdate }) => {
   const { examId } = useParams();
@@ -94,8 +95,8 @@ const Mcq = ({ mcq, onDelete, onUpdate }) => {
 
   return (
     <>
-      <div className="flex-col px-2 border-1 py-2">
-        <div>{mcq.mcqQuestionText}</div>
+      <div className="flex-col px-2 border-1 py-2 mx-2 mb-2 bg-gray-50 rounded-lg shadow-md">
+        <div className="font-semibold mb-3 mx-2">{mcq.mcqQuestionText}</div>
         <div className="flex">
           {mcq.options.map((option, index) => (
             <div key={option.optionId || index} className="mx-2">
@@ -106,23 +107,28 @@ const Mcq = ({ mcq, onDelete, onUpdate }) => {
             </div>
           ))}
           <ModeEditOutlineIcon onClick={handleEdit} />
+          <DeleteIcon onClick={handleDeleteMcq} />
+          </div>
           {editableMcq && (
-            <form onSubmit={handleUpdateMcq}>
+            <form onSubmit={handleUpdateMcq} className="mt-4 p-2 rounded-md bg-gray-100">
               <input
                 type="text"
                 name="mcqQuestionText"
                 value={editableMcq.mcqQuestionText || ""}
                 onChange={onChange}
+                className="rounded-lg p-1 w-full"
               ></input>
-              <div className="flex">
+              <div className="flex mt-2">
                 {options.map((option, index) => (
-                  <div key={option.optionId || index}>
-                    {option.optionText}{" "}
-                    {option.isCorrect && (
-                      <strong classname="font-light bg-green-200">
-                        (Correct)
-                      </strong>
-                    )}
+                  <div key={option.optionId || index} className="p-2">
+                    <input
+                      type="checkbox"
+                      checked={option.isCorrect || false}
+                      onChange={(e) =>
+                        onChangeOption(index, "isCorrect", e.target.checked)
+                      }
+                      className="mx-2"
+                    />
                     <input
                       type="text"
                       name="optionText"
@@ -130,23 +136,20 @@ const Mcq = ({ mcq, onDelete, onUpdate }) => {
                       onChange={(e) =>
                         onChangeOption(index, "optionText", e.target.value)
                       }
+                      className="rounded-lg p-1"
                     ></input>
-                    <input
-                      type="checkbox"
-                      checked={option.isCorrect || false}
-                      onChange={(e) =>
-                        onChangeOption(index, "isCorrect", e.target.checked)
-                      }
-                    />
+                   
+                    
                   </div>
                 ))}
               </div>
-              <button type="submit">Update MCQ</button>
+              <Button type="submit" variant="primary">Update MCQ</Button>
+              <Button type="cancel" onClick={()=>{setEditableMcq(null)}} variant="warning" className="mx-2">Cancel</Button>
             </form>
           )}
-          <DeleteIcon onClick={handleDeleteMcq} />
+          
         </div>
-      </div>
+      
     </>
   );
 };

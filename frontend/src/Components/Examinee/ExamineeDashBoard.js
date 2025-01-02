@@ -91,7 +91,7 @@ const ExamineeDashBoard = () => {
             <div key={exam.examId || index} className="mx-2">
               {exam.startTime}
               {exam.duration} min
-              <Link to={`/startExam/${exam.examId}`}>
+              <Link to={`/startExam/${exam.examId}`} className="p-3">
                 <Button disabled={()=>checkIfAlreadyGiven(exam)}>Start Exam</Button>
               </Link>
             </div>
@@ -106,12 +106,11 @@ const ExamineeDashBoard = () => {
 
 export default ExamineeDashBoard;
 
-//Tomorrow
+
 //Working on Update functionality of MCQ.
 //Examinee can see the exams assign to them-> onClick start, ek page navbar timer, get mcq and pro, page wise mcq will display.
 //Submit answer, automatic marking of answers in backend. Display marked results in frontend.
 //OTP vala if possible
 
-//Next week.
 //Another endpoint where examiner will be able to assign exam to the examinee after examinee creation.
 //Also an (endpoint) option to assign a particular exam to all examinees, after exam creation

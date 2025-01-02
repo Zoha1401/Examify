@@ -17,6 +17,14 @@ const ExamAnswers = () => {
     navigate("/examiner-login");
   }
 
+  const sortedExaminees = [...examinees].sort((a, b) => {
+    const aPassed = passed[a.examineeId] ? 1 : 0; 
+    const bPassed = passed[b.examineeId] ? 1 : 0;
+    return bPassed - aPassed; // Passed examinees come first
+  });
+  
+
+
   useEffect(() => {
     const fetchExaminees = async () => {
       setLoading(true);
@@ -73,22 +81,22 @@ const ExamAnswers = () => {
   console.log(examinees);
 
   return (
-    <div>
+    <div className="">
       <Navigationbar/>
-      <div className="flex-col flex mx-2 py-4">
-        <b className="mx-2">Answers:</b>
+      <div className="flex-col flex mx-2 py-4 p-4">
+        <b className="mx-2 text-xl font-semibold mb-4">Exam Answers:</b>
       {loading ? (
         <p>Loading...</p>
       ) : examinees.length === 0 ? (
         <p>You have no exams</p>
-      ) : (
-        examinees.map((e) => (
-          <div key={e.examineeId} onClick={() => showAnswer(e)} className="flex border-1 rounded-lg py-2 px-2 my-1 bg-gray-50 shadow-sm">
-            <p className="mx-2">Email: {e.email}</p>
-            <p className="mx-2">Degree: {e.degree}</p>
-            <p className="mx-2">College: {e.college}</p>
-            <p className="mx-2">Year: {e.year}</p>
-            <p className="mx-2">MCQ Score: {scores[e.examineeId] ?? "Loading..."}</p>
+      ) : ( 
+        sortedExaminees.map((e) => (
+          <div key={e.examineeId} onClick={() => showAnswer(e)} className={`hover:cursor-pointer hover:shadow-lg transition-transform transform hover:scale-95 flex border-1 rounded-lg p-3 my-1 shadow-sm ${passed[e.examineeId]? "bg-green-100":"bg-red-100"}`}>
+            <p className="mx-2 font-bold">Email:</p> <span> {e.email}</span>
+            <p className="mx-2 font-bold">Degree:</p><span>{e.degree}</span>
+            <p className="mx-2 font-bold">College:</p><span> {e.college}</span>
+            <p className="mx-2 font-bold">Year:</p><span> {e.year}</span>
+            <p className="mx-2 font-bold">MCQ Score: {scores[e.examineeId] ?? "Loading..."}</p>
             <div>Status : {passed[e.examineeId]? "Passed": "Not Passed"}</div>
           </div>
         ))

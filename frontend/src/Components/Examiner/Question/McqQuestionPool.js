@@ -37,7 +37,7 @@ const McqQuestionPool = () => {
         setMcqQuestions(response.data);
 
         const examQuestionsResponse = await axiosInstance.get(
-          `/exam/getAllMcqQuestions?examId=${examId}`,
+          `/mcqQuestion/getAllMcqQuestions?examId=${examId}`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
 
@@ -80,7 +80,7 @@ const McqQuestionPool = () => {
 
     try {
       const response = await axiosInstance.post(
-        `/exam/addMcqQuestionList?examId=${examId}`,
+        `/mcqQuestion/addMcqQuestionList?examId=${examId}`,
         fullQuestions,
         { headers: { Authorization: `Bearer ${token}` } }
       );

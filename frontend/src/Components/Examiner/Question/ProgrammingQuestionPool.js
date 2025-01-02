@@ -64,7 +64,7 @@ const ProgrammingQuestionPool = () => {
         }
 
         const examQuestionsResponse = await axiosInstance.get(
-          `/exam/getAllProgrammingQuestions?examId=${examId}`,
+          `/programmingQuestion/getAllProgrammingQuestions?examId=${examId}`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
 
@@ -115,7 +115,7 @@ const ProgrammingQuestionPool = () => {
       );
     console.log(fullQuestions)
     try{
-       const response=await axiosInstance.post(`/exam/addProgrammingQuestionList?examId=${examId}`,
+       const response=await axiosInstance.post(`/programmingQuestion/addProgrammingQuestionList?examId=${examId}`,
          fullQuestions,
         {headers: { Authorization: `Bearer ${token}` }},
        

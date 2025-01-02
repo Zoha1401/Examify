@@ -70,14 +70,17 @@ const ExaminerDashBoard = () => {
           </Button>
         </Link>
       </div>
-      <div className="grid grid-cols-5 gap-4 text-center font-semibold">
-        <span>Exam ID</span>
-        <span>Date</span>
-        <span>Start Time</span>
-        <span>End Time</span>
-        <span>Duration</span>
       </div>
-      </div>     
+      <div className="px-2 py-2 text-xl font-bold">Exams:</div>
+      <div className="mx-2 font-semibold">
+        <span className="p-2">Exam ID</span>
+        <span className="p-8">Date</span>
+        <span className="p-10">Start</span>
+        <span className="p-6">End</span>
+        <span className="p-6">Mcq Passing score</span>
+        <span className="p-6">Duration</span>
+      </div>
+          
       
       <div className="">
         {loading ? (

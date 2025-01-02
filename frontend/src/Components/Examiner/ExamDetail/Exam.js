@@ -10,6 +10,7 @@ const Exam = ({ temp_exam, onDelete, onUpdate }) => {
   const [checkedState, setCheckedState]=useState(false);
   const [showExaminees, setShowExaminees]=useState(false);
   const [selectedExaminees, setSelectedExaminees]=useState([])
+  const [searchTerm, setSearchTerm] = useState("");
 
   const toggleDropDown=()=>{
     setShowExaminees(!showExaminees);
@@ -180,9 +181,17 @@ const Exam = ({ temp_exam, onDelete, onUpdate }) => {
     }
   }
 
-  const handleSearch=()=>{
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
+  };
 
-  }
+  const filteredExaminees = examinees.filter((examinee) =>
+    examinee.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    examinee.degree.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    examinee.college.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    String(examinee.year).includes(searchTerm)
+  );
+
 
   const handleAddAllExaminees=()=>{
     try{
@@ -208,73 +217,101 @@ const Exam = ({ temp_exam, onDelete, onUpdate }) => {
   }
 
   return (
-    <div className="flex flex-row mb-3 mx-2 mt-2 my-2 border-1 px-2 py-2 rounded-lg">
-      <h4 className='mx-2'>{temp_exam.examId}</h4>
-      <h4 className='mx-2'>{date1}</h4>
-      <h4 className='mx-2'>{time1}</h4>
-      <h4 className='mx-2'>{time2}</h4>
-      <h4 className='mx-2'>{temp_exam.mcqPassingScore}</h4>
-      <h4 className='mx-2'>{temp_exam.duration} min</h4> 
+    <div className="flex flex-col">
+      <div className="flex flex-row mb-3 mx-2 mt-2 my-2 border-1 px-2 py-2 rounded-lg justify-between"> 
+      <div className='flex flex-wrap'><h4 className='mx-2'>{temp_exam.examId}</h4>
+      <h4 className='mx-2 px-2'>{date1}</h4>
+      <h4 className='mx-2 px-2'>{time1}</h4>
+      <h4 className='mx-2 px-2'>{time2}</h4>
+      <h4 className='mx-2 px-2'>{temp_exam.mcqpassingScore}</h4>
+      <h4 className='mx-2 px-10'>{temp_exam.duration} min</h4></div>
+
       <div className="flex mx-2">
       <Button onClick={handleDelete} variant="danger" className="mx-2">Delete</Button>
       <Button onClick={handleEdit} variant="primary" className="mx-2">Update</Button>
       <Button onClick={viewQuestions} variant="dark" className="mx-2">View Questions</Button>
       <Button onClick={viewAnswers} variant="dark" className="mx-2">View Answers</Button>
-      
-      </div>
-      <div>
       <KeyboardArrowDownIcon onClick={toggleDropDown}/>
       </div>
+      </div>
       
-      {
-        editableExam && (
-            <form onSubmit={handleUpdate}>
-                <input type="startTime"
-                name="startTime"
-                value={editableExam.startTime}
-                onChange={onChange}
-                ></input>
-                <input type="endTime"
-                name="endTime"
-                value={editableExam.endTime}
-                onChange={onChange}
-                ></input>
-                <input type="mcqPassingScore"
-                name="mcqPassingScore"
-                value={editableExam.mcqPassingScore}
-                onChange={onChange}
-                ></input>
-                <input type="duration"
-                name="duration"
-                value={editableExam.duration}
-                onChange={onChange}
-                ></input>
-                
-                 <button type="submit">Update</button>
-                 <button onClick={() => setEditableExam(null)}>Cancel</button>
-                 
-            </form>
-        )
-      }
+     
+      
+      
+      {editableExam && (
+    <form
+      onSubmit={handleUpdate}
+      className="mt-4 p-4 bg-gray-100 rounded-lg shadow-sm"
+    >
+      <div className="grid grid-cols-2 gap-4">
+        <input
+          type="text"
+          name="startTime"
+          value={editableExam.startTime}
+          onChange={onChange}
+          placeholder="Start Time"
+          className="p-2 border border-gray-300 rounded-md"
+        />
+        <input
+          type="text"
+          name="endTime"
+          value={editableExam.endTime}
+          onChange={onChange}
+          placeholder="End Time"
+          className="p-2 border border-gray-300 rounded-md"
+        />
+        <input
+          type="text"
+          name="mcqpassingScore"
+          value={editableExam.mcqpassingScore}
+          onChange={onChange}
+          placeholder="MCQ Passing Score"
+          className="p-2 border border-gray-300 rounded-md"
+        />
+        <input
+          type="text"
+          name="duration"
+          value={editableExam.duration}
+          onChange={onChange}
+          placeholder="Duration (min)"
+          className="p-2 border border-gray-300 rounded-md"
+        />
+      </div>
+      <div className="mt-4 flex justify-end space-x-3">
+        <button
+          type="submit"
+          className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
+        >
+          Update
+        </button>
+        <button
+          onClick={() => setEditableExam(null)}
+          className="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 transition"
+        >
+          Cancel
+        </button>
+      </div>
+    </form>
+  )}
 
 {showExaminees && (
         <div className="mt-3 p-3 border rounded bg-light shadow-sm">
           <h5 className="mb-3">Examinees</h5>
           <InputGroup className="mb-3">
             <Form.Control
-              type="text"
-              placeholder="Search examinees..."
-              onChange={handleSearch}
-              value=""
+             type="text"
+             placeholder="Search examinees..."
+             onChange={handleSearch}
+             value={searchTerm}
             />
           </InputGroup>
           <div className="max-h-64 overflow-y-auto">
-            {examinees.map((examinee) => (
+            {filteredExaminees.map((examinee) => (
               <div
                 key={examinee.examineeId}
                 className="flex items-center justify-between mb-2"
               >
-                <span>{examinee.email}</span>
+                <span >{examinee.email}</span>
                 <span>{examinee.degree}</span>
                 <span>{examinee.college}</span>
                 <span>{examinee.year}</span>
@@ -286,8 +323,8 @@ const Exam = ({ temp_exam, onDelete, onUpdate }) => {
                
               </div>
             ))}
-             <Button variant='dark' onClick={handleAddSelectedExaminees}>Add selected examinees</Button>
-             <Button variant='dark' onClick={handleAddAllExaminees}>Add all examinees</Button>
+             <Button variant='dark' onClick={handleAddSelectedExaminees} >Add selected examinees</Button>
+             <Button variant='dark' onClick={handleAddAllExaminees} className='mx-2'>Add all examinees</Button>
           </div>
         </div>
       )}

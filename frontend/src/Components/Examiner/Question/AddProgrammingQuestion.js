@@ -110,6 +110,20 @@ const AddProgrammingQuestion = () => {
             </Dropdown.Menu>
           </Dropdown>
 
+          <div>
+            <label htmlFor="referenceAnswer" className="block font-medium">
+              Reference Answer
+            </label>
+            <input
+              id="referenceAnswer"
+              name="referenceAnswer"
+              required
+              value={progQuestion.referenceAnswer}
+              onChange={onChange}
+              className="block w-full rounded-md border px-3 py-2"
+            />
+          </div>
+
           {/* Testcase Management */}
           <div>
             <h4>Test Cases</h4>

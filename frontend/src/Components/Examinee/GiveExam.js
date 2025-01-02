@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axiosInstance from "../../utils/axiosInstance";
 import { useNavigate, useParams } from "react-router-dom";
-import { Dropdown } from "react-bootstrap";
+import { Button, Dropdown } from "react-bootstrap";
 import { ClipboardEvent } from "react"
 
 const GiveExam = () => {
@@ -182,12 +182,12 @@ const GiveExam = () => {
 
   const renderMcq = (mcq) => {
     return (
-      <div>
-        <h2 className="select-none">Question {currentQuestionIndex + 1}</h2>
-        <p className="select-none">{mcq.mcqQuestionText}</p>
-        <div className="options-container">
+      <div className="bg-gray-50 rounded-md px-2">
+        <h2 className="select-none text-lg font-bold mb-4">Question {currentQuestionIndex + 1}</h2>
+        <p className="select-none text-gray-700 mb-4">{mcq.mcqQuestionText}</p>
+        <div className="options-container space-y-3">
           {mcq.options.map((option) => (
-            <div key={option.optionId}>
+            <div key={option.optionId} className="flex items-center space-x-2 bg-white px-2 py-4 rounded-md shadow-sm">
               <input
                 type="radio"
                 name={`mcq-${mcq.mcqId}`}
@@ -213,73 +213,71 @@ const GiveExam = () => {
     console.log(codeAnswers);
   
     return (
-      <div>
-        <Dropdown>
-          <Dropdown.Toggle variant="secondary">{language}</Dropdown.Toggle>
-          <Dropdown.Menu>
-            <Dropdown.Item
-              onClick={() =>
-                handleLanguageChange(pq.programmingQuestionId, "C++")
-              }
-            >
-              C++
-            </Dropdown.Item>
-            <Dropdown.Item
-              onClick={() =>
-                handleLanguageChange(pq.programmingQuestionId, "Java")
-              }
-            >
-              Java
-            </Dropdown.Item>
-            <Dropdown.Item
-              onClick={() =>
-                handleLanguageChange(pq.programmingQuestionId, "Python")
-              }
-            >
-              Python
-            </Dropdown.Item>
-          </Dropdown.Menu>
-        </Dropdown>
-
-        <div className="programming-question">
-          <h2 className="select-none">Question {currentQuestionIndex + 1}</h2>
-          <p className="select-none">{pq.programmingQuestionText}</p>
-          <div className="testcase-container">
-            {pq.testCases.map((t) => (
-              <div key={t.testcaseId} className="testcase">
-                <p>
-                  <strong className="select-none">Input:</strong> {t.input}
-                </p>
-                <p>
-                  <strong className="select-none">Expected Output:</strong> {t.expectedOutput}
-                </p>
-              </div>
-            ))}
-          </div>
-
-          <div>
-            <label htmlFor={`codeSubmission-${pq.programmingQuestionId}`}>
-              Your Code:
-            </label>
-            <textarea
-              id={`codeSubmission-${pq.programmingQuestionId}`}
-              rows="10"
-              cols="50"
-              value={codeSubmission}
-              onChange={(e) =>
-                onChangeCodeAnswer(
-                  pq.programmingQuestionId,
-                  language,
-                  e.target.value
-                )
-              }
-              onCopy={(e) => handleCopy(e)}
-              onPaste={(e) => handlePaste(e)}
-              onCut={(e) => handleCut(e)}
-            ></textarea>
-          </div>
+      <div className="flex flex-col lg:flex-row gap-6">
+      {/* Left Column: Question and Test Cases */}
+      <div className="lg:w-1/2 w-full bg-gray-50 p-6 rounded-lg shadow-md">
+        <h2 className="text-lg font-bold mb-4 select-none">Question {currentQuestionIndex + 1}</h2>
+        <p className="text-gray-700 mb-6 select-none">{pq.programmingQuestionText}</p>
+    
+        <div className="space-y-4">
+          <h3 className="text-md font-semibold select-none">Test Cases:</h3>
+          {pq.testCases.map((t) => (
+            <div key={t.testcaseId} className="bg-white p-3 rounded-md shadow-sm">
+              <p>
+                <span className="font-medium select-none">Input:</span> {t.input}
+              </p>
+              <p>
+                <span className="font-medium select-none">Expected Output:</span> {t.expectedOutput}
+              </p>
+            </div>
+          ))}
         </div>
       </div>
+    
+      {/* Right Column: Language Dropdown and Text Area */}
+      <div className="lg:w-1/2 w-full bg-gray-50 p-6 rounded-lg shadow-md">
+        <div className="mb-6">
+          <label htmlFor={`languageDropdown-${pq.programmingQuestionId}`} className="block mb-2 font-medium">
+            Select Language:
+          </label>
+          <Dropdown>
+            <Dropdown.Toggle variant="secondary">{language}</Dropdown.Toggle>
+            <Dropdown.Menu>
+              {["C++", "Java", "Python"].map((lang) => (
+                <Dropdown.Item
+                  key={lang}
+                  onClick={() =>
+                    handleLanguageChange(pq.programmingQuestionId, lang)
+                  }
+                >
+                  {lang}
+                </Dropdown.Item>
+              ))}
+            </Dropdown.Menu>
+          </Dropdown>
+        </div>
+    
+        <label
+          htmlFor={`codeSubmission-${pq.programmingQuestionId}`}
+          className="block mb-4 font-medium"
+        >
+          Your Code:
+        </label>
+        <textarea
+          id={`codeSubmission-${pq.programmingQuestionId}`}
+          rows="15"
+          className="w-full p-3 rounded-md border shadow-sm focus:ring focus:ring-indigo-300"
+          value={codeSubmission}
+          onChange={(e) =>
+            onChangeCodeAnswer(pq.programmingQuestionId, language, e.target.value)
+          }
+          onCopy={(e) => handleCopy(e)}
+          onPaste={(e) => handlePaste(e)}
+          onCut={(e) => handleCut(e)}
+        ></textarea>
+      </div>
+    </div>
+    
     );
   };
 
@@ -303,7 +301,7 @@ const GiveExam = () => {
       console.log(response);
       alert("Exam submitted");
       //Submit screen
-      navigate("/");
+      navigate("/submitPage");
     } catch (error) {
       console.error("Error submiting exam:", error, error.message);
       alert("Failed to submit exam. Please try again.");
@@ -315,22 +313,27 @@ const GiveExam = () => {
 
   return (
     <>
-      <div className="timer">
-        <div className="col-4">
-          <div className="box">
-            <p id="minute">{minutes < 10 ? "0" + minutes : minutes}</p>
-            <span className="text">Minutes</span>
-          </div>
-        </div>
-        <div className="col-4">
-          <div className="box">
-            <p id="second">{seconds < 10 ? "0" + seconds : seconds}</p>
-            <span className="text">Seconds</span>
-          </div>
-        </div>
-      </div>
+     <div className="flex flex-row justify-between">
 
-      <div>
+      <div className="flex flex-rows px-2 py-2 bg-indigo-100 rounded-md ml-3 mt-3">
+           <span className="px-2 font-bold">Time Left:</span>
+           <p id="minute">{minutes < 10 ? "0" + minutes : minutes}</p>
+           :
+       
+            <p id="second">{seconds < 10 ? "0" + seconds : seconds}</p>
+      </div>
+      
+      <div className="px-2"><Button
+    onClick={handleSubmit}
+    variant="success"
+    className="px-4 py-2 mt-3 mr-3 font-semibold rounded-lg shadow-md hover:bg-green-700"
+  >
+    Submit
+  </Button></div>
+     </div>
+           
+
+      <div className="bg-white p-6 mb-6">
         {currentQuestionIndex < mcqQuestions.length ? (
           renderMcq(currentMcq)
         ) : currentProgrammingQuestion ? (
@@ -339,10 +342,11 @@ const GiveExam = () => {
           <div>No questions found.</div>
         )}
 
-        <div className="navigation-container">
+        <div className="navigation-container flex justify-between items-center py-4">
           <button
             disabled={currentQuestionIndex === 0}
             onClick={() => setCurrentQuestionIndex((prev) => prev - 1)}
+            className="px-4 py-2 bg-gray-200 rounded-lg shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Previous
           </button>
@@ -353,11 +357,12 @@ const GiveExam = () => {
               mcqQuestions.length + programmingQuestions.length - 1
             }
             onClick={() => setCurrentQuestionIndex((prev) => prev + 1)}
+            className="px-4 py-2 bg-indigo-600 text-white rounded-lg shadow-md hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Next
           </button>
         </div>
-        <button onClick={handleSubmit}>Submit</button>
+      
       </div>
     </>
   );

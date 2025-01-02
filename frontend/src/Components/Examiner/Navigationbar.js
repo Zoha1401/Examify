@@ -3,8 +3,17 @@ import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
+import { useNavigate } from 'react-router-dom';
 
 const Navigationbar = () => {
+  let navigate=useNavigate()
+
+  const handleLogout=()=>{
+    localStorage.removeItem("token")
+    alert("You are logged out")
+    navigate("/")
+
+  }
   return (
     <>
       <Navbar bg="dark" data-bs-theme="dark">
@@ -15,7 +24,7 @@ const Navigationbar = () => {
             <Nav.Link href="/manage-examinee">Examinees</Nav.Link>
           </Nav>
         </Container>
-        <Button variant="primary" className='d-flex mx-4'>Logout</Button>
+        <Button variant="primary" className='d-flex mx-4' onClick={handleLogout}>Logout</Button>
       </Navbar> 
       
       </>
