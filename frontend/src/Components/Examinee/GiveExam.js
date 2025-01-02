@@ -17,6 +17,7 @@ const GiveExam = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [deadline, setDeadline] = useState(0);
   const [clipBoardContent, setClipBoardContent]= useState("")
+  const [isExamPaused, setIsExamPaused] = useState(false);
 
   let navigate = useNavigate();
   const token = localStorage.getItem("token");
@@ -87,10 +88,39 @@ const GiveExam = () => {
     }
   }, [token, examId]);
 
+
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        setIsExamPaused(true);
+      }
+    };
+    const disableKeys=(event)=>{
+      const forbiddenKeys=["Tab", "Alt", "Shift", "Meta"]
+      if(forbiddenKeys.includes(event.key)){
+        event.preventDefault();
+        alert(`Usage of ${event.key} is not allowed outside exam`)
+      }
+    }
+
+    window.addEventListener("keydown", disableKeys)
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      window.addEventListener("keydown", disableKeys)
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, []);
+
+ 
+
+  
+
   useEffect(() => {
     if (!deadline) return; // Ensure deadline is set
     console.log("Deadline is ", deadline);
     const interval = setInterval(() => {
+      
       const now = Date.now();
       const timeLeft = deadline - now;
 
@@ -108,7 +138,7 @@ const GiveExam = () => {
     }, 1000);
 
     return () => clearInterval(interval); // Cleanup on unmount
-  }, [deadline]);
+  }, [deadline, isExamPaused]);
 
   const handleOptionChange = (mcqQuestionId, optionId) => {
     setMcqAnswers((prevAnswers) => {
