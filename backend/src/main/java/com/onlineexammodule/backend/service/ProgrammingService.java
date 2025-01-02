@@ -13,6 +13,8 @@ import com.onlineexammodule.backend.repo.ExamRepository;
 import com.onlineexammodule.backend.repo.ProgrammingRepository;
 import com.onlineexammodule.backend.repo.TestCaseRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class ProgrammingService {
 
@@ -204,6 +206,40 @@ public class ProgrammingService {
        }
 
        return "Added";
+    }
+    
+
+    public List<ProgrammingQuestion> getAllProgrammingQuestions(Long examId) {
+        Exam existingExam = examRepository.findById(examId)
+                .orElseThrow(() -> new IllegalArgumentException("Exam not found or exam ID incorrect"));
+
+        return existingExam.getProgrammingQuestions();
+    }
+
+    
+   
+    @Transactional
+    public List<ProgrammingQuestion> addProgrammingQuestionList(Long examId, List<ProgrammingQuestion> listPro) {
+        Exam existingExam = examRepository.findById(examId)
+                .orElseThrow(() -> new IllegalArgumentException("Exam not found or exam ID incorrect"));
+    
+        for (ProgrammingQuestion programmingQuestion : listPro) {
+            // Check if the question already exists
+            boolean alreadyPresent = existingExam.getProgrammingQuestions().stream()
+                    .anyMatch(q -> q.getProgrammingQuestionId()==programmingQuestion.getProgrammingQuestionId());
+    
+            if (!alreadyPresent) {
+                // Add only if not present
+                ProgrammingQuestion proQ = programmingRepository.save(programmingQuestion);
+                proQ.getExams().add(existingExam);
+                existingExam.getProgrammingQuestions().add(proQ);
+            }
+        }
+    
+        // Save updated exam
+        examRepository.save(existingExam);
+    
+        return existingExam.getProgrammingQuestions();
     }
     
     

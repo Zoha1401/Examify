@@ -83,5 +83,19 @@ public class ProgrammingQuestionController {
          return programmingService.addProgrammingQuestionPool(programmingQuestions);
      }
      
-     
+      //Get all programming question.
+      @GetMapping("/getAllProgrammingQuestions")
+      public List<ProgrammingQuestion> getAllProgrammingQuestions(@RequestParam Long examId) {
+          return programmingService.getAllProgrammingQuestions(examId);
+      }
+      
+      
+      //To create a pool of questions
+      
+      
+      
+      @PostMapping("/addProgrammingQuestionList")
+      public List<ProgrammingQuestion> addProgrammingQuestionList(Long examId, @RequestBody List<ProgrammingQuestion> listPro) {
+           return programmingService.addProgrammingQuestionList(examId, listPro);
+      }
 }

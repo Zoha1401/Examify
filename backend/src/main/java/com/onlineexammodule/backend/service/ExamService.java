@@ -2,7 +2,6 @@ package com.onlineexammodule.backend.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -22,7 +21,6 @@ import com.onlineexammodule.backend.repo.McqRepository;
 import com.onlineexammodule.backend.repo.ProgrammingAnswerRepository;
 import com.onlineexammodule.backend.repo.ProgrammingRepository;
 
-import jakarta.transaction.Transactional;
 
 @Service
 public class ExamService {
@@ -193,71 +191,8 @@ public class ExamService {
         return examRepository.save(existingExam);
     }
 
-    public List<McqQuestion> getAllMcqQuestions(Long examId) {
-        Exam existingExam = examRepository.findById(examId)
-                .orElseThrow(() -> new IllegalArgumentException("Exam not found or exam ID incorrect"));
-
-        return existingExam.getMcqQuestions();
-    }
-
-    public List<ProgrammingQuestion> getAllProgrammingQuestions(Long examId) {
-        Exam existingExam = examRepository.findById(examId)
-                .orElseThrow(() -> new IllegalArgumentException("Exam not found or exam ID incorrect"));
-
-        return existingExam.getProgrammingQuestions();
-    }
-
-    
-    @Transactional
-    public List<McqQuestion> addMcqQuestionList(Long examId, List<McqQuestion> listMcqs) {
-        Exam existingExam = examRepository.findById(examId)
-                .orElseThrow(() -> new IllegalArgumentException("Exam not found or exam ID incorrect"));
-
-        System.out.println("Adding mcqs to exam and vice versa");
-
-        for (McqQuestion mcqQuestion : listMcqs) {
-            // Save the MCQ question to the repository
-
-            boolean alreadyPresent = existingExam.getMcqQuestions().stream()
-            .anyMatch(q -> q.getMcqId()==mcqQuestion.getMcqId());
-
-            if(!alreadyPresent){
-            McqQuestion savedMcq = mcqRepository.save(mcqQuestion);
-
-            // Update relationships
-            savedMcq.getExams().add(existingExam);
-            existingExam.getMcqQuestions().add(savedMcq);
-            }
-        }
-
-        examRepository.save(existingExam);
-
-        return existingExam.getMcqQuestions();
-    }
    
-    @Transactional
-    public List<ProgrammingQuestion> addProgrammingQuestionList(Long examId, List<ProgrammingQuestion> listPro) {
-        Exam existingExam = examRepository.findById(examId)
-                .orElseThrow(() -> new IllegalArgumentException("Exam not found or exam ID incorrect"));
-    
-        for (ProgrammingQuestion programmingQuestion : listPro) {
-            // Check if the question already exists
-            boolean alreadyPresent = existingExam.getProgrammingQuestions().stream()
-                    .anyMatch(q -> q.getProgrammingQuestionId()==programmingQuestion.getProgrammingQuestionId());
-    
-            if (!alreadyPresent) {
-                // Add only if not present
-                ProgrammingQuestion proQ = programmingRepository.save(programmingQuestion);
-                proQ.getExams().add(existingExam);
-                existingExam.getProgrammingQuestions().add(proQ);
-            }
-        }
-    
-        // Save updated exam
-        examRepository.save(existingExam);
-    
-        return existingExam.getProgrammingQuestions();
-    }
+
     
 
 
@@ -269,27 +204,7 @@ public class ExamService {
 
     }
 
-    public List<McqQuestion> getMcqTechnical(Long examId) {
-        Exam exam = examRepository.findById(examId)
-                .orElseThrow(() -> new IllegalArgumentException("Exam does not exist, Incorrect exam Id"));
-        
-                //Get technical mcqs only
-        List<McqQuestion> mcqQuestions=exam.getMcqQuestions().stream().filter(mcqQuestion-> "Technical".equals(mcqQuestion.getCategory()))
-        .collect(Collectors.toList());
-
-        return mcqQuestions;
-    }
-
-    public List<McqQuestion> getMcqAptitude(Long examId) {
-        Exam exam = examRepository.findById(examId)
-                .orElseThrow(() -> new IllegalArgumentException("Exam does not exist, Incorrect exam Id"));
-
-                //Get Aptitude mcqs
-        List<McqQuestion> mcqQuestions=exam.getMcqQuestions().stream().filter(mcqQuestion-> "Aptitude".equals(mcqQuestion.getCategory()))
-                .collect(Collectors.toList());
-        
-        return mcqQuestions;
-    }
+   
 
     public List<Examinee> getPassedExaminees(Long examId) {
        

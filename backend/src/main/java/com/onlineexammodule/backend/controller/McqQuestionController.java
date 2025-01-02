@@ -78,6 +78,26 @@ public class McqQuestionController {
         return mcqService.addMcqQuestionPool(mcqQuestions);
     }
     
+    //*****
+    @GetMapping("/getAllMcqQuestions")
+    public List<McqQuestion> getAllMcqQuestions(@RequestParam Long examId) {
+        return mcqService.getAllMcqQuestions(examId);
+    }
+
+    @PostMapping("/addMcqQuestionList")
+     public List<McqQuestion> addMcqQuestionList(Long examId, @RequestBody List<McqQuestion> listMcqs) {
+         return mcqService.addMcqQuestionList(examId, listMcqs);
+     }
+
+     @GetMapping("/getMcqTechnical")
+     public List<McqQuestion> getMcqTechnical(@RequestParam Long examId) {
+         return mcqService.getMcqTechnical(examId);
+     }
+
+     @GetMapping("/getMcqAptitude")
+     public List<McqQuestion> getMcqAptitude(@RequestParam Long examId) {
+         return mcqService.getMcqAptitude(examId);
+     }
      
 
     

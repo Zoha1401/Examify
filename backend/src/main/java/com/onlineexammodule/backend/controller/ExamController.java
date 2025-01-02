@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.onlineexammodule.backend.DTO.ExamRequest;
 import com.onlineexammodule.backend.model.Exam;
 import com.onlineexammodule.backend.model.Examinee;
-import com.onlineexammodule.backend.model.McqQuestion;
-import com.onlineexammodule.backend.model.ProgrammingQuestion;
 import com.onlineexammodule.backend.service.ExamService;
 import com.onlineexammodule.backend.service.JWTService;
 
@@ -52,48 +50,12 @@ public class ExamController {
      public String deleteExam(@RequestParam Long examId) {
          return examService.deleteExam(examId);
      }
-
-     //Get all MCQ questions.
-     @GetMapping("/getAllMcqQuestions")
-     public List<McqQuestion> getAllMcqQuestions(@RequestParam Long examId) {
-         return examService.getAllMcqQuestions(examId);
-     }
-     
-
-     //Get all programming question.
-     @GetMapping("/getAllProgrammingQuestions")
-     public List<ProgrammingQuestion> getAllProgrammingQuestions(@RequestParam Long examId) {
-         return examService.getAllProgrammingQuestions(examId);
-     }
-     
-     
-     //To create a pool of questions
-     @PostMapping("/addMcqQuestionList")
-     public List<McqQuestion> addMcqQuestionList(Long examId, @RequestBody List<McqQuestion> listMcqs) {
-         return examService.addMcqQuestionList(examId, listMcqs);
-     }
-     
-     
-     @PostMapping("/addProgrammingQuestionList")
-     public List<ProgrammingQuestion> addProgrammingQuestionList(Long examId, @RequestBody List<ProgrammingQuestion> listPro) {
-          return examService.addProgrammingQuestionList(examId, listPro);
-     }
+    
      
      @GetMapping("/getExamById")
      public Exam  getExamById(@RequestParam Long examId) {
          return examService.getExamById(examId);
      }
-
-     @GetMapping("/getMcqTechnical")
-     public List<McqQuestion> getMcqTechnical(@RequestParam Long examId) {
-         return examService.getMcqTechnical(examId);
-     }
-
-     @GetMapping("/getMcqAptitude")
-     public List<McqQuestion> getMcqAptitude(@RequestParam Long examId) {
-         return examService.getMcqAptitude(examId);
-     }
-     
 
      @GetMapping("/getPassedExaminees")
      public List<Examinee> getPassedExaminees(@RequestParam Long examId) {
@@ -104,6 +66,7 @@ public class ExamController {
      public List<Examinee> getExaminees(@RequestParam Long examId) {
          return examService.getExaminees(examId);
      }
+    
      
      
      

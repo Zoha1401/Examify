@@ -154,7 +154,9 @@ public class ExamineeService {
             mcqAnswerRepository.save(new_mcq_answer);
         }
         new_answer.setMcqScore(mcqScore);
-        new_answer.setPassed(mcqScore >= existingExam.getMcqpassingScore());
+        boolean isPassed = mcqScore > 0 && mcqScore >= existingExam.getMcqpassingScore();
+        new_answer.setPassed(isPassed);
+      
 
         // Save ProgrammingQuestionAnswers
         for (ProgrammingQuestionAnswer programmingQuestionAnswer : programmingQuestionAnswers) {
