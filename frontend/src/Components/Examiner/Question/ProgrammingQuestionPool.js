@@ -86,7 +86,7 @@ const ProgrammingQuestionPool = () => {
       }
     };
     fetchAllProgrammingQuestions();
-  }, [token]);
+  }, [token, examId]);
 
 //   const handleChange = (event) => {
 //     setChecked(event.target.checked);

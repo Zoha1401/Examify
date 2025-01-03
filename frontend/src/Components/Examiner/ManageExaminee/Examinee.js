@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import axiosInstance from '../../../utils/axiosInstance';
 import {useNavigate} from 'react-router-dom'
-import { Button, Row, Col } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 
 const Examinee = ({temp_examinee, onUpdate, onDelete}) => {
     const [editableExaminee, setEditableExaminee]=useState(null);

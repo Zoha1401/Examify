@@ -37,11 +37,11 @@ const ProgrammingQuestion = ({ pq, onDelete, onUpdate }) => {
           },
         }
       );
-      if (response.status === 200) {
+    
         alert("Programming Question Updated");
-        onUpdate(response.data);
+        window.location.reload()
         setEditableProQ(null);
-      }
+      
     } catch (error) {
       console.error(
         "Error updating pro q:",
@@ -60,10 +60,10 @@ const ProgrammingQuestion = ({ pq, onDelete, onUpdate }) => {
         }
       );
 
-      if (response.status === 200) {
+     
         alert("Programming Question is deleted");
         onDelete(pq.programmingQuestionId);
-      }
+      
     } catch (error) {
       console.error("Error deleting:", error.response?.data || error.message);
       alert("Failed to delete question. Please try again.");

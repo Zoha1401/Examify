@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axiosInstance from "../../utils/axiosInstance";
 import { useNavigate, useParams } from "react-router-dom";
 import { Button, Dropdown } from "react-bootstrap";
-import { ClipboardEvent } from "react"
+import Editor from "@monaco-editor/react";
 
 const GiveExam = () => {
   const { examId } = useParams();
@@ -16,7 +16,7 @@ const GiveExam = () => {
   const [mcqAnswers, setMcqAnswers] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [deadline, setDeadline] = useState(0);
-  const [clipBoardContent, setClipBoardContent]= useState("")
+  const [clipBoardContent, setClipBoardContent] = useState("");
   const [isExamPaused, setIsExamPaused] = useState(false);
 
   let navigate = useNavigate();
@@ -26,7 +26,6 @@ const GiveExam = () => {
     navigate("/examinee-login");
   }
 
-  
   useEffect(() => {
     const fetchExamById = async () => {
       try {
@@ -88,39 +87,33 @@ const GiveExam = () => {
     }
   }, [token, examId]);
 
-
   useEffect(() => {
     const handleVisibilityChange = () => {
       if (document.hidden) {
         setIsExamPaused(true);
       }
     };
-    const disableKeys=(event)=>{
-      const forbiddenKeys=["Tab", "Alt", "Meta"]
-      if(forbiddenKeys.includes(event.key)){
+    const disableKeys = (event) => {
+      const forbiddenKeys = ["Tab", "Alt", "Meta"];
+      if (forbiddenKeys.includes(event.key)) {
         event.preventDefault();
-        alert(`Usage of ${event.key} is not allowed outside exam`)
+        alert(`Usage of ${event.key} is not allowed outside exam`);
       }
-    }
+    };
 
-    window.addEventListener("keydown", disableKeys)
+    window.addEventListener("keydown", disableKeys);
     document.addEventListener("visibilitychange", handleVisibilityChange);
 
     return () => {
-      window.addEventListener("keydown", disableKeys)
+      window.addEventListener("keydown", disableKeys);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, []);
-
- 
-
-  
 
   useEffect(() => {
     if (!deadline) return; // Ensure deadline is set
     console.log("Deadline is ", deadline);
     const interval = setInterval(() => {
-      
       const now = Date.now();
       const timeLeft = deadline - now;
 
@@ -175,6 +168,10 @@ const GiveExam = () => {
   //   alert("Copying and pasting is not allowed!")
   // }
 
+  // const handleRun=()=>
+  // {
+
+  // }
   const handleCopy = (e) => {
     const selectedText = e.target.value.substring(
       e.target.selectionStart,
@@ -195,11 +192,10 @@ const GiveExam = () => {
     if (selectedText) {
       e.clipboardData.setData("text/plain", selectedText);
       setClipBoardContent(selectedText);
-      e.target.value = e.target.value.selectionEnd
+      e.target.value = e.target.value.selectionEnd;
       e.preventDefault();
     }
   };
-  
 
   const handlePaste = (e) => {
     const pastedText = e.clipboardData.getData("text/plain");
@@ -209,15 +205,19 @@ const GiveExam = () => {
     }
   };
 
-
   const renderMcq = (mcq) => {
     return (
       <div className="bg-gray-50 rounded-md px-2">
-        <h2 className="select-none text-lg font-bold mb-4">Question {currentQuestionIndex + 1}</h2>
+        <h2 className="select-none text-lg font-bold mb-4">
+          Question {currentQuestionIndex + 1}
+        </h2>
         <p className="select-none text-gray-700 mb-4">{mcq.mcqQuestionText}</p>
         <div className="options-container space-y-3">
           {mcq.options.map((option) => (
-            <div key={option.optionId} className="flex items-center space-x-2 bg-white px-2 py-4 rounded-md shadow-sm">
+            <div
+              key={option.optionId}
+              className="flex items-center space-x-2 bg-white px-2 py-4 rounded-md shadow-sm"
+            >
               <input
                 type="radio"
                 name={`mcq-${mcq.mcqId}`}
@@ -241,73 +241,97 @@ const GiveExam = () => {
       codeAnswers.find((a) => a.pqId === pq.programmingQuestionId) || {};
     const { language = "C++", codeSubmission = "" } = currentAnswer;
     console.log(codeAnswers);
-  
+
     return (
       <div className="flex flex-col lg:flex-row gap-6">
-      {/* Left Column: Question and Test Cases */}
-      <div className="lg:w-1/2 w-full bg-gray-50 p-6 rounded-lg shadow-md">
-        <h2 className="text-lg font-bold mb-4 select-none">Question {currentQuestionIndex + 1}</h2>
-        <p className="text-gray-700 mb-6 select-none">{pq.programmingQuestionText}</p>
-    
-        <div className="space-y-4">
-          <h3 className="text-md font-semibold select-none">Test Cases:</h3>
-          {pq.testCases.map((t) => (
-            <div key={t.testcaseId} className="bg-white p-3 rounded-md shadow-sm">
-              <p>
-                <span className="font-medium select-none">Input:</span> {t.input}
-              </p>
-              <p>
-                <span className="font-medium select-none">Expected Output:</span> {t.expectedOutput}
-              </p>
-            </div>
-          ))}
+        {/* Left Column: Question and Test Cases */}
+        <div className="lg:w-1/2 w-full bg-gray-50 p-6 rounded-lg shadow-md">
+          <h2 className="text-lg font-bold mb-4 select-none">
+            Question {currentQuestionIndex + 1}
+          </h2>
+          <p className="text-gray-700 mb-6 select-none">
+            {pq.programmingQuestionText}
+          </p>
+
+          <div className="space-y-4">
+            <h3 className="text-md font-semibold select-none">Test Cases:</h3>
+            {pq.testCases.map((t) => (
+              <div
+                key={t.testcaseId}
+                className="bg-white p-3 rounded-md shadow-sm"
+              >
+                <p>
+                  <span className="font-medium select-none">Input:</span>{" "}
+                  {t.input}
+                </p>
+                <p>
+                  <span className="font-medium select-none">
+                    Expected Output:
+                  </span>{" "}
+                  {t.expectedOutput}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
-    
-      {/* Right Column: Language Dropdown and Text Area */}
-      <div className="lg:w-1/2 w-full bg-gray-50 p-6 rounded-lg shadow-md">
-        <div className="mb-6">
-          <label htmlFor={`languageDropdown-${pq.programmingQuestionId}`} className="block mb-2 font-medium">
-            Select Language:
+
+        {/* Right Column: Language Dropdown and Text Area */}
+        <div className="lg:w-1/2 w-full bg-gray-50 p-6 rounded-lg shadow-md">
+          <div className="mb-6">
+            <label
+              htmlFor={`languageDropdown-${pq.programmingQuestionId}`}
+              className="block mb-2 font-medium"
+            >
+              Select Language:
+            </label>
+            <Dropdown>
+              <Dropdown.Toggle variant="secondary">{language}</Dropdown.Toggle>
+              <Dropdown.Menu>
+                {["C++", "Java", "Python"].map((lang) => (
+                  <Dropdown.Item
+                    key={lang}
+                    onClick={() =>
+                      handleLanguageChange(pq.programmingQuestionId, lang)
+                    }
+                  >
+                    {lang}
+                  </Dropdown.Item>
+                ))}
+              </Dropdown.Menu>
+            </Dropdown>
+          </div>
+
+          <label
+            htmlFor={`codeSubmission-${pq.programmingQuestionId}`}
+            className="block mb-4 font-medium"
+          >
+            Your Code:
           </label>
-          <Dropdown>
-            <Dropdown.Toggle variant="secondary">{language}</Dropdown.Toggle>
-            <Dropdown.Menu>
-              {["C++", "Java", "Python"].map((lang) => (
-                <Dropdown.Item
-                  key={lang}
-                  onClick={() =>
-                    handleLanguageChange(pq.programmingQuestionId, lang)
-                  }
-                >
-                  {lang}
-                </Dropdown.Item>
-              ))}
-            </Dropdown.Menu>
-          </Dropdown>
+          <Editor
+            id={`codeSubmission-${pq.programmingQuestionId}`}
+            height="50vh"
+            className="w-full p-3 rounded-md border shadow-sm focus:ring focus:ring-indigo-300"
+            value={codeSubmission}
+            onChange={(value) =>
+              onChangeCodeAnswer(
+                pq.programmingQuestionId,
+                language,
+                value || ""
+              )
+            }
+            onCopy={(e) => handleCopy(e)}
+            onPaste={(e) => handlePaste(e)}
+            onCut={(e) => handleCut(e)}
+          ></Editor>
+          {/* <div className="px-2 justify-content-end"><Button
+    onClick={handleRun}
+    variant="warning"
+    className="px-4 py-2 mt-3 mr-3 font-semibold rounded-lg shadow-md hover:bg-green-700"
+  >
+    Run
+  </Button></div> */}
         </div>
-    
-        <label
-          htmlFor={`codeSubmission-${pq.programmingQuestionId}`}
-          className="block mb-4 font-medium"
-        >
-          Your Code:
-        </label>
-        <textarea
-          id={`codeSubmission-${pq.programmingQuestionId}`}
-          rows="15"
-          className="w-full p-3 rounded-md border shadow-sm focus:ring focus:ring-indigo-300"
-          value={codeSubmission}
-          onChange={(e) =>
-            onChangeCodeAnswer(pq.programmingQuestionId, language, e.target.value)
-          }
-          onCopy={(e) => handleCopy(e)}
-          onPaste={(e) => handlePaste(e)}
-          onCut={(e) => handleCut(e)}
-        ></textarea>
       </div>
-    </div>
-    
     );
   };
 
@@ -343,25 +367,23 @@ const GiveExam = () => {
 
   return (
     <>
-     <div className="flex flex-row justify-between">
+      <div className="flex flex-row justify-between">
+        <div className="flex flex-rows px-2 py-2 bg-indigo-100 rounded-md ml-3 mt-3">
+          <span className="px-2 font-bold">Time Left:</span>
+          <p id="minute">{minutes < 10 ? "0" + minutes : minutes}</p>:
+          <p id="second">{seconds < 10 ? "0" + seconds : seconds}</p>
+        </div>
 
-      <div className="flex flex-rows px-2 py-2 bg-indigo-100 rounded-md ml-3 mt-3">
-           <span className="px-2 font-bold">Time Left:</span>
-           <p id="minute">{minutes < 10 ? "0" + minutes : minutes}</p>
-           :
-       
-            <p id="second">{seconds < 10 ? "0" + seconds : seconds}</p>
+        <div className="px-2">
+          <Button
+            onClick={handleSubmit}
+            variant="success"
+            className="px-4 py-2 mt-3 mr-3 font-semibold rounded-lg shadow-md hover:bg-green-700"
+          >
+            Submit
+          </Button>
+        </div>
       </div>
-      
-      <div className="px-2"><Button
-    onClick={handleSubmit}
-    variant="success"
-    className="px-4 py-2 mt-3 mr-3 font-semibold rounded-lg shadow-md hover:bg-green-700"
-  >
-    Submit
-  </Button></div>
-     </div>
-           
 
       <div className="bg-white p-6 mb-6">
         {currentQuestionIndex < mcqQuestions.length ? (
@@ -392,7 +414,6 @@ const GiveExam = () => {
             Next
           </button>
         </div>
-      
       </div>
     </>
   );
