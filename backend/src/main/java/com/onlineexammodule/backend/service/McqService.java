@@ -1,11 +1,20 @@
 package com.onlineexammodule.backend.service;
 
 import java.util.ArrayList;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.onlineexammodule.backend.DTO.MCQ;
 import com.onlineexammodule.backend.model.Exam;
@@ -60,6 +69,7 @@ public class McqService {
 
        
         exam.getMcqQuestions().add(mcqQuestion);
+        mcqQuestion.getExams().add(exam);
         mcqRepository.save(mcqQuestion); 
         examRepository.save(exam); 
 
@@ -280,4 +290,117 @@ public class McqService {
         return mcqQuestions;
     }
 
-}
+    @SuppressWarnings("null")
+    @Transactional
+    public String importMcqQuestionData(MultipartFile file, Long examId) throws Exception {
+
+        // Fetch Exam
+        Exam exam = examRepository.findById(examId)
+                .orElseThrow(() -> new IllegalArgumentException("Exam does not exist, Incorrect exam Id"));
+    
+        if (!file.getContentType().equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")) {
+            throw new IllegalArgumentException("Invalid file format. Please upload an Excel file.");
+        }
+    
+        Workbook workbook = new XSSFWorkbook(file.getInputStream());
+        Sheet sheet = workbook.getSheetAt(0); // Assuming data is in the first sheet
+    
+        int addedRows = 0;
+        int duplicateRows = 0;
+    
+        for (Row row : sheet) {
+            if (row.getRowNum() == 0) continue; // Skip header row
+            if (isRowEmpty(row)) {
+                System.out.println("Skipping empty row: " + row.getRowNum());
+                continue; // Skip to the next row
+            }
+    
+            // Fetch row-wise all the cells
+            String mcqQuestionText = getCellValueAsString(row.getCell(0));
+            String correctOption = getCellValueAsString(row.getCell(5));
+            String category = getCellValueAsString(row.getCell(6));
+            String difficulty = getCellValueAsString(row.getCell(7));
+    
+            // Check if this question already exists in the exam
+            boolean isDuplicate = exam.getMcqQuestions().stream()
+                    .anyMatch(q -> q.getMcqQuestionText().equalsIgnoreCase(mcqQuestionText));
+            if (isDuplicate) {
+                duplicateRows++;
+                continue; // Skip duplicate question
+            }
+    
+            // Create a new MCQ question
+            McqQuestion question = new McqQuestion();
+            question.setMcqQuestionText(mcqQuestionText);
+            question.setCategory(category);
+            question.setDifficulty(difficulty);
+    
+            // Create and save options
+            List<QuestionOption> options = new ArrayList<>();
+            for (int i = 1; i <= 4; i++) {
+                String optionText = getCellValueAsString(row.getCell(i));
+    
+                QuestionOption option = new QuestionOption();
+                option.setOptionText(optionText);
+                option.setMcqQuestion(question);
+    
+                if (optionText.equals(correctOption)) {
+                    option.setCorrect(true);
+                }
+    
+                questionOptionRepository.save(option); // Save transient option
+                options.add(option);
+            }
+    
+            question.setOptions(options);
+    
+            // Save the question
+            mcqRepository.save(question);
+    
+            // Associate question with exam
+            exam.getMcqQuestions().add(question);
+            question.getExams().add(exam);
+    
+            addedRows++;
+        }
+    
+        workbook.close();
+    
+        // Save exam to persist relationships
+        examRepository.save(exam);
+    
+        return String.format("Import completed: %d questions added, %d duplicates skipped.", addedRows, duplicateRows);
+    }
+    
+    private String getCellValueAsString(Cell cell) {
+        if (cell == null) {
+            return "";
+        }
+        
+        switch (cell.getCellType()) {
+            case STRING:
+                return cell.getStringCellValue();
+            case NUMERIC:
+                
+                return String.valueOf(cell.getNumericCellValue());
+            default:
+                return "";
+        }
+    }
+
+    private boolean isRowEmpty(Row row) {
+        if (row == null) return true;
+    
+        for (Cell cell : row) {
+            if (cell != null && cell.getCellType() != CellType.BLANK) {
+                String value = getCellValueAsString(cell);
+                if (value != null && !value.trim().isEmpty()) {
+                    return false; // Row has at least one non-empty cell
+                }
+            }
+        }
+        return true; // Row is empty
+    }
+    
+
+    }

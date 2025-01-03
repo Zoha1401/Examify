@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.onlineexammodule.backend.model.Exam;
 import com.onlineexammodule.backend.model.Examinee;
@@ -161,6 +162,17 @@ public class ExaminerController {
         return new ResponseEntity<>(val, HttpStatus.CREATED);
     }
 
+     @PostMapping("/import-examinees")
+    public ResponseEntity<String> importExaminees(@RequestParam("file") MultipartFile file, HttpServletRequest request) {
+        try {
+            String token=request.getHeader("Authorization").substring(7);
+            String examiner_email=jwtService.extractEmail(token);
+            String result = examinerService.importExamineeData(file, examiner_email);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to import students: " + e.getMessage());
+        }
+    }
     
     
      

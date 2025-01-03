@@ -1,13 +1,25 @@
 package com.onlineexammodule.backend.service;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.DateUtil;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.ResourceAccessException;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.onlineexammodule.backend.model.Exam;
+
 import com.onlineexammodule.backend.model.ProgrammingQuestion;
+
 import com.onlineexammodule.backend.model.TestCase;
 import com.onlineexammodule.backend.repo.ExamRepository;
 import com.onlineexammodule.backend.repo.ProgrammingRepository;
@@ -241,18 +253,133 @@ public class ProgrammingService {
     
         return existingExam.getProgrammingQuestions();
     }
+
+    @SuppressWarnings("null")
+    @Transactional
+    public String importProgrammingQuestionData(MultipartFile file, Long examId) throws Exception {
+        Exam exam = examRepository.findById(examId)
+                .orElseThrow(() -> new IllegalArgumentException("Exam does not exist, Incorrect exam Id"));
+    
+        if (!file.getContentType().equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")) {
+            throw new IllegalArgumentException("Invalid file format. Please upload an Excel file.");
+        }
+        //Initialise wrkbook
+    
+        Workbook workbook = new XSSFWorkbook(file.getInputStream());
+        Sheet sheet = workbook.getSheetAt(0); 
+    
+        int addedRows = 0;
+        int duplicateRows = 0;
+    
+        for (Row row : sheet) {
+            if (row.getRowNum() == 0) continue; // Skip header row
+
+            if (isRowEmpty(row)) {
+                System.out.println("Skipping empty row: " + row.getRowNum());
+                continue; // Skip to the next row
+            }
+    
+            // Fetch row-wise all the cells
+            String programmingQuestionText = getCellValueAsString(row.getCell(0));
+            String difficulty = getCellValueAsString(row.getCell(5));
+            String referenceAnswer=getCellValueAsString(row.getCell(6));
+
+            if(programmingQuestionText==null){
+                continue;
+            }
+    
+            // Check if this question already exists in the exam
+            boolean isDuplicate = exam.getProgrammingQuestions().stream()
+                    .anyMatch(q -> q.getProgrammingQuestionText().equalsIgnoreCase(programmingQuestionText));
+            if (isDuplicate) {
+                duplicateRows++;
+                continue; // Skip duplicate question
+            }
+    
+            // Create a new Programming question
+            ProgrammingQuestion question = new ProgrammingQuestion();
+            question.setProgrammingQuestionText(programmingQuestionText);
+            
+            question.setDifficulty(difficulty);
+            question.setReferenceAnswer(referenceAnswer);
+    
+            // Create and save options
+            List<TestCase> testcases = new ArrayList<>();
+            for (int i = 1; i <= 4; i+=2) {
+                String input = getCellValueAsString(row.getCell(i));
+                String expectedOutput=getCellValueAsString(row.getCell(i+1));
+
+                System.out.println("Input "+input+"Output "+expectedOutput);
+    
+                TestCase testcase = new TestCase();
+                testcase.setInput(input);
+                testcase.setExpectedOutput(expectedOutput);
+    
+                
+    
+                testCaseRepository.save(testcase); // Save transient option
+                testcases.add(testcase);
+                testcase.setProgrammingQuestion(question);
+            }
+    
+            question.setTestCases(testcases);
+    
+            // Save the question
+            programmingRepository.save(question);
+    
+            // Associate question with exam
+            exam.getProgrammingQuestions().add(question);
+            question.getExams().add(exam);
+    
+            addedRows++;
+        }
+    
+        workbook.close();
+        examRepository.save(exam);
+    
+        return String.format("Import completed: %d questions added, %d duplicates skipped.", addedRows, duplicateRows);
+    }
+    
+       
+    private boolean isRowEmpty(Row row) {
+        if (row == null) return true;
+    
+        for (Cell cell : row) {
+            if (cell != null && cell.getCellType() != CellType.BLANK) {
+                String value = getCellValueAsString(cell);
+                if (value != null && !value.trim().isEmpty()) {
+                    return false; // Row has at least one non-empty cell
+                }
+            }
+        }
+        return true; // Row is empty
+    }
     
     
+   private String getCellValueAsString(Cell cell) {
+    if (cell == null) {
+        return "";
+    }
 
-
-
-
-
-
-
-
-
-
-
-    
+    switch (cell.getCellType()) {
+        case STRING:
+            return cell.getStringCellValue();
+        case NUMERIC:
+            if (DateUtil.isCellDateFormatted(cell)) {
+                return cell.getDateCellValue().toString();
+            }
+            return BigDecimal.valueOf(cell.getNumericCellValue()).toPlainString();
+        case BOOLEAN:
+            return String.valueOf(cell.getBooleanCellValue());
+        case FORMULA:
+            return cell.getCellFormula();
+        default:
+            return "";
+    }
 }
+}
+
+
+
+
+    
