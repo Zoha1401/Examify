@@ -17,7 +17,6 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.onlineexammodule.backend.model.Exam;
-
 import com.onlineexammodule.backend.model.ProgrammingQuestion;
 
 import com.onlineexammodule.backend.model.TestCase;
@@ -41,7 +40,8 @@ public class ProgrammingService {
         this.testCaseRepository=testCaseRepository;
     }
     
-    //ADD Pro question
+    
+    //When examiner adds an programming question it gets saved in the pool which then can be used for other exams
     public ProgrammingQuestion addProgrammingQuestion(ProgrammingQuestion programmingQuestion, Long examId) {
         Exam exam = examRepository.findById(examId)
                 .orElseThrow(() -> new IllegalArgumentException("Exam not found"));
@@ -270,6 +270,7 @@ public class ProgrammingService {
     
         int addedRows = 0;
         int duplicateRows = 0;
+        int alreadyExisiting = 0;
     
         for (Row row : sheet) {
             if (row.getRowNum() == 0) continue; // Skip header row
@@ -284,16 +285,21 @@ public class ProgrammingService {
             String difficulty = getCellValueAsString(row.getCell(5));
             String referenceAnswer=getCellValueAsString(row.getCell(6));
 
-            if(programmingQuestionText==null){
-                continue;
-            }
-    
+            
             // Check if this question already exists in the exam
-            boolean isDuplicate = exam.getProgrammingQuestions().stream()
-                    .anyMatch(q -> q.getProgrammingQuestionText().equalsIgnoreCase(programmingQuestionText));
-            if (isDuplicate) {
-                duplicateRows++;
-                continue; // Skip duplicate question
+            ProgrammingQuestion existingQuestion = programmingRepository.findByProgrammingQuestionText(programmingQuestionText);
+            if (existingQuestion != null) {
+                // Check if this question 
+                if (exam.getProgrammingQuestions().contains(existingQuestion)) {
+                    duplicateRows++;
+                    continue; // Skip redundant question
+                }
+    
+                // Associate existing question with the exam
+                exam.getProgrammingQuestions().add(existingQuestion);
+                existingQuestion.getExams().add(exam);
+                alreadyExisiting++;
+                continue;
             }
     
             // Create a new Programming question
@@ -337,7 +343,7 @@ public class ProgrammingService {
         workbook.close();
         examRepository.save(exam);
     
-        return String.format("Import completed: %d questions added, %d duplicates skipped.", addedRows, duplicateRows);
+        return String.format("Import completed: %d questions added, %d duplicates skipped %d already existing in database.", addedRows, duplicateRows, alreadyExisiting);
     }
     
        

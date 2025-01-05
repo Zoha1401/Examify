@@ -11,4 +11,6 @@ import com.onlineexammodule.backend.model.ProgrammingQuestion;
 public interface ProgrammingRepository extends JpaRepository<ProgrammingQuestion, Long> {
      
     List<ProgrammingQuestion> findAllByDifficulty(String difficulty);
+
+    ProgrammingQuestion findByProgrammingQuestionText(String programmingQuestionText);
 }

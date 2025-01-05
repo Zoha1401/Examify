@@ -38,6 +38,8 @@ public class McqService {
         this.questionOptionRepository = questionOptionRepository;
     }
 
+    
+    //When examiner adds an mcq question it gets saved in the pool which then can be used for other exams
     @Transactional
     public MCQ addMcqQuestion(McqQuestion mcqQuestion, Long examId) {
         //Check if exam exists
@@ -226,6 +228,7 @@ public class McqService {
       
     }
 
+    //To add mcq question pool from backend
     public String addMcqQuestionPool(List<McqQuestion> mcqQuestions) {
         for(McqQuestion mcqQuestion:mcqQuestions){
             mcqRepository.save(mcqQuestion);
@@ -292,6 +295,7 @@ public class McqService {
 
     @SuppressWarnings("null")
     @Transactional
+    //When mcqs are imported, they automatically get added to mcq question pool to be shared with other exams.
     public String importMcqQuestionData(MultipartFile file, Long examId) throws Exception {
 
         // Fetch Exam
@@ -307,6 +311,7 @@ public class McqService {
     
         int addedRows = 0;
         int duplicateRows = 0;
+        int alreadyExisiting =0;
     
         for (Row row : sheet) {
             if (row.getRowNum() == 0) continue; // Skip header row
@@ -321,13 +326,30 @@ public class McqService {
             String category = getCellValueAsString(row.getCell(6));
             String difficulty = getCellValueAsString(row.getCell(7));
     
-            // Check if this question already exists in the exam
-            boolean isDuplicate = exam.getMcqQuestions().stream()
-                    .anyMatch(q -> q.getMcqQuestionText().equalsIgnoreCase(mcqQuestionText));
-            if (isDuplicate) {
-                duplicateRows++;
-                continue; // Skip duplicate question
+           
+            // boolean isDuplicate = exam.getMcqQuestions().stream()
+            //         .anyMatch(q -> q.getMcqQuestionText().equalsIgnoreCase(mcqQuestionText));
+            // if (isDuplicate) {
+            //     duplicateRows++;
+            //     continue; // Skip duplicate question
+            // }
+
+            //This part, so that on import, already existing questions in database are not again added in pool
+            McqQuestion existingQuestion = mcqRepository.findByMcqQuestionText(mcqQuestionText);
+            if (existingQuestion != null) {
+                // Check if this question 
+                if (exam.getMcqQuestions().contains(existingQuestion)) {
+                    duplicateRows++;
+                    continue; // Skip redundant question
+                }
+    
+                // Associate existing question with the exam
+                exam.getMcqQuestions().add(existingQuestion);
+                existingQuestion.getExams().add(exam);
+                alreadyExisiting++;
+                continue;
             }
+
     
             // Create a new MCQ question
             McqQuestion question = new McqQuestion();
@@ -369,7 +391,7 @@ public class McqService {
         // Save exam to persist relationships
         examRepository.save(exam);
     
-        return String.format("Import completed: %d questions added, %d duplicates skipped.", addedRows, duplicateRows);
+        return String.format("Import completed: %d questions added, %d duplicates skipped %d already existing.", addedRows, duplicateRows, alreadyExisiting);
     }
     
     private String getCellValueAsString(Cell cell) {

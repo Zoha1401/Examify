@@ -28,6 +28,7 @@ public class McqQuestionController {
     @Autowired
     private McqService mcqService;
 
+    //When examiner adds an mcq question it gets saved in the pool which then can be used for other exams
     @PostMapping("/addMcqQuestion")
     public ResponseEntity<MCQ> addMcqQuestion(@RequestBody McqQuestion McqQuestion, @RequestParam Long examId) {
         MCQ new_mcq = mcqService.addMcqQuestion(McqQuestion, examId);
@@ -78,7 +79,7 @@ public class McqQuestionController {
         return mcqService.addMcqQuestionPool(mcqQuestions);
     }
 
-    // *****
+ 
     @GetMapping("/getAllMcqQuestions")
     public List<McqQuestion> getAllMcqQuestions(@RequestParam Long examId) {
         return mcqService.getAllMcqQuestions(examId);

@@ -21,7 +21,6 @@ import com.onlineexammodule.backend.repo.McqRepository;
 import com.onlineexammodule.backend.repo.ProgrammingAnswerRepository;
 import com.onlineexammodule.backend.repo.ProgrammingRepository;
 
-
 @Service
 public class ExamService {
 
@@ -60,8 +59,8 @@ public class ExamService {
         new_exam.setAssignToAllExaminees(exam.isAssignToAllExaminees());
         // Option for examiner to create an exam for already existing examinee or not
         // all examinees.
-        System.out.println("isAssign"+ exam.isAssignToAllExaminees());
-        System.out.println("size"+ examiner.getExaminees().size());
+        System.out.println("isAssign" + exam.isAssignToAllExaminees());
+        System.out.println("size" + examiner.getExaminees().size());
         if (exam.isAssignToAllExaminees()) {
             List<Examinee> examinees = examiner.getExaminees();
             for (Examinee examinee_temp : examinees) {
@@ -133,10 +132,10 @@ public class ExamService {
 
         // List<Answer> answers=toBeDeleteExam.getAnswers();
         // if(answers!=null){
-        //     for(Answer answer:answers){
-        //         answer.removeExam(toBeDeleteExam);
-                
-        //     }
+        // for(Answer answer:answers){
+        // answer.removeExam(toBeDeleteExam);
+
+        // }
         // }
 
         // Remove exam from examiner
@@ -191,11 +190,6 @@ public class ExamService {
         return examRepository.save(existingExam);
     }
 
-   
-
-    
-
-
     public Exam getExamById(Long examId) {
         Exam exam = examRepository.findById(examId)
                 .orElseThrow(() -> new IllegalArgumentException("Exam does not exist, Incorrect exam Id"));
@@ -204,40 +198,35 @@ public class ExamService {
 
     }
 
-   
-
     public List<Examinee> getPassedExaminees(Long examId) {
-       
-       Exam exam = examRepository.findById(examId)
-                .orElseThrow(() -> new IllegalArgumentException("Exam does not exist, Incorrect exam Id"));
-        
-        List<Answer> answers=exam.getAnswers();
-        int mcqPassingScore=exam.getMcqpassingScore();
-        List<Examinee> examinees=new ArrayList<>();
-        //Find passed answers and get the examinee from there
-        for(Answer answer:answers){
 
-            if(answer.getMcqScore()>=mcqPassingScore){
+        Exam exam = examRepository.findById(examId)
+                .orElseThrow(() -> new IllegalArgumentException("Exam does not exist, Incorrect exam Id"));
+
+        List<Answer> answers = exam.getAnswers();
+        int mcqPassingScore = exam.getMcqpassingScore();
+        List<Examinee> examinees = new ArrayList<>();
+        // Find passed answers and get the examinee from there
+        for (Answer answer : answers) {
+
+            if (answer.getMcqScore() >= mcqPassingScore) {
                 examinees.add(answer.getExaminee());
             }
         }
 
         return examinees;
 
-
-        //Get exam
-        //Get answers
-        //Iterate, find passed answers, fetch their examinee and store and send
+        // Get exam
+        // Get answers
+        // Iterate, find passed answers, fetch their examinee and store and send
     }
 
     public List<Examinee> getExaminees(Long examId) {
         Exam exam = examRepository.findById(examId)
-        .orElseThrow(() -> new IllegalArgumentException("Exam does not exist, Incorrect exam Id"));
-        
+                .orElseThrow(() -> new IllegalArgumentException("Exam does not exist, Incorrect exam Id"));
+
         return exam.getExaminees();
     }
-
-   
 
     // public Exam createExamWithQuestions(Exam exam, List<Long> mcqQuestionIds,
     // List<Long> programmingQuestionIds) {
