@@ -24,8 +24,10 @@ const McqQuestionPool = () => {
     }
   }, [token, navigate]);
 
+  //Fetch all questions from the database
   useEffect(() => {
     const fetchQuestions = async () => {
+      //Fetch questions based on difficulty and category
       setLoading(true);
       try {
         const response = await axiosInstance.get(
@@ -58,6 +60,7 @@ const McqQuestionPool = () => {
     fetchQuestions();
   }, [difficulty, category, token, examId]);
 
+  //Set check state if question already in exam or should be added
   const handleCheckboxChange = (id) => {
     setCheckedState((prevState) => {
       const updatedState = { ...prevState, [id]: !prevState[id] };
@@ -73,6 +76,7 @@ const McqQuestionPool = () => {
     setSelectedQuestions(selectedQuestions);
   };
 
+  //Add selected questions
   const handleAdditionOfSelected = async () => {
     const fullQuestions = mcqQuestions.filter((q) =>
       selectedQuestions.includes(String(q.mcqId))
@@ -149,7 +153,9 @@ console.log(mcqQuestions)
                   <div key={option.optionId || index} className='px-2'>
                     {option.optionText}{" "}
                     {option.isCorrect && (
-                      <strong classname="font-light bg-green-200">
+                      <strong classname="font-light bg-green-200"> 
+                      
+                      {/* if option correct */}
                         (Correct)
                       </strong>
                     )}

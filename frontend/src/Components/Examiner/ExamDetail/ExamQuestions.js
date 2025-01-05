@@ -64,6 +64,7 @@ const ExamQuestions = () => {
     }
   };
 
+  //Upload programming xcel file
   const handleProgrammingUpload = async () => {
     if (!programmingFile) {
       alert("Please select a programming data file first");
@@ -91,6 +92,7 @@ const ExamQuestions = () => {
     }
   };
 
+  //Fetch pre existing questions in exam
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -131,6 +133,7 @@ const ExamQuestions = () => {
     fetchData();
   }, [examId, token]);
 
+  //State management
   const handleDeleteTechnicalMcq = (mcqId) => {
     setTechnicalMcqs((prev) => prev.filter((mcq) => mcq.mcqId !== mcqId));
   };
@@ -189,7 +192,11 @@ const ExamQuestions = () => {
         </Link>
         <div className="flex mx-4">
           <input type="file" onChange={handleMcqFileChange} className="mt-2" />
-          <Button variant="dark" onClick={handleMcqUpload} className="mb-2 mt-2 px-4">
+          <Button
+            variant="dark"
+            onClick={handleMcqUpload}
+            className="mb-2 mt-2 px-4"
+          >
             Import Mcq Questions
           </Button>
         </div>
@@ -199,7 +206,11 @@ const ExamQuestions = () => {
             onChange={handleProgrammingFileChange}
             className="mt-2"
           />
-          <Button variant="dark" onClick={handleProgrammingUpload} className="mb-2 mt-2 px-4">
+          <Button
+            variant="dark"
+            onClick={handleProgrammingUpload}
+            className="mb-2 mt-2 px-4"
+          >
             Import Programming Questions
           </Button>
         </div>
@@ -264,5 +275,3 @@ const ExamQuestions = () => {
 };
 
 export default ExamQuestions;
-
-//Give option to delete all.

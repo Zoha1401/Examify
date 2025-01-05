@@ -37,11 +37,10 @@ const ProgrammingQuestion = ({ pq, onDelete, onUpdate }) => {
           },
         }
       );
-    
-        alert("Programming Question Updated");
-        window.location.reload()
-        setEditableProQ(null);
-      
+
+      alert("Programming Question Updated");
+      window.location.reload();
+      setEditableProQ(null);
     } catch (error) {
       console.error(
         "Error updating pro q:",
@@ -60,10 +59,8 @@ const ProgrammingQuestion = ({ pq, onDelete, onUpdate }) => {
         }
       );
 
-     
-        alert("Programming Question is deleted");
-        onDelete(pq.programmingQuestionId);
-      
+      alert("Programming Question is deleted");
+      onDelete(pq.programmingQuestionId);
     } catch (error) {
       console.error("Error deleting:", error.response?.data || error.message);
       alert("Failed to delete question. Please try again.");
@@ -89,7 +86,9 @@ const ProgrammingQuestion = ({ pq, onDelete, onUpdate }) => {
     <>
       <div className="flex-col bg-gray-50 p-2 py-4 mx-2 mt-3 rounded-md shadow-md">
         <div className="flex flex-row px-2 mb-2">
-          <div className="text-lg font-semibold">{pq.programmingQuestionText}</div>
+          <div className="text-lg font-semibold">
+            {pq.programmingQuestionText}
+          </div>
           <div>
             <ModeEditOutlineIcon onClick={handleEdit} />
             <DeleteIcon onClick={handleDeleteProgrammingQuestion} />
@@ -100,14 +99,20 @@ const ProgrammingQuestion = ({ pq, onDelete, onUpdate }) => {
             pq.testCases.map((t) => (
               <div className="flex px-2 mx-auto px-auto mb-1">
                 <span className="font-semibold">Input :</span> {t.input}
-                <span className="font-semibold px-2"> Output:</span> {t.expectedOutput}
+                <span className="font-semibold px-2"> Output:</span>{" "}
+                {t.expectedOutput}
               </div>
             ))}
         </div>
-        <div className="px-2 mt-2 font-semibold">Reference Answer:{pq.referenceAnswer}</div>
+        <div className="px-2 mt-2 font-semibold">
+          Reference Answer:{pq.referenceAnswer}
+        </div>
 
         {editableProQ && (
-          <form onSubmit={handleUpdateProQ} className="mt-4 bg-gray-100 p-2 rounded-md">
+          <form
+            onSubmit={handleUpdateProQ}
+            className="mt-4 bg-gray-100 p-2 rounded-md"
+          >
             <input
               type="text"
               name="programmingQuestionText"
@@ -145,8 +150,19 @@ const ProgrammingQuestion = ({ pq, onDelete, onUpdate }) => {
                 </div>
               ))}
             </div>
-            <Button type="submit" variant="primary" className="mt-2">Update Programming Question</Button>
-            <Button type="submit" variant="warning" onClick={()=>{setEditableProQ(null)}} className="mx-2 mt-2">Cancel</Button>
+            <Button type="submit" variant="primary" className="mt-2">
+              Update Programming Question
+            </Button>
+            <Button
+              type="submit"
+              variant="warning"
+              onClick={() => {
+                setEditableProQ(null);
+              }}
+              className="mx-2 mt-2"
+            >
+              Cancel
+            </Button>
           </form>
         )}
       </div>
@@ -155,29 +171,3 @@ const ProgrammingQuestion = ({ pq, onDelete, onUpdate }) => {
 };
 
 export default ProgrammingQuestion;
-
-//summarise results
-//passed examinees
-//assign exam functionality debugging and proper frontend (Assigned exmainee dekhava joiye ane assign kari sake)
-
-//Results are getting fetched now have to enhance UI and show
-
-//Enhance UI
-
-//Sequence of Importance (To finish it beautifully)
-
-//Examiner side done-> Answer display frontend left
-//Examinee side -> Frontend left
-//Tomorrow---> Google oauth
-
-////Google oauth
-//Enhance UI
-//Try to load questions from CSV.
-//Try to load examinees from CSV.
-
-//Done
-//State management
-//Have examinee enter phone number as password.
-//Organize backendd code based on return type
-//Once exam deleted delete all asociated answers****
-//assign to all examinee frontend***

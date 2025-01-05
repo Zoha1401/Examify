@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button } from "react-bootstrap";
 import axiosInstance from "../../../utils/axiosInstance";
-import { Link, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 import InputGroup from "react-bootstrap/InputGroup";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -19,6 +19,7 @@ const CreateExam = () => {
     setData({ ...data, [key]: value });
   };
   
+  //Set format propery for backend
   const combineAndFormatDateTime = (date, time) => {
     if (dayjs(date).isValid() && dayjs(time).isValid()) {
       const combined = dayjs(date)
@@ -78,6 +79,7 @@ const CreateExam = () => {
       alert("Failed to add exam. Please try again.");
     }
   };
+
 
   const handleCheckboxChange = (e) => {
     setAssignToAllExaminees(e.target.checked);

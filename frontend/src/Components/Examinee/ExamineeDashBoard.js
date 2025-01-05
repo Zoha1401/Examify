@@ -16,6 +16,7 @@ const ExamineeDashBoard = () => {
     navigate("/examinee-login");
   }
 
+  //Fetch exams that is assigned to examinee
   useEffect(() => {
     const fetchExams = async () => {
       try {
@@ -48,18 +49,20 @@ const ExamineeDashBoard = () => {
     fetchExams();
   }, [token, examineeEmail]);
 
-  const checkIfAlreadyGiven=async(exam)=>{
+  //This part is not yet implemented successfully
+  const checkIfAlreadyGiven = async (exam) => {
     try {
-      const examineeIdResponse=await axiosInstance(`/examinee/getExamineeIdFromEmail/examineeEmail=${examineeEmail}`,
+      const examineeIdResponse = await axiosInstance(
+        `/examinee/getExamineeIdFromEmail/examineeEmail=${examineeEmail}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
-      )
+      );
 
-      const examineeId=examineeIdResponse.data
-      console.log("ExamineeId",examineeId)
+      const examineeId = examineeIdResponse.data;
+      console.log("ExamineeId", examineeId);
       const response = await axiosInstance(
         `/answer/getExamSpecificAnswer?examineeId=${examineeId}&examId=${exam.examId}`,
         {
@@ -69,19 +72,18 @@ const ExamineeDashBoard = () => {
         }
       );
 
-      const {isSubmitted}=response.data
-      console.log("Is submitted", isSubmitted)
-      if(isSubmitted)
-        return isSubmitted
-      else
-        return false
-    }
-    catch(error){
-      console.error('Error in fetching answer', error.response?.data || error.message);
+      const { isSubmitted } = response.data;
+      console.log("Is submitted", isSubmitted);
+      if (isSubmitted) return isSubmitted;
+      else return false;
+    } catch (error) {
+      console.error(
+        "Error in fetching answer",
+        error.response?.data || error.message
+      );
       return false;
-       
     }
-  }
+  };
   return (
     <>
       <div className="font-bold mt-2 mx-2">Exams:</div>
@@ -92,7 +94,9 @@ const ExamineeDashBoard = () => {
               {exam.startTime}
               {exam.duration} min
               <Link to={`/startExam/${exam.examId}`} className="p-3">
-                <Button disabled={()=>checkIfAlreadyGiven(exam)}>Start Exam</Button>
+                <Button disabled={() => checkIfAlreadyGiven(exam)}>
+                  Start Exam
+                </Button>
               </Link>
             </div>
           ))
@@ -105,12 +109,3 @@ const ExamineeDashBoard = () => {
 };
 
 export default ExamineeDashBoard;
-
-
-//Working on Update functionality of MCQ.
-//Examinee can see the exams assign to them-> onClick start, ek page navbar timer, get mcq and pro, page wise mcq will display.
-//Submit answer, automatic marking of answers in backend. Display marked results in frontend.
-//OTP vala if possible
-
-//Another endpoint where examiner will be able to assign exam to the examinee after examinee creation.
-//Also an (endpoint) option to assign a particular exam to all examinees, after exam creation

@@ -19,6 +19,7 @@ const GiveExam = () => {
   const [clipBoardContent, setClipBoardContent] = useState("");
   const [isExamPaused, setIsExamPaused] = useState(false);
 
+  //Go to login if not authorized
   let navigate = useNavigate();
   const token = localStorage.getItem("token");
   if (!token) {
@@ -26,6 +27,7 @@ const GiveExam = () => {
     navigate("/examinee-login");
   }
 
+  //Fetch exam
   useEffect(() => {
     const fetchExamById = async () => {
       try {
@@ -53,6 +55,7 @@ const GiveExam = () => {
         alert("Failed to fetch exam. Please try again.");
       }
     };
+    //Get exam questions
     const fetchQuestions = async () => {
       try {
         const mcqResponse = await axiosInstance.get(
@@ -87,6 +90,7 @@ const GiveExam = () => {
     }
   }, [token, examId]);
 
+  //Forbid keys to be used
   useEffect(() => {
     const handleVisibilityChange = () => {
       if (document.hidden) {
@@ -110,6 +114,7 @@ const GiveExam = () => {
     };
   }, []);
 
+  //Code for timer
   useEffect(() => {
     if (!deadline) return; // Ensure deadline is set
     console.log("Deadline is ", deadline);
@@ -172,6 +177,8 @@ const GiveExam = () => {
   // {
 
   // }
+
+  //set clip board content if copy occurs
   const handleCopy = (e) => {
     const selectedText = e.target.value.substring(
       e.target.selectionStart,
@@ -184,6 +191,7 @@ const GiveExam = () => {
     }
   };
 
+  //set clip board content if cut occurs
   const handleCut = (e) => {
     const selectedText = e.target.value.substring(
       e.target.selectionStart,
@@ -197,6 +205,7 @@ const GiveExam = () => {
     }
   };
 
+  //Paste only if clipboard content is set or dont
   const handlePaste = (e) => {
     const pastedText = e.clipboardData.getData("text/plain");
     if (pastedText !== clipBoardContent) {
@@ -205,6 +214,7 @@ const GiveExam = () => {
     }
   };
 
+  //Render mcq
   const renderMcq = (mcq) => {
     return (
       <div className="bg-gray-50 rounded-md px-2">
@@ -236,6 +246,7 @@ const GiveExam = () => {
     );
   };
 
+  //render pq
   const renderProgrammingQuestion = (pq) => {
     const currentAnswer =
       codeAnswers.find((a) => a.pqId === pq.programmingQuestionId) || {};
@@ -275,7 +286,6 @@ const GiveExam = () => {
           </div>
         </div>
 
-        {/* Right Column: Language Dropdown and Text Area */}
         <div className="lg:w-1/2 w-full bg-gray-50 p-6 rounded-lg shadow-md">
           <div className="mb-6">
             <label
@@ -361,6 +371,8 @@ const GiveExam = () => {
       alert("Failed to submit exam. Please try again.");
     }
   };
+
+  //Set current mcq, as the question index increments
   const currentMcq = mcqQuestions[currentQuestionIndex];
   const currentProgrammingQuestion =
     programmingQuestions[currentQuestionIndex - mcqQuestions.length];
@@ -394,6 +406,7 @@ const GiveExam = () => {
           <div>No questions found.</div>
         )}
 
+        {/* As current question index increments different questions get rendererd */}
         <div className="navigation-container flex justify-between items-center py-4">
           <button
             disabled={currentQuestionIndex === 0}
@@ -420,8 +433,3 @@ const GiveExam = () => {
 };
 
 export default GiveExam;
-
-//For this week
-
-//Integrate Frontend with submit exam
-//Integrate assign to all examinees

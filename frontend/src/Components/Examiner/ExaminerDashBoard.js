@@ -43,33 +43,38 @@ const ExaminerDashBoard = () => {
     fetchAllExams();
   }, []);
 
-  const handleDeleteExam=(examId)=>{
-    setExams((prev)=>prev.filter((exam)=> exam.examId!==examId))
-  }
+  const handleDeleteExam = (examId) => {
+    setExams((prev) => prev.filter((exam) => exam.examId !== examId));
+  };
 
-  const handleUpdateExam=(updatedExam)=>{
-    setExams((prevExams)=> prevExams.map((exam)=> (exam.examId===updatedExam.examId? updatedExam: exam)))
-  }
+  const handleUpdateExam = (updatedExam) => {
+    setExams((prevExams) =>
+      prevExams.map((exam) =>
+        exam.examId === updatedExam.examId ? updatedExam : exam
+      )
+    );
+  };
 
   return (
     <>
-    <Navigationbar/>
-    <div className="flex flex-col bg-white justify-center items-center px-4 py-6">
-     <h1 className="text-2xl font-bold text-center mb-6">Examiner Dashboard</h1>
-      <div className="flex flex-row my-2 mb-4 px-2">
-      
-        <Link to="/manage-examinee">
-          <Button variant="dark" className="px-3 my-3 mx-2">
-            Manage Examinees
-          </Button>
-        </Link>
-         {/* This will show a list of all examinees added by examiner, where he/she can add, update or delete examinee. Can also assign an exam from here to examinee, also bulk upload examinee*/}
-        <Link to="/create-exam">
-          <Button variant="dark" className="px-3 my-3 mx-2">
-            Create Exam
-          </Button>
-        </Link>
-      </div>
+      <Navigationbar />
+      <div className="flex flex-col bg-white justify-center items-center px-4 py-6">
+        <h1 className="text-2xl font-bold text-center mb-6">
+          Examiner Dashboard
+        </h1>
+        <div className="flex flex-row my-2 mb-4 px-2">
+          <Link to="/manage-examinee">
+            <Button variant="dark" className="px-3 my-3 mx-2">
+              Manage Examinees
+            </Button>
+          </Link>
+          {/* This will show a list of all examinees added by examiner, where he/she can add, update or delete examinee. Can also assign an exam from here to examinee, also bulk upload examinee*/}
+          <Link to="/create-exam">
+            <Button variant="dark" className="px-3 my-3 mx-2">
+              Create Exam
+            </Button>
+          </Link>
+        </div>
       </div>
       <div className="px-2 py-2 text-xl font-bold">Exams:</div>
       <div className="mx-2 font-semibold">
@@ -80,39 +85,25 @@ const ExaminerDashBoard = () => {
         <span className="p-6">Mcq Passing score</span>
         <span className="p-6">Duration</span>
       </div>
-          
-      
+
       <div className="">
         {loading ? (
           <p>Loading...</p>
         ) : exams.length === 0 ? (
           <p>You have no exams</p>
         ) : (
-          exams.map((e) => <Exam key={e.examId} temp_exam={e} onDelete={handleDeleteExam} onUpdate={handleUpdateExam}/>)
+          exams.map((e) => (
+            <Exam
+              key={e.examId}
+              temp_exam={e}
+              onDelete={handleDeleteExam}
+              onUpdate={handleUpdateExam}
+            />
+          ))
         )}
       </div>
-   
     </>
   );
 };
 
 export default ExaminerDashBoard;
-
-{
-  /* Dashboard will show a button to create exam and all the existing exams of examiner. Add a filter to show the most recent exam in first and finished exams at end
-       Edit exam takes you to a new page where you can delete/Update/add questions  .... will see about question pool */
-}
-{
-  /*have a dropdown that will show all examinees assigned to that exam and their respective result if exam done or nothing*/
-}
-{
-  /*An exam on click will see all the questions in different sections and be able to edit */
-}
-
-{
-  /* A button create a exam, navigate where retrieve all the data then go to a page where add Mcq question or add programming question.
-      Add technical question, add logical question and add programming question. save-> navigate to dashboard
-      
-      In add mcq question-> Pool of mcq questions for examiner to select based on difficulty and category and also add option
-      Same for programming*/
-}
