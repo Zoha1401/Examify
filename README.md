@@ -25,3 +25,5 @@ Follow these steps:
 3) Run mvn clean install to install all dependencies
 
 4) Update application.properties with your username password and database name
+
+5) Run (mvn spring-boot:run) to run the backend
